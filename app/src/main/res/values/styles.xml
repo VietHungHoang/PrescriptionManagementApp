@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="tra_cuu_thu">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#2D87F3</item>
+    </style>
+</resources>
