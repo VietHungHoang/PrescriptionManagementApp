@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_schedule"
+        android:icon="@drawable/ic_calendar_blue"
+        android:title="Lịch Nhắc" />
+    <item
+        android:id="@+id/nav_invoice"
+        android:icon="@drawable/ic_invoice_black"
+        android:title="Hóa Đơn" />
+</menu>
