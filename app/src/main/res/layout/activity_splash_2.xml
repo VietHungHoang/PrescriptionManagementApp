@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:padding="16dp"
+android:background="#FFFFFF">
+
+<!-- Progress Bar at the top -->
+<ProgressBar
+    android:id="@+id/progressBar"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:progress="30" />
+
+<!-- Title -->
+<TextView
+    android:id="@+id/titleTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="TÊN BẠN LÀ GÌ?"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:layout_marginTop="16dp" />
+
+<!-- Description -->
+<TextView
+    android:id="@+id/descriptionTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Giới thiệu một chút về bản thân bạn nhé"
+    android:textSize="16sp"
+    android:layout_marginTop="8dp" />
+
+<!-- Full Name Input -->
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Họ và tên *"
+    android:textSize="14sp"
+    android:layout_marginTop="16dp" />
+
+<EditText
+    android:id="@+id/fullNameEditText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Nhập tên thực của bạn"
+    android:inputType="textPersonName"
+    android:padding="12dp"
+    android:background="@android:drawable/edit_text"
+    android:layout_marginTop="8dp" />
+
+<!-- Date of Birth Input -->
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Ngày sinh"
+    android:textSize="14sp"
+    android:layout_marginTop="16dp" />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="8dp">
+
+    <EditText
+        android:id="@+id/dateOfBirthEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="MM/DD/YYYY"
+        android:inputType="date"
+        android:padding="12dp"
+        android:background="@android:drawable/edit_text"
+        android:focusable="false" />
+
+    <ImageView
+        android:id="@+id/calendarIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        android:contentDescription="Select date"
+        android:layout_marginStart="8dp"
+        android:padding="8dp" />
+</LinearLayout>
+
+</LinearLayout>

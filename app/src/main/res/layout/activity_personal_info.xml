@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".PersonalInfoActivity">
+
+    <!-- Toolbar with tabs -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:padding="16dp"
+            android:src="@android:drawable/ic_menu_back"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTitle" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Thông tin cá nhân"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Tab indicators -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#2196F3" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#E0E0E0" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#E0E0E0" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/btnContinue"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Profile Picture -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/ivProfilePic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/circle_gray"
+                    android:padding="20dp"
+                    android:src="@drawable/ic_person" />
+
+                <ImageView
+                    android:id="@+id/ivAddPhoto"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/circle_blue"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_camera" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvAddPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:text="Thêm Ảnh Hồ sơ"
+                android:textColor="#2196F3"
+                android:textSize="14sp" />
+
+            <!-- Full Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Họ và Tên"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="16sp"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="-16dp" />
+
+            <EditText
+                android:id="@+id/etFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edit_text_background"
+                android:hint="Họ và Tên"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:text="Hung Hoàng" />
+
+            <!-- Country -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quốc gia"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="16sp"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="-16dp" />
+
+            <Spinner
+                android:id="@+id/spinnerCountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/spinner_background"
+                android:padding="12dp"
+                android:spinnerMode="dropdown" />
+
+            <!-- Gender -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giới tính"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinnerGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/spinner_background"
+                android:padding="12dp"
+                android:spinnerMode="dropdown" />
+
+            <!-- Date of Birth -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ngày sinh"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etDateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edit_text_background"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:focusable="false"
+                android:hint="Ngày sinh"
+                android:inputType="none"
+                android:padding="12dp" />
+
+            <!-- Phone Number -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số điện thoại"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edit_text_background"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvCountryCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableEnd="@drawable/ic_dropdown"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:padding="12dp"
+                    android:text="+84"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="8dp"
+                    android:background="#E0E0E0" />
+
+                <EditText
+                    android:id="@+id/etPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="Số điện thoại"
+                    android:inputType="phone"
+                    android:padding="12dp" />
+            </LinearLayout>
+
+            <!-- Email -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edit_text_background"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                android:text="viethung18tuoi@gmail.com" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="#2196F3"
+        android:padding="12dp"
+        android:text="Tiếp tục"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

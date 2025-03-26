@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.RegisterFragment"
+    android:id="@+id/fragment_register">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emailTitleTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Địa chỉ email"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/emailEditTxt"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/plain_text_bg"
+                android:ems="10"
+                android:hint="name@gmail.com"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/passwordSignInTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mật khẩu"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+            <EditText
+                android:id="@+id/passwordEditTxt"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/plain_text_bg"
+                android:ems="10"
+                android:hint="Tạo một mật khẩu"
+                android:inputType="textPassword"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/reTypePasswordTxt"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/plain_text_bg"
+                android:ems="10"
+                android:hint="Xác nhận mật khẩu"
+                android:inputType="textPassword"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/loginTxtBtn"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đã có tài khoản? Đăng nhập ngay"
+                android:textColor="@color/mainColor"
+                android:gravity="center"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>
