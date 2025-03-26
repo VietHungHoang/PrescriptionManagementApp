@@ -1,27 +1,42 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="0dp"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="6dp">
+    android:padding="6dp"
+    android:minWidth="48dp"
+    android:minHeight="64dp"
+    android:layout_marginHorizontal="2dp"
+    android:background="@drawable/bg_selected_day">
 
-    <!-- Thứ -->
+    <!-- Hiển thị thứ trong tuần (CN - T7) -->
     <TextView
-        android:id="@+id/tvWeekday"
+        android:id="@+id/tvDayOfWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="T2"
-        android:textColor="#000000"
-        android:textSize="14sp"/>
-
-    <!-- Ngày -->
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:text="CN"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Hiển thị số ngày -->
+    <TextView
+        android:id="@+id/tvDayNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="20"
-        android:textSize="14sp"
-        android:background="@drawable/bg_circle_gray"/>
-</LinearLayout>
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tvDayOfWeek"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

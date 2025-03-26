@@ -7,6 +7,9 @@
     tools:context=".MedicineScheduleActivity">
 
     <!-- Nội dung chính -->
+
+    <!-- Nút thêm mới -->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,19 +21,19 @@
             android:layout_height="56dp"
             android:background="#2196F3"
             android:padding="12dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/back_btn"
                 android:contentDescription="Quay lại"
+                android:src="@drawable/back_btn"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -40,10 +43,10 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Container lịch -->
@@ -53,13 +56,13 @@
             android:id="@+id/calendarContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerContainer" />
 
-        <FrameLayout
+                <FrameLayout
             android:id="@+id/fragmentMedicineContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -70,7 +73,6 @@
             app:layout_constraintTop_toBottomOf="@id/calendarContainer" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Nút thêm mới -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="56dp"

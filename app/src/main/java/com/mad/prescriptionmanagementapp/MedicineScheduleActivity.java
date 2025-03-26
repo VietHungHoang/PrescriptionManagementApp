@@ -1,56 +1,51 @@
 package com.mad.prescriptionmanagementapp;
 
-import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 public class MedicineScheduleActivity extends AppCompatActivity {
-
-    // Gọi khi Activity được tạo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicine_schedule);
 
-        // Hiển thị Fragment chứa thông tin thuốc
-        loadMedicineFragment();
-
-        // Xử lý FloatingActionButton - Thêm mới phiên thuốc
-//        FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
-//        fabAdd.setOnClickListener(view -> {
-//            // Mở dialog hoặc activity thêm mới
-//            showAddMedicineDialog();
-//        });
-    }
-
-    // Hàm load Fragment vào container
-    private void loadMedicineFragment() {
+        // Thêm CalendarFragment vào calendarContainer
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        MedicineItemFragment medicineFragment = new MedicineItemFragment(); // Tên Fragment bạn đã tạo
-        fragmentTransaction.replace(R.id.fragmentMedicineContainer, medicineFragment);
-        fragmentTransaction.commit();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.calendarContainer, new FragmentCalendar());
+        transaction.commit();
+
+        // Xử lý các tab
+        MaterialButtonToggleGroup tabGroup = findViewById(R.id.tabGroup);
+        MaterialButton btnRemind = findViewById(R.id.btn_remind);
+        MaterialButton btnNoRemind = findViewById(R.id.btn_no_remind);
+        MaterialButton btnDone = findViewById(R.id.btn_done);
+
+        tabGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                // Cập nhật màu nền và màu chữ khi một tab được chọn
+                updateTabState(btnRemind, checkedId == R.id.btn_remind, true);
+                updateTabState(btnNoRemind, checkedId == R.id.btn_no_remind, false);
+                updateTabState(btnDone, checkedId == R.id.btn_done, false);
+            }
+        });
     }
 
-//    // Hiển thị dialog thêm mới (có thể thay đổi tùy chức năng)
-//    private void showAddMedicineDialog() {
-//        Dialog dialog = new Dialog(MedicineScheduleActivity.this);
-//        dialog.setContentView(R.layout.dialog_add_medicine); // Layout thêm mới thuốc bạn tạo
-//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//
-//        Button btnClose = dialog.findViewById(R.id.btnClose);
-//        btnClose.setOnClickListener(view -> dialog.dismiss());
-//
-//        dialog.show();
-//    }
+    // Hàm cập nhật trạng thái màu sắc của tab khi được chọn hoặc không được chọn
+    private void updateTabState(MaterialButton button, boolean isSelected, boolean isFirstTab) {
+        if (isSelected) {
+            button.setBackgroundColor(getResources().getColor(R.color.tab_selected_bg_color));
+            button.setTextColor(getResources().getColor(R.color.tab_selected_text_color));
+        } else {
+            button.setBackgroundColor(getResources().getColor(R.color.tab_unselected_bg_color));
+            button.setTextColor(getResources().getColor(R.color.tab_unselected_text_color));
+        }
+    }
 }

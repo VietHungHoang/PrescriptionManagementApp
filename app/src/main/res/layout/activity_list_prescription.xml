@@ -49,101 +49,104 @@
                 app:layout_constraintVertical_bias="0.177" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Tab  -->
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/tabGroup"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginTop="-24dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginTop="-24dp"
+            android:backgroundTint="@android:color/white"
             android:elevation="4dp"
-            android:padding="4dp"
-            android:background="@drawable/bg_tab_container"
-            app:layout_constraintTop_toBottomOf="@id/headerContainer"
-            app:layout_constraintStart_toStartOf="parent"
+            app:singleSelection="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:singleSelection="true">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerContainer"
+            app:checkedButton="@id/btn_remind">  <!-- Chỉ định tab mặc định là btn_remind -->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_remind"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:text="Đang nhắc"
-                android:textSize="12sp"
-                android:textColor="@color/black"
-                app:checkedIcon="@null"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_weight="1"
                 app:cornerRadius="24dp"
-                app:backgroundTint="@android:color/white" />
+                app:rippleColor="@color/colorAccent"
+                android:backgroundTint="@android:color/white"
+                android:elevation="4dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_no_remind"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:text="Không nhắc"
-                android:textSize="12sp"
-                android:textColor="@color/black"
-                app:checkedIcon="@null"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_weight="1"
                 app:cornerRadius="24dp"
-                app:backgroundTint="@android:color/white" />
+                app:rippleColor="@color/colorAccent"
+                android:backgroundTint="@android:color/white"
+                android:elevation="4dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_done"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:text="Đã xong"
-                android:textSize="12sp"
-                android:textColor="@color/black"
-                app:checkedIcon="@null"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_weight="1"
                 app:cornerRadius="24dp"
-                app:backgroundTint="@android:color/white" />
+                app:rippleColor="@color/colorAccent"
+                android:backgroundTint="@android:color/white"
+                android:elevation="4dp" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+
+
         <!-- RecyclerView hiển thị danh sách đơn thuốc -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPrescriptionList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabGroup"
+        app:layout_constraintVertical_bias="0.0" />
 
-        <!-- FloatingActionButton -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPrescriptionList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="80dp"
-            app:layout_constraintBottom_toTopOf="@id/bottomNav"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabGroup"
-            app:layout_constraintVertical_bias="0.0" />
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/ic_add_white"
+        android:contentDescription="Thêm mới"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:backgroundTint="#2196F3" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAdd"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginBottom="30dp"
-            android:src="@drawable/ic_add_white"
-            android:contentDescription="Thêm mới"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:backgroundTint="#2196F3" />
-
-        <!-- Bottom Navigation -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNav"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:background="@android:color/white"
-            app:itemIconTint="@color/nav_icon_selector"
-            app:itemTextColor="@color/nav_text_selector"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_nav_menu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:background="@android:color/white"
+        app:itemIconTint="@color/nav_icon_selector"
+        app:itemTextColor="@color/nav_text_selector"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
