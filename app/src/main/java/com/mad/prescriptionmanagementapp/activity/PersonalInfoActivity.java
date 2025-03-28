@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp;
+package com.mad.prescriptionmanagementapp.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.mad.prescriptionmanagementapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -1,0 +1,48 @@
+[33mcommit 79d58c4d57393a35d6f64905ccb3e163c524369f[m[33m ([m[1;36mHEAD -> [m[1;32mkiet[m[33m)[m
+Author: VietHungHoang <viethunghoang1508@gmail.com>
+Date:   Thu Mar 27 21:14:10 2025 +0700
+
+    gradle
+
+[33mcommit 5d1f794ca722a570945d003ab27c6863645cca04[m
+Merge: 9adb122 28e320e
+Author: VietHungHoang <viethunghoang1508@gmail.com>
+Date:   Wed Mar 26 21:08:51 2025 +0700
+
+    ok
+
+[33mcommit 9adb122abeef5f531f7ed6f2a3c68960fc6b44be[m
+Author: VietHungHoang <viethunghoang1508@gmail.com>
+Date:   Wed Mar 26 21:07:40 2025 +0700
+
+    25
+
+[33mcommit 28e320e3fd575480275eef140f500b78369a43a0[m[33m ([m[1;31morigin/kiet[m[33m)[m
+Author: kietjune2003 <k.code.2003@gmail.com>
+Date:   Wed Mar 26 20:39:44 2025 +0700
+
+    Calendar and ToggleButton
+
+[33mcommit 05778b47d6ba085cb78c21f852225d21334c9086[m
+Author: kietjune2003 <k.code.2003@gmail.com>
+Date:   Mon Mar 24 15:00:47 2025 +0700
+
+    Kiet first push
+
+[33mcommit a90efad620647dda6a299455e768e5fcb5031c92[m
+Author: kietjune2003 <k.code.2003@gmail.com>
+Date:   Mon Mar 24 15:12:02 2025 +0700
+
+    Thêm AndroidProjectSystem.xml
+
+[33mcommit ad562626350ccbfa66c388e0ffde18f35dd224c2[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: VietHungHoang <viethunghoang1508@gmail.com>
+Date:   Wed Mar 12 18:48:14 2025 +0700
+
+    init project
+
+[33mcommit 1fd542f9719d36dca81a91f86fad6572f26d6125[m
+Author: VietHung <viethunghoang1508@gmail.com>
+Date:   Wed Feb 19 10:04:59 2025 +0700
+
+    Initial commit

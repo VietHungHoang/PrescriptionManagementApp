@@ -13,13 +13,13 @@
         android:theme="@style/Theme.PrescriptionManagementApp"
         tools:targetApi="31">
         <activity
-            android:name=".PersonalInfoActivity"
+            android:name=".activity.PersonalInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".SelectUserType"
+            android:name=".activity.SelectActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,7 @@
         <!-- android:name=".HomeActivity" -->
         <!-- android:exported="false" /> -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login" />
     </application>

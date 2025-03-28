@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp;
+package com.mad.prescriptionmanagementapp.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.mad.prescriptionmanagementapp.R;
 
 public class OptionsDialogFragment extends BottomSheetDialogFragment {
 
