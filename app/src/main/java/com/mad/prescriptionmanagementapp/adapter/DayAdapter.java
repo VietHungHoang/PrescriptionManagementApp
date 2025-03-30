@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp;
+package com.mad.prescriptionmanagementapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,12 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.mad.prescriptionmanagementapp.R;
+
 import java.util.List;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
     private List<String> days;
-    private int selectedDay; // Ngày được chọn
-    private int lastSelectedPosition = -1; // Vị trí ngày được chọn trước đó
+    private int selectedDay;
+    private int lastSelectedPosition = -1;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -25,7 +28,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         this.selectedDay = selectedDay;
         this.listener = listener;
 
-        // Tìm vị trí ngày được chọn ban đầu
         for (int i = 0; i < days.size(); i++) {
             if (Integer.parseInt(days.get(i).split(" ")[1]) == selectedDay) {
                 lastSelectedPosition = i;
@@ -58,31 +60,35 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
             super(itemView);
             tvDayOfWeek = itemView.findViewById(R.id.tvDayOfWeek);
             tvDayNumber = itemView.findViewById(R.id.tvDayNumber);
+
+            // Kiểm tra nếu ID bị null -> báo lỗi
+            if (tvDayOfWeek == null || tvDayNumber == null) {
+                throw new RuntimeException("Lỗi: Không tìm thấy tvDayOfWeek hoặc tvDayNumber trong item_day.xml");
+            }
         }
 
         public void bind(String day, int position) {
             Context context = itemView.getContext();
             String[] parts = day.split(" ");
-            tvDayOfWeek.setText(parts[0]); // T2, T3, ...
-            tvDayNumber.setText(parts[1]); // 25, 26, ...
+            tvDayOfWeek.setText(parts[0]);
+            tvDayNumber.setText(parts[1]);
 
             int dayNumber = Integer.parseInt(parts[1]);
             boolean isSelected = (position == lastSelectedPosition);
 
-            // Cập nhật UI khi chọn ngày
+            // Cập nhật màu nền và màu chữ cho item
             itemView.setBackgroundResource(isSelected ? R.drawable.bg_selected_day : android.R.color.transparent);
             int textColor = ContextCompat.getColor(context, isSelected ? android.R.color.white : android.R.color.black);
             tvDayOfWeek.setTextColor(textColor);
             tvDayNumber.setTextColor(textColor);
 
-            // Bắt sự kiện click
+            // Cập nhật click event
             itemView.setOnClickListener(v -> {
                 if (lastSelectedPosition != position) {
                     int previousPosition = lastSelectedPosition;
                     lastSelectedPosition = position;
                     selectedDay = dayNumber;
 
-                    // Chỉ cập nhật lại 2 vị trí thay vì toàn bộ danh sách
                     if (previousPosition != -1) notifyItemChanged(previousPosition);
                     notifyItemChanged(position);
 
@@ -92,7 +98,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         }
     }
 
-    // Cập nhật dữ liệu mới cho adapter
     public void updateDays(List<String> newDays, int selectedDay) {
         this.days = newDays;
         this.selectedDay = selectedDay;
@@ -108,7 +113,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         notifyDataSetChanged();
     }
 
-    // Đặt ngày được chọn mới
     public void setSelectedDate(int day) {
         for (int i = 0; i < days.size(); i++) {
             if (Integer.parseInt(days.get(i).split(" ")[1]) == day) {

@@ -6,19 +6,6 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <!-- Guideline để căn chỉnh khoảng cách động -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.1"/> <!-- 10% từ mép trái -->
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineEnd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.9"/> <!-- 90% từ mép trái -->
-
     <!-- Hiển thị tháng/năm -->
     <TextView
         android:id="@+id/tvMonthYear"
@@ -38,8 +25,7 @@
 
     <!-- Nhóm chứa cả nút và RecyclerView -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutWeekContainer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tvMonthYear"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,12 +35,12 @@
         <!-- Nút chuyển về tuần trước -->
         <ImageView
             android:id="@+id/btnPrevWeek"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_arrow_left"
             android:contentDescription="Tuần trước"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp"
+            android:padding="6dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
@@ -64,26 +50,33 @@
             android:id="@+id/recyclerViewDays"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:minWidth="320dp"
             android:clipToPadding="false"
-            android:paddingHorizontal="8dp"
+            android:paddingHorizontal="2dp"
             android:paddingVertical="4dp"
+            android:paddingEnd="6dp"
             app:layout_constraintStart_toEndOf="@id/btnPrevWeek"
             app:layout_constraintEnd_toStartOf="@id/btnNextWeek"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent="0.88"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="7" />
 
         <!-- Nút chuyển sang tuần tiếp theo -->
         <ImageView
             android:id="@+id/btnNextWeek"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_arrow_right"
             android:contentDescription="Tuần tiếp theo"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="8dp"
+            android:padding="6dp"
+            android:layout_marginStart="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

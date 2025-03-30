@@ -14,16 +14,16 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-<!--        &lt;!&ndash; Ngày &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvDate"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Ngày 30/02/2025"-->
-<!--            android:textSize="14sp"-->
-<!--            android:textColor="#2196F3"-->
-<!--            android:textStyle="bold"-->
-<!--            android:layout_marginBottom="8dp" />-->
+        <!--        &lt;!&ndash; Ngày &ndash;&gt;-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/tvDate"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Ngày 30/02/2025"-->
+        <!--            android:textSize="14sp"-->
+        <!--            android:textColor="#2196F3"-->
+        <!--            android:textStyle="bold"-->
+        <!--            android:layout_marginBottom="8dp" />-->
 
         <!-- Nội dung đơn thuốc -->
         <LinearLayout
@@ -64,12 +64,12 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_edit"
-                android:tint="#757575"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Chỉnh sửa"
-            android:padding="4dp"
-            android:clickable="true"
-            android:focusable="true" />
+
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Chỉnh sửa"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

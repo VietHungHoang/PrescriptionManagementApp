@@ -1,9 +1,12 @@
-package com.mad.prescriptionmanagementapp;
+package com.mad.prescriptionmanagementapp.view;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.mad.prescriptionmanagementapp.R;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -21,7 +24,7 @@ public class MedicineActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_medicine_item); // đổi tên file layout đúng
 
         tvTime = findViewById(R.id.tvTime);
-        tvPrescription = findViewById(R.id.tvPrescription);
+
         tvMedicineList = findViewById(R.id.tvMedicineList);
 
         // Gọi API

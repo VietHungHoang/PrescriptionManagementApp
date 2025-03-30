@@ -9,13 +9,11 @@
     app:cardElevation="6dp"
     android:background="@android:color/white">
 
-    <!-- Không padding tại đây để tvTime sát lề -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white">
 
-        <!-- Giờ uống thuốc: SÁT LỀ trên/dưới/trái -->
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="60dp"
@@ -30,9 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-        <!-- Info thuốc: có border trái xanh, cách giờ 12dp, có padding -->
         <LinearLayout
-            android:id="@+id/medicineInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -47,93 +43,105 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/actionButtons">
 
-            <TextView
-                android:id="@+id/tvPrescription"
-                android:layout_width="wrap_content"
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Đơn thuốc tại bệnh viện P"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/tvMedicineList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Paracetamol 500mg - 1 viên\nAmlodipine + Atorvastatin - 2 viên"
+                    android:textColor="#555555"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+
 
             <TextView
-                android:id="@+id/tvMedicineList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Paracetamol 500mg\nAmlodipine + Atorvastatin"
-                android:textColor="#555555"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvDetails"
+                android:id="@+id/tvDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="Xem chi tiết"
                 android:textColor="#2196F3"
                 android:textSize="14sp" />
+
         </LinearLayout>
 
-        <!-- Nút Dùng / Bỏ qua -->
         <LinearLayout
             android:id="@+id/actionButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
+            android:minHeight="48dp"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <!-- Dùng -->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:layout_marginBottom="8dp">
-
-                <ImageView
-                    android:id="@+id/imgIconUse"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@drawable/check___off" />
-
-                <TextView
-                    android:id="@+id/tvUse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Dùng"
-                    android:textColor="#2196F3"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <!-- Bỏ qua -->
-            <LinearLayout
+                android:id="@+id/statusContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imgIconSkip"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@drawable/skip___off" />
-
-                <TextView
-                    android:id="@+id/tvSkip"
+                <LinearLayout
+                    android:id="@+id/btnUsed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Bỏ Qua"
-                    android:textColor="#000000"
-                    android:textSize="12sp" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imgUsed"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/check___off" />
+
+                    <TextView
+                        android:id="@+id/tvUsed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Dùng"
+                        android:textColor="#2196F3"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnSkip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imgSkip"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/skip___off" />
+
+                    <TextView
+                        android:id="@+id/tvSkip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Bỏ Qua"
+                        android:textColor="#000000"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
