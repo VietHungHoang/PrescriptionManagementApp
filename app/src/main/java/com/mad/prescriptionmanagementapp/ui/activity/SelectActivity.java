@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.fragment.AddCustomerInfoFragment;
 import com.mad.prescriptionmanagementapp.fragment.SelectUserTypeFragment;
 
 public class SelectActivity extends AppCompatActivity implements SelectUserTypeFragment.OnUserTypeSelectedListener {
@@ -63,10 +64,24 @@ public class SelectActivity extends AppCompatActivity implements SelectUserTypeF
     }
 
     @Override
-    public void onUserTypeSelected(boolean isSelected) {
-        if (isSelected) {
+    public void onUserTypeSelected(String userType) {
             btnConfirm.setAlpha(1f);
             btnConfirm.setEnabled(true);
-        }
+        btnConfirm.setOnClickListener(v -> {
+            if (userType.equals("CUSTOMER")) {
+                replaceFragment(new AddCustomerInfoFragment());
+            }
+        });
     }
+
+    public void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+
 }

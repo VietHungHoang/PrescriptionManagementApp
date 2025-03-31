@@ -27,7 +27,7 @@ public class SelectUserTypeFragment extends Fragment {
     private ImageView tickUser, tickDoctor;
 
     public interface OnUserTypeSelectedListener {
-        void onUserTypeSelected(boolean isSelected);
+        void onUserTypeSelected(String userType);
     }
 
     private OnUserTypeSelectedListener mListener;
@@ -90,7 +90,7 @@ public class SelectUserTypeFragment extends Fragment {
             tickDoctor.setVisibility(View.VISIBLE);
         }
         if (mListener != null) {
-            mListener.onUserTypeSelected(true);
+            mListener.onUserTypeSelected("CUSTOMER");
         }
     }
 }
