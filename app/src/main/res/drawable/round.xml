@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="326dp"
+    android:height="138dp"
+    android:viewportWidth="326"
+    android:viewportHeight="138">
+
+    <group>
+        <!-- Định nghĩa vùng bo góc -->
+        <clip-path
+            android:pathData="M15 0H311C319.284 0 326 6.71573 326 15V123C326 131.284 319.284 138 311 138H15C6.71573 138 0 131.284 0 123V15C0 6.71573 6.71573 0 15 0Z"/>
+
+        <!-- Nền màu trắng -->
+        <path
+            android:pathData="M0 0V138H326V0"
+            android:fillColor="#FFFFFF"/>
+
+        <!-- Viền màu xám -->
+        <path
+            android:pathData="M15 0H311C319.284 0 326 6.71573 326 15V123C326 131.284 319.284 138 311 138H15C6.71573 138 0 131.284 0 123V15C0 6.71573 6.71573 0 15 0Z"
+            android:strokeWidth="2"
+            android:strokeColor="#B2B0B0"/>
+    </group>
+</vector>

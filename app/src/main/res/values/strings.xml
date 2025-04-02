@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PrescriptionManagementApp</string>
+    <string name="ten_lich_hen"><![CDATA[<font color="#FF0000">*</font> Tên Lịch Hẹn]]></string>
+
 </resources>
