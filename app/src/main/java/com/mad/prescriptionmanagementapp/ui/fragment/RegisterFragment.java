@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.fragment;
+package com.mad.prescriptionmanagementapp.ui.fragment;
 
 import android.os.Bundle;
 

@@ -1,4 +1,4 @@
-//package com.mad.prescriptionmanagementapp.activity;
+//package com.mad.prescriptionmanagementapp.ui.activity;
 //
 //import android.os.Bundle;
 //import android.view.View;

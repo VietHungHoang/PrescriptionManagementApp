@@ -10,6 +10,11 @@
         <item name="cornerFamily">rounded</item>
     </style>
 
+    <style name="dropdownBackground">
+        <item name="android:background">@drawable/edittext_bg_normal</item>
+        <item name="android:drawableEnd">@drawable/ic_dropdown</item>
+    </style>
+
     <style name="Theme.PrescriptionManagementApp" parent="Base.Theme.PrescriptionManagementApp" />
 
 </resources>
