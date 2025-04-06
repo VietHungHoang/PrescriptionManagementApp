@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="lineSelectColor">#F5F5F5</color>
+    <color name="chartLate">#ED791D</color>
+    <color name="chartOnTime">#28A745</color>
+    <color name="chartNoDrink">#FF4D4D</color>
 </resources>
