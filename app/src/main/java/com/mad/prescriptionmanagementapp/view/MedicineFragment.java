@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.mad.prescriptionmanagementapp.adapter.MedicineAdapter;
 import com.mad.prescriptionmanagementapp.model.MedicineItem;
 import com.mad.prescriptionmanagementapp.R;
 import java.util.ArrayList;

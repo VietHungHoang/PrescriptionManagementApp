@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.view;
+package com.mad.prescriptionmanagementapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mad.prescriptionmanagementapp.model.MedicineItem;
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.view.OnMedicineActionListener;
+
 import java.util.List;
 
 public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHolder> {

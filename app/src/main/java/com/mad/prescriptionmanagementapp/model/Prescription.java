@@ -1,19 +1,34 @@
 package com.mad.prescriptionmanagementapp.model;
 
 public class Prescription {
-    private String title;
-    private String medicines;
+    private String drugName;
+    private String schedule;
 
-    public Prescription(String title, String medicines) {
-        this.title = title;
-        this.medicines = medicines;
+
+    // Constructor
+    public Prescription(String drugName, String schedule) {
+        this.drugName = drugName;
+        this.schedule = schedule;
+
     }
 
-    public String getTitle() {
-        return title;
+    // Getter and Setter
+    public String getDrugName() {
+        return drugName;
     }
 
-    public String getMedicines() {
-        return medicines;
+    public void setDrugName(String drugName) {
+        this.drugName = drugName;
     }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+
+
+
 }

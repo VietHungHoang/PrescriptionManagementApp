@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.adapter.MedicineTableAdapter;
 import com.mad.prescriptionmanagementapp.model.MedicineItem;
 import com.mad.prescriptionmanagementapp.model.MedicineTableItem;
 

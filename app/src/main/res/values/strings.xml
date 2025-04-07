@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">PrescriptionManagementApp</string>
+    <string-array name="unit_array">
+        <item>Viên</item>
+        <item>Gói</item>
+        <item>Ống</item>
+        <item>Thể tích (ml)</item>
+    </string-array>
+
+    <string name="select_unit">Chọn đơn vị</string>
+    <string-array name="frequency_array">
+        <item>Mỗi ngày</item>
+        <item>Cách số ngày</item>
+        <item>Ngày cụ thể trong tuần</item>
+    </string-array>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.view;
+package com.mad.prescriptionmanagementapp.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

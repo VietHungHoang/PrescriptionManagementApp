@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="blue">#2196F3</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="gray">#B2B0B0</color>
 
     <color name="tab_selected_bg_color">#2196F3</color>
     <color name="tab_selected_text_color">#FFFFFF</color>
-
+    <color name="transparent">#00000000</color>
 
     <color name="tab_unselected_bg_color">#FFFFFF</color>
     <color name="tab_unselected_text_color">#000000</color>
