@@ -37,23 +37,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.initParam();
         this.setupObservers();
-
-        this.btnLogin.setOnClickListener(v -> this.validateLogin());
-        this.txtBtnRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, SelectActivity.class);
-            intent.putExtra("FRAGMENT_TYPE", "SELECT_USER_TYPE");
-            startActivity(intent);
-
-        });
-
-        this.progressBar = findViewById(R.id.progressBar); // Thêm ProgressBar vào layout nếu muốn
-
-
-        this.btnGoogleLogin.setOnClickListener(v -> {
-            Log.d(Constants.TAG, "Sign-in button clicked.");
-            // Truyền context vào ViewModel khi bắt đầu sign-in
-            viewModel.startGoogleSignIn(this);
-        });
     }
 
     private void initParam() {
@@ -68,10 +51,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void setupObservers() {
-        // Quan sát trạng thái xác thực
+        // Observer authentication status
         this.viewModel.authStatus.observe(this, status -> {
             Log.d(Constants.TAG, "Auth Status Changed: " + status);
-            updateUIBasedOnStatus(status);
+            this.updateUIBasedOnStatus(status);
         });
 
         // Quan sát thông báo lỗi
