@@ -6,4 +6,5 @@
     <color name="chartLate">#ED791D</color>
     <color name="chartOnTime">#28A745</color>
     <color name="chartNoDrink">#FF4D4D</color>
+    <color name="blue">#0B72C1</color>
 </resources>
