@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-////
 
-=======
 //package com.mad.prescriptionmanagementapp.ui.activity;
 //
 //public class MainActivity extends AppCompatActivity {
@@ -24,4 +21,3 @@
 //
 //
 //}
->>>>>>> hung
