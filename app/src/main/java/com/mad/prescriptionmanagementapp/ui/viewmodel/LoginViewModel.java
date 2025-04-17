@@ -21,6 +21,8 @@ import androidx.credentials.exceptions.GetCredentialException;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
@@ -30,6 +32,7 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.response.LoginResponse;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.GoogleAuthRespone;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.repository.LoginRepository;
+import com.mad.prescriptionmanagementapp.reminder.ReminderWorker;
 import com.mad.prescriptionmanagementapp.util.AuthStatus;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.Event;
@@ -38,6 +41,7 @@ import com.mad.prescriptionmanagementapp.util.Resource;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -127,6 +131,16 @@ public class LoginViewModel extends AndroidViewModel {
         }
         return isValid;
     }
+
+    public void handle() {
+        OneTimeWorkRequest request =
+                new OneTimeWorkRequest.Builder(ReminderWorker.class)
+                        .setInitialDelay(100, TimeUnit.MILLISECONDS)
+                        .build();
+
+        WorkManager.getInstance(this.getApplication()).enqueue(request);
+    }
+
 
 
     // Start the Google login flow

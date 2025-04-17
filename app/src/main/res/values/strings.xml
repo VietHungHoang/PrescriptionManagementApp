@@ -50,4 +50,16 @@
     <string name="select_profile_photo">Chọn ảnh hồ sơ</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string name="reminder_title">Đến giờ uống thuốc!</string>
+        <string name="reminder_action_taken">ĐÃ UỐNG</string>
+        <string name="reminder_action_snooze">Báo lại (10 phút)</string> <!-- Hoặc chỉ "Báo lại" -->
+        <string name="reminder_action_skip">Bỏ qua</string>
+    <string name="medication_reminder_icon">Biểu tượng nhắc nhở thuốc</string>
+    <string name="prescription_title">ĐƠN THUỐC</string>
+    <string name="medications_list_title">DANH SÁCH THUỐC</string>
+    <string name="pill_icon">Biểu tượng viên thuốc</string>
+    <string name="remind_later">Báo lại sau</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="confirm">Xác nhận</string>
+        <!-- Thêm các string khác nếu cần -->
 </resources>
