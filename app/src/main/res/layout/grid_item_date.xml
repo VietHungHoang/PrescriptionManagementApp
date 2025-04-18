@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="12dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/bg_date_item"
+    android:elevation="4dp"
+    android:layout_marginBottom="12dp">
+
+    <!-- TextView cho tên ngày -->
+    <TextView
+        android:id="@+id/dayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="T2" />
+
+    <!-- CheckBox cho chọn ngày -->
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:buttonTint="@android:color/white"
+        android:text="Chọn"
+        android:visibility="gone"/>
+</LinearLayout>

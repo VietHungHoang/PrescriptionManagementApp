@@ -33,6 +33,10 @@ android {
     }
     buildFeatures {
         dataBinding = true
+<<<<<<< HEAD
+=======
+        viewBinding = true
+>>>>>>> kiet
     }
 }
 
