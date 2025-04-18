@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/option_add_prescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm đơn thuốc"
+        android:padding="12dp" />
+
+    <TextView
+        android:id="@+id/option_add_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thêm lịch hẹn"
+        android:padding="12dp" />
+</LinearLayout>
