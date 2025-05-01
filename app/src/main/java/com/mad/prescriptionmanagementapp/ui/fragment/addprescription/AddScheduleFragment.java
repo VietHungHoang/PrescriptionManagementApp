@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
@@ -30,7 +32,7 @@ public class AddScheduleFragment extends Fragment {
 
     private FragmentAddScheduleBinding binding;
     private AddPrescriptionViewModel viewModel;
-    private AutoCompleteTextView spinnerUnit;
+    private Spinner spinnerUnit;
     public AddScheduleFragment() {
         // Required empty public constructor
     }
@@ -83,14 +85,14 @@ public class AddScheduleFragment extends Fragment {
 
         this.spinnerUnit.setAdapter(adapter);
 
-        this.spinnerUnit.setOnTouchListener((v, event) -> {
-            if (spinnerUnit.getDropDownHeight() > 0) {
-                spinnerUnit.dismissDropDown();
-            } else {
-                spinnerUnit.showDropDown();
-            }
-            return true;
-        });
+//        this.spinnerUnit.setOnTouchListener((v, event) -> {
+//            if (spinnerUnit.getDropDownHeight() > 0) {
+//                spinnerUnit.dismissDropDown();
+//            } else {
+//                spinnerUnit.showDropDown();
+//            }
+//            return true;
+//        });
 
         this.setStartDate();
         this.binding.spinnerFrequency.setOnClickListener(v -> {

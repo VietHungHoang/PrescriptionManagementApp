@@ -5,7 +5,8 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="edt_height">48dp</dimen>
     <dimen name="padding_horizontal">24dp</dimen>
-    <dimen name="edt_textsize">16sp</dimen>
-    <dimen name="lbl_textsize">15dp</dimen>
+    <dimen name="edt_textsize">17sp</dimen>
+    <dimen name="lbl_textsize">16sp</dimen>
     <dimen name="edt_padding">16sp</dimen>
+    <dimen name="error_textsize">14sp</dimen>
 </resources>

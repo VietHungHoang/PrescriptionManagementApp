@@ -58,13 +58,6 @@ public class AddMedicineActivity extends AppCompatActivity {
             layoutNhacNho.setVisibility(View.GONE);    // Ẩn layout nếu không bật
         }
 
-        // Kiểm tra trạng thái của switch Kham benh
-        if (switchKhamBenh.isChecked()) {
-            setKhamBenhEnabled(true);  // Kích hoạt các trường khám bệnh
-        } else {
-            setKhamBenhEnabled(false); // Tắt các trường khám bệnh
-        }
-
         // Listener cho Switch "Nhắc nhở uống thuốc"
         switchNhacNho.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -74,14 +67,7 @@ public class AddMedicineActivity extends AppCompatActivity {
             }
         });
 
-        // Listener cho Switch "Thêm thông tin khám bệnh"
-        switchKhamBenh.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                setKhamBenhEnabled(true);
-            } else {
-                setKhamBenhEnabled(false);
-            }
-        });
+
 
         // Listener cho DatePicker khi click vào các trường ngày
         edtNgayBatDau.setOnClickListener(v -> showDatePicker(edtNgayBatDau));
@@ -128,11 +114,5 @@ public class AddMedicineActivity extends AppCompatActivity {
     }
 
     // Hàm để kích hoạt hoặc tắt các trường thông tin khám bệnh
-    private void setKhamBenhEnabled(boolean isEnabled) {
-        cardKhamBenh.setVisibility(isEnabled ? View.VISIBLE : View.GONE);
-        edtBenhVien.setEnabled(isEnabled);
-        edtTenBacSi.setEnabled(isEnabled);
-        edtNgayKham.setEnabled(isEnabled);
-        edtNgayTaiKham.setEnabled(isEnabled);
-    }
+
 }

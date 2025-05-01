@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    >
     <data>
         <variable
             name="viewModel"
@@ -10,43 +10,42 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F5F5F9">
+        android:background="#FDFDFD"
+        android:padding="@dimen/edt_padding">
 
         <EditText
-            android:id="@+id/search_medication"
+            android:id="@+id/search_drug"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="48dp"
             android:background="@drawable/search_background"
-            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp"
             android:hint="Nhập tên thuốc"
-            android:padding="12dp"
-            android:textColorHint="#888888" />
+            android:paddingHorizontal="@dimen/edt_padding"
+            android:textColorHint="#888888"
+            android:textSize="@dimen/edt_textsize"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/medication_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_medication"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_below="@id/search_drug"
             android:clipToPadding="false"
             android:paddingBottom="8dp"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:layout_marginTop="16dp"/>
 
-        <com.mad.prescriptionmanagementapp.ui.view.AlphabetIndexView
-            android:id="@+id/alphabet_index"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/search_medication"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="#E0E0E0" />
+<!--        <com.mad.prescriptionmanagementapp.ui.view.AlphabetIndexView-->
+<!--            android:padding="@dimen/edt_padding"-->
+<!--            android:id="@+id/alphabet_index"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_below="@id/search_drug"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:background="#E0E0E0"-->
+<!--            />-->
 
     </RelativeLayout>
 

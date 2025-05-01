@@ -1,6 +1,7 @@
 package com.mad.prescriptionmanagementapp.ui.viewmodel;
 
 import android.app.Application;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -17,6 +18,7 @@ import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -25,10 +27,20 @@ import lombok.Setter;
 public class AddPrescriptionViewModel extends AndroidViewModel {
     private DrugRepository drugRepository;
     private LiveData<List<DrugResponse>> drugsList;
-
     private final MutableLiveData<List<DrugInPresRequest>> _selectedDrug = new MutableLiveData<>();
-
     public LiveData<List<DrugInPresRequest>> selectedDrug = this._selectedDrug;
+    private MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    @Getter
+    private boolean nameEmpty;
+
+    public LiveData<String> getErrorMessage() {
+        return this.errorMessage;
+    }
+
+    public void resetErrorMessage() {
+        this.errorMessage.setValue(null);
+    }
+
 
     public void addDrug(DrugInPresRequest drug) {
         List<DrugInPresRequest> current = this._selectedDrug.getValue();
@@ -84,6 +96,30 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 //            }
 //        });
 //    }
+
+    // Login handle for error message
+    private boolean validateAddPrescriptionInfo(String presName) {
+        if(presName.trim().isEmpty()) {
+            this.nameEmpty = true;
+            this.errorMessage.setValue("Tên đơn thuốc không được để trống");
+            return false;
+
+        } else {
+            this.nameEmpty = false;
+            if(this.selectedDrug.getValue() == null || this.selectedDrug.getValue().isEmpty()) {
+                this.errorMessage.setValue("Vui lòng nhập ít nhất một thuốc");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void handleBtnSavePres(String presName) {
+        if(this.validateAddPrescriptionInfo(presName)) {
+
+        }
+    }
+
 
 
 }

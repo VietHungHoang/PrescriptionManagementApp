@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
-import com.mad.prescriptionmanagementapp.databinding.ItemMedicationBinding;
+import com.mad.prescriptionmanagementapp.databinding.ViewholderDrugBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnItemClickListener;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
     @NonNull
     @Override
     public DrugViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemMedicationBinding binding = ItemMedicationBinding.inflate(
+        ViewholderDrugBinding binding = ViewholderDrugBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
         return new DrugViewHolder(binding, listener);
     }
@@ -41,17 +41,17 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
     }
 
     static class DrugViewHolder extends RecyclerView.ViewHolder {
-        private final ItemMedicationBinding binding;
+        private final ViewholderDrugBinding binding;
         private final OnItemClickListener<DrugResponse> clickListener;
 
-        public DrugViewHolder(ItemMedicationBinding binding, OnItemClickListener<DrugResponse> clickListener) {
+        public DrugViewHolder(ViewholderDrugBinding binding, OnItemClickListener<DrugResponse> clickListener) {
             super(binding.getRoot());
             this.binding = binding;
             this.clickListener = clickListener;
         }
 
         public void bind(DrugResponse drug) {
-            this.binding.medicationName.setText(drug.getName());
+            this.binding.drugName.setText(drug.getName());
             this.binding.getRoot().setOnClickListener(v -> {
                 if (clickListener != null) {
                     clickListener.onItemClick(drug);
