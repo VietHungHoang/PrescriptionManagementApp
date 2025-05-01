@@ -1,8 +1,7 @@
-package com.mad.prescriptionmanagementapp.view;
+package com.mad.prescriptionmanagementapp.ui.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,11 +12,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.view.FrequencySelectionActivity;
+import com.mad.prescriptionmanagementapp.view.TimeAndDosageActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;

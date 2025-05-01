@@ -33,10 +33,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
-<<<<<<< HEAD
-=======
         viewBinding = true
->>>>>>> kiet
     }
 }
 
@@ -51,6 +48,8 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.legacy.support.v4)
     implementation(libs.recyclerview)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -68,4 +67,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-jackson:2.11.0")
     implementation("androidx.work:work-runtime:2.10.0")
 //    implementation 'androidx.core:core-ktx:1.12.0' // nếu dùng NotificationCompat
+    implementation ("androidx.room:room-runtime:2.7.1")
+    annotationProcessor ("androidx.room:room-compiler:2.7.1")
+    implementation("org.modelmapper:modelmapper:3.2.2")
 }

@@ -63,7 +63,7 @@
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/gray">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_ten_don_thuoc"
+                android:id="@+id/edt_prescription_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"

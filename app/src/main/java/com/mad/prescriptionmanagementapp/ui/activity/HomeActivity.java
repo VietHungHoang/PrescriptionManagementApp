@@ -1,5 +1,6 @@
 package com.mad.prescriptionmanagementapp.ui.activity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -9,14 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.databinding.ActivityHomeBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.HomeViewModel;
-import com.mad.prescriptionmanagementapp.ui.viewmodel.LoginViewModel;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
@@ -59,7 +58,8 @@ public class HomeActivity extends AppCompatActivity {
         View sheetView = getLayoutInflater().inflate(R.layout.dialog_add_options, null);
 
         sheetView.findViewById(R.id.option_add_prescription).setOnClickListener(v -> {
-            viewModel.onAddPrescriptionClicked();
+//            viewModel.onAddPrescriptionClicked();
+            this.startActivity(new Intent(this, AddPrescriptionActivity.class));
             dialog.dismiss();
         });
 

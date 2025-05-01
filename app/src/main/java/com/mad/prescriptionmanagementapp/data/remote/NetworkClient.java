@@ -2,6 +2,7 @@ package com.mad.prescriptionmanagementapp.data.remote;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mad.prescriptionmanagementapp.data.remote.api.DrugService;
 import com.mad.prescriptionmanagementapp.data.remote.api.LoginService;
 import com.mad.prescriptionmanagementapp.data.remote.api.UserService;
 import com.mad.prescriptionmanagementapp.util.Constants;
@@ -14,6 +15,8 @@ public class NetworkClient {
     private static Retrofit retrofit = null;
     private static LoginService loginService = null;
     private static UserService userService = null;
+
+    private static DrugService drugService = null;
 
     private static Retrofit getClient() {
         if (retrofit == null) {
@@ -40,5 +43,12 @@ public class NetworkClient {
             NetworkClient.userService = NetworkClient.getClient().create(UserService.class);
         }
         return NetworkClient.userService;
+    }
+
+    public static DrugService getDrugService() {
+        if (NetworkClient.drugService == null) {
+            NetworkClient.drugService = NetworkClient.getClient().create(DrugService.class);
+        }
+        return NetworkClient.drugService;
     }
 }

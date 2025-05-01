@@ -1,11 +1,10 @@
-package com.mad.prescriptionmanagementapp.view;
+package com.mad.prescriptionmanagementapp.ui.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 
@@ -36,7 +35,7 @@ public class AddMedicineActivity extends AppCompatActivity {
         switchKhamBenh = findViewById(R.id.switch_kham_benh);
         layoutNhacNho = findViewById(R.id.layout_nhac_nho);
         cardKhamBenh = findViewById(R.id.card_kham_benh);
-        edtTenDonThuoc = findViewById(R.id.edt_ten_don_thuoc);
+        edtTenDonThuoc = findViewById(R.id.edt_prescription_name);
         edtNgayBatDau = findViewById(R.id.edt_ngay_bat_dau);
         edtSoNgay = findViewById(R.id.edt_so_ngay);
         edtBenhVien = findViewById(R.id.edt_benh_vien);

@@ -235,7 +235,6 @@
                     android:textColor="@color/black"
                     />
             </LinearLayout>
-
         </LinearLayout>
 </FrameLayout>
 </layout>
