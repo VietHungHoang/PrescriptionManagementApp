@@ -1,8 +1,7 @@
-package com.mad.prescriptionmanagementapp.ui.fragment;
+package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,12 +17,8 @@ import android.widget.AutoCompleteTextView;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
-import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddScheduleBinding;
-import com.mad.prescriptionmanagementapp.ui.activity.AddScheduleActivity;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
-import com.mad.prescriptionmanagementapp.view.FrequencySelectionActivity;
-import com.mad.prescriptionmanagementapp.view.TimeAndDosageActivity;
 
 import java.util.Calendar;
 import java.util.List;

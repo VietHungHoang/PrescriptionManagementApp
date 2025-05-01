@@ -32,11 +32,12 @@
     <color name="text_on_primary">#FFFFFF</color>
     <color name="text_on_secondary">#FFFFFF</color>
     <color name="text_on_warning">#FFFFFF</color>
-
+    <color name="add_btn">#113E96FA</color>
     <color name="tab_selected_bg_color">#2196F3</color>
     <color name="tab_selected_text_color">#FFFFFF</color>
     <color name="transparent">#00000000</color>
-
+    <color name="toggle_track_color">#E2E2E2</color>
     <color name="tab_unselected_bg_color">#FFFFFF</color>
     <color name="tab_unselected_text_color">#000000</color>
+    <color name="btn_end_background">#40F8F8F8</color>
 </resources>

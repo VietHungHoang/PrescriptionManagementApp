@@ -42,7 +42,7 @@ public class AddMedicineActivity extends AppCompatActivity {
         edtTenBacSi = findViewById(R.id.edt_ten_bac_si);
         edtNgayKham = findViewById(R.id.edt_ngay_kham);
         edtNgayTaiKham = findViewById(R.id.edt_ngay_tai_kham);
-        btnThemThuoc = findViewById(R.id.btn_them_thuoc);
+        btnThemThuoc = findViewById(R.id.btn_add_drug);
         btnLuu = findViewById(R.id.btn_luu);
         ImageView btnClose = findViewById(R.id.btn_close);
 

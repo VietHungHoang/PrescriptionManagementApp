@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.ui.fragment;
+package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
 import android.os.Bundle;
 
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.TimeDosageRequest;
-import com.mad.prescriptionmanagementapp.databinding.FragmentAddScheduleBinding;
 import com.mad.prescriptionmanagementapp.databinding.FragmentTimeDosageSelectionBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
