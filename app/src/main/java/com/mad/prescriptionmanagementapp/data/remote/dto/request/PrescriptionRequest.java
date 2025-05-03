@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class PrescriptionRequest {
-    private List<DrugInPresRequest> drugs = new ArrayList<>();
+    private List<DrugInPres> drugs = new ArrayList<>();
     private String hospital;
     private Doctor doctor;
     private String doctorName;
     private LocalDate consultationDate;
     private LocalDate followUpDate;
 
-    public void addDrug(DrugInPresRequest drug) {
+    public void addDrug(DrugInPres drug) {
         this.drugs.add(drug);
     }
 }

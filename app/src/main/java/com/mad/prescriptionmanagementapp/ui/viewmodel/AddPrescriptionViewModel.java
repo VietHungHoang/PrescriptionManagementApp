@@ -1,7 +1,6 @@
 package com.mad.prescriptionmanagementapp.ui.viewmodel;
 
 import android.app.Application;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -10,15 +9,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.mad.prescriptionmanagementapp.data.mapper.DrugMapper;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.data.repository.DrugRepository;
-import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
@@ -27,8 +24,9 @@ import lombok.Setter;
 public class AddPrescriptionViewModel extends AndroidViewModel {
     private DrugRepository drugRepository;
     private LiveData<List<DrugResponse>> drugsList;
-    private final MutableLiveData<List<DrugInPresRequest>> _selectedDrug = new MutableLiveData<>();
-    public LiveData<List<DrugInPresRequest>> selectedDrug = this._selectedDrug;
+    private final MutableLiveData<List<DrugInPres>> listSelectedDrug = new MutableLiveData<>();
+    public LiveData<List<DrugInPres>> selectedDrug = this.listSelectedDrug;
+    private MutableLiveData<DrugInPres> currentDrug = new MutableLiveData<>();
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
     @Getter
     private boolean nameEmpty;
@@ -41,13 +39,22 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         this.errorMessage.setValue(null);
     }
 
+    public LiveData<String> getCurrentDrugName() {
+        return Transformations.map(currentDrug, drug ->
+                drug != null ? drug.getDrugResponse().getName() : ""
+        );
+    }
 
-    public void addDrug(DrugInPresRequest drug) {
-        List<DrugInPresRequest> current = this._selectedDrug.getValue();
+
+    public void addCurrentDrug(DrugInPres drug) {
+        this.currentDrug.setValue(drug);
+    }
+    public void addDrug(DrugInPres drug) {
+        List<DrugInPres> current = this.listSelectedDrug.getValue();
         if (current == null) current = new ArrayList<>();
-        List<DrugInPresRequest> updated = new ArrayList<>(current);
+        List<DrugInPres> updated = new ArrayList<>(current);
         updated.add(drug);
-        this._selectedDrug.setValue(updated);
+        this.listSelectedDrug.setValue(updated);
     }
 
     private final MutableLiveData<String> selectedValue = new MutableLiveData<>();

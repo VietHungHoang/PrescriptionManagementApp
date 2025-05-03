@@ -63,7 +63,6 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="12dp"
-                    android:layout_weight="1"
                     android:background="@color/lineSelectColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

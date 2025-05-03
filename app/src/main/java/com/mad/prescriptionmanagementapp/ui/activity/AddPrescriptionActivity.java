@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -33,7 +34,21 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         this.loadInitialFragment();
 
         this.binding.btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+// Đăng ký callback để xử lý back button
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
+                if (currentFragment == null || !currentFragment.isVisible()) {
+                    // Không còn fragment, gọi dispatcher để đóng Activity
+                    finish();
+                } else {
+                    // Nếu còn fragment, pop fragment
+                    getSupportFragmentManager().popBackStack();
+                }
+            }
+        });
 
     }
 

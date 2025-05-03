@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.DrugsAdapter;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.databinding.FragmentSelectDrugBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnItemClickListener;
@@ -119,7 +119,7 @@ public class SelectDrugFragment extends Fragment implements OnItemClickListener<
     @Override
     public void onItemClick(DrugResponse drug) {
         Fragment newFragment = AddScheduleFragment.newInstance(drug.getId());
-        this.viewModel.addDrug(new DrugInPresRequest(drug.getId()));
+        this.viewModel.addCurrentDrug(new DrugInPres(drug));
         // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
         this.getParentFragmentManager()
                 .beginTransaction()

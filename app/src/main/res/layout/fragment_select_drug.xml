@@ -28,12 +28,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/medication_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_below="@id/search_drug"
             android:clipToPadding="false"
             android:paddingBottom="8dp"
             android:scrollbars="vertical"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:layout_alignParentBottom="true"/>
 
 <!--        <com.mad.prescriptionmanagementapp.ui.view.AlphabetIndexView-->
 <!--            android:padding="@dimen/edt_padding"-->

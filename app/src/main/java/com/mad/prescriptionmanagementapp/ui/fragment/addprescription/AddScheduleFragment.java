@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddScheduleBinding;
+import com.mad.prescriptionmanagementapp.ui.fragment.dialog.SelectFrequencyDialog;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 import java.util.Calendar;
@@ -67,8 +68,8 @@ public class AddScheduleFragment extends Fragment {
     private void initViewModel() {
         this.viewModel = new ViewModelProvider(requireActivity()).get(AddPrescriptionViewModel.class);
         // Gán ViewModel cho DataBinding
-//        this.binding.setViewModel(viewModel);
-//        this.binding.setLifecycleOwner(getViewLifecycleOwner());
+        this.binding.setViewModel(viewModel);
+        this.binding.setLifecycleOwner(getViewLifecycleOwner());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -80,7 +81,7 @@ public class AddScheduleFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.unit_array,
-                android.R.layout.simple_dropdown_item_1line
+                R.layout.item_dropdown
         );
 
         this.spinnerUnit.setAdapter(adapter);
@@ -130,6 +131,7 @@ public class AddScheduleFragment extends Fragment {
                 .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
                 .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
                 .commit();
+//        new SelectFrequencyDialog().show(getParentFragmentManager(), "selectfrequency");
     }
 
     private void setAddTimeAndDosage() {

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.TimeDosageRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentTimeDosageSelectionBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
@@ -60,8 +60,8 @@ public class TimeDosageSelectionFragment extends Fragment {
     @Override
     public void onViewCreated (@NotNull View view, Bundle saveInstanceState) {
         super.onViewCreated(view, saveInstanceState);
-        this.setupDosage();
-        this.setupFinishBtn();
+//        this.setupDosage();
+//        this.setupFinishBtn();
     }
     private void initViewModel() {
         this.viewModel = new ViewModelProvider(this).get(AddPrescriptionViewModel.class);
@@ -70,30 +70,30 @@ public class TimeDosageSelectionFragment extends Fragment {
 //        this.binding.setLifecycleOwner(getViewLifecycleOwner());
     }
 
-    private void setupDosage() {
-        DrugInPresRequest drugInPres = this.viewModel.getPrescription().getDrugs().stream().filter(drug -> drug.getId() == this.drugId).findFirst().orElse(null);
-        if(drugInPres != null) {
-            this.binding.edtDosage.setText(drugInPres.getTimeDosages().toString());
-        }
-    }
+//    private void setupDosage() {
+//        DrugInPres drugInPres = this.viewModel.getPrescription().getDrugs().stream().filter(drug -> drug.getId() == this.drugId).findFirst().orElse(null);
+//        if(drugInPres != null) {
+//            this.binding.edtDosage.setText(drugInPres.getTimeDosages().toString());
+//        }
+//    }
 
     private void setupFinishBtn() {
 
-        this.binding.btnSaveTimeAndDosage.setOnClickListener(v -> {
-            int hour = this.binding.timePicker.getHour();
-            int minute = this.binding.timePicker.getMinute();
-            int dosage = Integer.parseInt(this.binding.edtDosage.getText().toString());
-
-            // Ví dụ: format giờ và in log
-            String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
-            Log.d("TimeDosage", "Giờ: " + time + ", Liều: " + dosage);
-            for(DrugInPresRequest drug : this.viewModel.getPrescription().getDrugs()) {
-                if(drug.getId() == this.drugId) {
-                    drug.addTimeDosage(new TimeDosageRequest(time, dosage));
-                }
-            }
-            this.setSchedule();
-        });
+//        this.binding.btnSaveTimeAndDosage.setOnClickListener(v -> {
+//            int hour = this.binding.timePicker.getHour();
+//            int minute = this.binding.timePicker.getMinute();
+//            int dosage = Integer.parseInt(this.binding.edtDosage.getText().toString());
+//
+//            // Ví dụ: format giờ và in log
+//            String time = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+//            Log.d("TimeDosage", "Giờ: " + time + ", Liều: " + dosage);
+//            for(DrugInPres drug : this.viewModel.getPrescription().getDrugs()) {
+//                if(drug.getId() == this.drugId) {
+//                    drug.addTimeDosage(new TimeDosageRequest(time, dosage));
+//                }
+//            }
+//            this.setSchedule();
+//        });
         
 
     }

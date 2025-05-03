@@ -1,5 +1,7 @@
 package com.mad.prescriptionmanagementapp.data.remote.dto.request;
 
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DrugInPresRequest {
-    private Long id;
+public class DrugInPres {
+    private DrugResponse drugResponse;
     private List<TimeDosageRequest> timeDosages = new ArrayList<>();
     private List<ScheduleRequest> schedules = new ArrayList<>();
 
-    public DrugInPresRequest (Long id) {
-        this.id = id;
+    public DrugInPres(DrugResponse drugResponse) {
+        this.drugResponse = drugResponse;
         this.schedules = new ArrayList<>();
     }
 

@@ -43,9 +43,9 @@ public class MedicineScheduleActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_invoice) {
-                    // Chuyển sang ListPrescriptionActivity
-                    Intent intent = new Intent(MedicineScheduleActivity.this, ListPrescriptionActivity.class);
-                    startActivity(intent);
+//                    // Chuyển sang ListPrescriptionActivity
+//                    Intent intent = new Intent(MedicineScheduleActivity.this, ListPrescriptionActivity.class);
+//                    startActivity(intent);
                     return true;
                 }
                 return false;

@@ -1,71 +1,51 @@
-package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
+package com.mad.prescriptionmanagementapp.ui.fragment.dialog;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
-import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
-import com.mad.prescriptionmanagementapp.databinding.FragmentFrequencySelectionBinding;
-import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
-import org.jetbrains.annotations.NotNull;
+import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
+import com.mad.prescriptionmanagementapp.databinding.DialogSelectFrequencyBinding;
+import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.TimeDosageSelectionFragment;
+import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import lombok.NoArgsConstructor;
+public class SelectFrequencyDialog extends DialogFragment {
 
-@NoArgsConstructor
-public class FrequencySelectionFragment extends Fragment {
     private static final String ARG_DRUG_ID = "drug_id";
 
     private Long drugId;
 
-    private FragmentFrequencySelectionBinding binding;
+    private DialogSelectFrequencyBinding binding;
     private AddPrescriptionViewModel viewModel;
 
-
-
-    public static FrequencySelectionFragment newInstance(Long drugId) {
-       FrequencySelectionFragment fragment = new FrequencySelectionFragment();
-       Bundle args = new Bundle();
-       args.putLong(ARG_DRUG_ID, drugId);
-       fragment.setArguments(args);
-       return fragment;
-
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(this.getArguments() != null) {
-            this.drugId = this.getArguments().getLong(ARG_DRUG_ID);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        this.binding = FragmentFrequencySelectionBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        this.binding = DialogSelectFrequencyBinding.inflate(inflater, container, false);
         this.initViewModel();
         return this.binding.getRoot();
     }
 
     @Override
-    public void onViewCreated (@NotNull View view, Bundle saveInstanceState) {
-        super.onViewCreated(view, saveInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         this.setupRadio();
         this.setupBtnIncrease();
         this.setupBtnDecrease();
@@ -80,11 +60,11 @@ public class FrequencySelectionFragment extends Fragment {
     }
 
     private void setupRadio() {
-            if(this.viewModel.getFrequencyId() == null) {
-                this.viewModel.setFrequencyId(this.binding.radioDaily.getId());
-            }
-            this.binding.radioGroupFrequency.check(this.viewModel.getFrequencyId());
-            this.updateLayoutVisibility(this.viewModel.getFrequencyId());
+        if(this.viewModel.getFrequencyId() == null) {
+            this.viewModel.setFrequencyId(this.binding.radioDaily.getId());
+        }
+        this.binding.radioGroupFrequency.check(this.viewModel.getFrequencyId());
+        this.updateLayoutVisibility(this.viewModel.getFrequencyId());
 
 
         this.binding.radioGroupFrequency.setOnCheckedChangeListener((group, checkedId) -> {
