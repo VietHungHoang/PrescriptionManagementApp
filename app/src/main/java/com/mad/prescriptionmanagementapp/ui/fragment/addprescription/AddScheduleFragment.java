@@ -117,8 +117,15 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
             public void onNothingSelected(AdapterView<?> parent) {
                 // Không chọn gì
             }
-        });
 
+
+        });
+        this.binding.edtNote.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                // Cuộn ScrollView lên đến vị trí của EditText khi có focus
+                 this.binding.scrollView.post(() -> this.binding.scrollView.smoothScrollTo(0, this.binding.edtNote.getBottom()));
+            }
+        });
 
         this.setStartDate();
         this.binding.spinnerFrequency.setOnClickListener(v -> {

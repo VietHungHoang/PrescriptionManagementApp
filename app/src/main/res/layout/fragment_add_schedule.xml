@@ -24,6 +24,7 @@
             >
 
             <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -309,7 +310,7 @@
                             android:textStyle="bold" />
 
                         <EditText
-                            android:id="@+id/edt_doctor"
+                            android:id="@+id/edt_note"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/edt_height"
                             android:layout_marginBottom="48dp"
