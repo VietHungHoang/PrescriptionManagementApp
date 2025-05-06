@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/edt_padding">
+                    >
 
                     <!-- Nhóm chọn tần suất -->
                     <RadioGroup
@@ -39,16 +39,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingBottom="16dp">
+                        android:paddingHorizontal="@dimen/edt_padding"
+                        >
 
                         <RadioButton
                             android:id="@+id/radioDaily"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="@color/blue"
                             android:text="Hằng ngày"
                             android:textColor="#000000"
-                            android:textSize="@dimen/lbl_textsize" />
+                            android:textSize="@dimen/lbl_textsize"
+                            app:buttonTint="@color/radio_button_color"/>
 
                         <!-- Divider -->
                         <View
@@ -59,12 +61,13 @@
 
                         <RadioButton
                             android:id="@+id/radioEveryNDays"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="@color/blue"
                             android:text="Cách số ngày"
                             android:textColor="#000000"
-                            android:textSize="@dimen/lbl_textsize" />
+                            android:textSize="@dimen/lbl_textsize"
+                            app:buttonTint="@color/radio_button_color"/>
 
                         <!-- Divider -->
                         <View
@@ -75,18 +78,28 @@
 
                         <RadioButton
                             android:id="@+id/radioSpecificDays"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="@color/blue"
                             android:text="Chọn ngày cụ thể"
                             android:textColor="#000000"
-                            android:textSize="@dimen/lbl_textsize" />
+                            android:textSize="@dimen/lbl_textsize"
+                            app:buttonTint="@color/radio_button_color"/>
                     </RadioGroup>
 
                     <!-- Counter section -->
 
+                    <View
+                        android:id="@+id/lineLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="8dp"
+                        android:layout_gravity="center"
+                        android:background="@color/lineSelectColor"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txtTitle" />
 
-                    <!-- Layout chọn ngày cụ thể -->
+<!--                    Chon cach ngay-->
                     <androidx.constraintlayout.widget.ConstraintLayout
 
                         android:id="@+id/numberOfDaysLayout"
@@ -94,7 +107,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:paddingHorizontal="22dp"
+                        android:layout_marginTop="8dp"
+                        >
+
+
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -102,6 +119,7 @@
                             android:text="Cách mỗi"
                             android:textColor="#000000"
                             android:textSize="@dimen/lbl_textsize"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -112,7 +130,8 @@
                             android:id="@+id/btn_decrease"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="24dp"
+                            android:paddingHorizontal="24dp"
+                            android:paddingVertical="10dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="Back"
                             android:src="@drawable/ic_subtracting"
@@ -139,7 +158,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginStart="24dp"
+                            android:paddingHorizontal="24dp"
+                            android:paddingVertical="10dp"
                             android:background="@android:color/transparent"
                             android:contentDescription="Tăng"
                             android:src="@drawable/ic_addtracting"
@@ -153,19 +173,44 @@
                             android:text="Ngày"
                             android:textColor="#000000"
                             android:textSize="@dimen/lbl_textsize"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    <!-- Layout chọn ngày cụ thể -->
                     <LinearLayout
                         android:id="@+id/daysOfWeekLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingTop="16dp"
                         android:paddingBottom="16dp"
-                        android:visibility="gone">
+                        android:paddingHorizontal="16dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Chọn ngày uống thuốc"
+                            android:textColor="#000000"
+                            android:textSize="@dimen/lbl_textsize"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginLeft="8dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Vui lòng chọn ít nhất một ngày uống thuốc"
+                            android:textColor="#4D4D4D"
+                            android:textSize="@dimen/lbl_textsize"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginLeft="8dp"/>
 
                         <CheckBox
                             android:id="@+id/cbMonday"

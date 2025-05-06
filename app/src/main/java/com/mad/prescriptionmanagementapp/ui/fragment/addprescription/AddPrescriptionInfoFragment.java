@@ -1,11 +1,13 @@
 package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -33,6 +35,10 @@ import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+
+import java.util.Calendar;
+import java.util.Locale;
+
 public class AddPrescriptionInfoFragment extends Fragment {
     private FragmentAddPrescriptionInfoBinding binding;
     private AddPrescriptionViewModel viewModel;
@@ -75,15 +81,33 @@ public class AddPrescriptionInfoFragment extends Fragment {
                 this.viewModel.resetErrorMessage();
             }
         });
+        this.setOnclickDatePicker();
+
+    }
+
+    private void setOnclickDatePicker() {
+        this.binding.edtConsultationDate.setOnClickListener(v -> {
+            this.showDatePickerDialog(this.binding.edtConsultationDate);
+        });
+
+        this.binding.edtFollowUpDate.setOnClickListener(v -> {
+            this.showDatePickerDialog(this.binding.edtFollowUpDate);
+        });
     }
 
 
     private void setOnclickBtnAddDrug() {
+
         this.binding.btnAddDrug.setOnClickListener(v -> {
             Fragment newFragment = new SelectDrugFragment();
             this.getParentFragmentManager()
                     .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
+                    .setCustomAnimations(
+                            R.anim.zoom_in,    // Fragment B vào (zoom in)
+                            R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
+                            R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
+                            R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
                     .replace(R.id.fragment_container, newFragment)
                     .addToBackStack(null)
                     .commit();
@@ -182,6 +206,23 @@ public class AddPrescriptionInfoFragment extends Fragment {
             // Đóng dialog sau khi animation hoàn tất
             new Handler().postDelayed(alertDialog::dismiss, 500); // Đợi cho animation hoàn tất
         }, 3000); // 3 giây hiển thị trước khi đóng
+    }
+
+    public void showDatePickerDialog(EditText editText) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String dateStr = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear);
+                    editText.setText(dateStr);
+                },
+                year, month, day
+        );
+        datePickerDialog.show();
     }
 
 

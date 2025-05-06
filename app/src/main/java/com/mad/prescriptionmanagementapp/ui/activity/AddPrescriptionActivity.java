@@ -40,7 +40,7 @@ public class AddPrescriptionActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-                if (currentFragment == null || !currentFragment.isVisible()) {
+                if (currentFragment == null || isFirstFragment()) {
                     // Không còn fragment, gọi dispatcher để đóng Activity
                     finish();
                 } else {
@@ -50,6 +50,14 @@ public class AddPrescriptionActivity extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    private boolean isFirstFragment() {
+        return this
+                .getSupportFragmentManager()
+                .getBackStackEntryCount() == 0;
     }
 
 
@@ -71,7 +79,6 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(binding.fragmentContainer.getId(), fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -95,4 +102,6 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
+
 }

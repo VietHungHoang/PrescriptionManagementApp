@@ -9,10 +9,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import com.mad.prescriptionmanagementapp.data.mapper.DrugMapper;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
+import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.data.repository.DrugRepository;
+import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +28,140 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     private LiveData<List<DrugResponse>> drugsList;
     private final MutableLiveData<List<DrugInPres>> listSelectedDrug = new MutableLiveData<>();
     public LiveData<List<DrugInPres>> selectedDrug = this.listSelectedDrug;
-    private MutableLiveData<DrugInPres> currentDrug = new MutableLiveData<>();
+    private final MutableLiveData<DrugInPres> currentDrug = new MutableLiveData<>();
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private MutableLiveData<PrescriptionRequest> prescription = new MutableLiveData<>();
+
+    private MutableLiveData<List<TimeDosage>> listTime = new MutableLiveData<>();
+
+    private MutableLiveData<TimeDosage> currentTimeDosage = new MutableLiveData<>();
+
+    private MutableLiveData<String> drugUnit = new MutableLiveData<>();
+
+
     @Getter
     private boolean nameEmpty;
 
+    public void removeTimeDosage(int position) {
+        List<TimeDosage> tmp = this.listTime.getValue();
+        tmp.remove(position);
+        this.listTime.setValue(tmp);
+    }
+
+    public LiveData<String> getDrugUnit() {
+        return this.drugUnit;
+    }
+
+    public void setDrugUnit(String unit) {
+        this.drugUnit.setValue(unit);
+    }
+
+    public LiveData<List<TimeDosage>> getListTimeDosage() {
+
+        return this.listTime;
+    }
+
     public LiveData<String> getErrorMessage() {
         return this.errorMessage;
+    }
+
+    public LiveData<DrugInPres> getCurrentDrug() {
+        return this.currentDrug;
+    }
+
+    public void setCurrentTimeDosage(TimeDosage timeDosage) {
+        this.currentTimeDosage.setValue(timeDosage);
+    }
+
+    public TimeDosage getCurrentTimeDosage() {
+        return this.currentTimeDosage.getValue();
     }
 
     public void resetErrorMessage() {
         this.errorMessage.setValue(null);
     }
 
+    public Frequency getFrequency() {
+        return this.currentDrug.getValue().getFrequency();
+    }
+
+    public LiveData<String> getHospital() {
+        return Transformations.map(prescription, pres ->
+                pres != null ? pres.getHospital() : ""
+        );
+    }
+
+    public LiveData<String> getDoctor() {
+        return Transformations.map(prescription, pres ->
+                pres != null ? pres.getDoctor().getName() : ""
+        );
+    }
+
+    public LiveData<String> getConsultationDate() {
+        return Transformations.map(prescription, pres ->
+                pres != null ? pres.getConsultationDate() : ""
+        );
+    }
+
+    public LiveData<String> getFollowUpDate() {
+        return Transformations.map(prescription, pres ->
+                pres != null ? pres.getFollowUpDate() : ""
+        );
+    }
+
     public LiveData<String> getCurrentDrugName() {
         return Transformations.map(currentDrug, drug ->
                 drug != null ? drug.getDrugResponse().getName() : ""
         );
+    }
+
+    public void setTimeAndDosage(TimeDosage timeDosage) {
+        if(this.listTime.getValue() == null) {
+            this.listTime.setValue(new ArrayList<>());
+        }
+        List<TimeDosage> list = this.listTime.getValue();
+        list.add(timeDosage);
+        this.listTime.setValue(list);
+    }
+
+    public String getDayBetween() {
+        DrugInPres drug = this.currentDrug.getValue();
+        if(drug != null) {
+            return String.valueOf(this.currentDrug.getValue().getEveryNDays());
+        }
+        return "1";
+    }
+
+    public List<Integer> getSpecificDays() {
+        DrugInPres drug = this.currentDrug.getValue();
+        return drug != null ? drug.getSpecificDays() : new ArrayList<>();
+    }
+
+    public void setFrequencyDaily() {
+        DrugInPres oldDrug = this.currentDrug.getValue();
+        if(oldDrug != null) {
+            DrugInPres drug = new DrugInPres(oldDrug);
+            drug.setFrequency(Frequency.DAILY);
+            this.currentDrug.setValue(drug);
+        }
+    }
+    public void setFrequencyEveryNDay(int days) {
+        DrugInPres oldDrug = this.currentDrug.getValue();
+        if(oldDrug != null) {
+            DrugInPres drug = new DrugInPres(oldDrug);
+            drug.setFrequency(Frequency.EVERY_N_DAY);
+            drug.setEveryNDays(days);
+            this.currentDrug.setValue(drug);
+        }
+    }
+    public void setFrequencySpecificDay(List<Integer> days) {
+        DrugInPres oldDrug = this.currentDrug.getValue();
+        if(oldDrug != null) {
+            DrugInPres drug = new DrugInPres(oldDrug);
+            drug.setFrequency(Frequency.SPECIFIC_DAYS);
+            drug.setSpecificDays(days);
+            this.currentDrug.setValue(drug);
+        }
     }
 
 
@@ -59,14 +178,6 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     private final MutableLiveData<String> selectedValue = new MutableLiveData<>();
 
-    @Getter
-    @Setter
-    private Integer frequencyId;
-
-    @Getter
-    @Setter
-    private PrescriptionRequest prescription;
-
     public AddPrescriptionViewModel(@NonNull Application application) {
         super(application);
         this.drugRepository = new DrugRepository(application); // Consider upgrading to use DI
@@ -77,8 +188,8 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
                     .map(DrugMapper::cacheToResponse) // Chuyển Entity -> DTO
                     .collect(Collectors.toList());
         });
-
-        this.prescription = new PrescriptionRequest();
+        List<DrugResponse> drugs = this.drugsList.getValue();
+        this.listTime.setValue(new ArrayList<>());
     }
 
     public LiveData<List<DrugResponse>> getDrugsList() {

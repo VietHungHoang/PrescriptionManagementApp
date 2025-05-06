@@ -79,7 +79,5 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
         MedicineItem item = filteredMedicineList.get(position);
 
         // Hiển thị MedicineDetailDialogFragment
-        MedicineDetailDialogFragment dialogFragment = MedicineDetailDialogFragment.newInstance(item);
-        dialogFragment.show(getChildFragmentManager(), "MedicineDetailDialog");
     }
 }

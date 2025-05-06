@@ -6,20 +6,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.TimeDosageRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentTimeDosageSelectionBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Locale;
 
 public class TimeDosageSelectionFragment extends Fragment {
 
@@ -104,7 +99,7 @@ public class TimeDosageSelectionFragment extends Fragment {
         this.getParentFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
-                .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
+                  .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
                 .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
                 .commit();
     }

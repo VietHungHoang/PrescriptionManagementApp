@@ -1,10 +1,13 @@
 package com.mad.prescriptionmanagementapp.data.remote.dto.request;
 
 import com.mad.prescriptionmanagementapp.data.model.Doctor;
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +25,15 @@ public class PrescriptionRequest {
 
     public void addDrug(DrugInPres drug) {
         this.drugs.add(drug);
+    }
+
+    public String getConsultationDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return sdf.format(this.consultationDate);
+    }
+
+    public String getFollowUpDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        return sdf.format(this.followUpDate);
     }
 }

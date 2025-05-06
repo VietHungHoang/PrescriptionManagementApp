@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentFrequencySelectionBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.NoArgsConstructor;
 
@@ -73,40 +72,53 @@ public class FrequencySelectionFragment extends Fragment {
     }
 
     private void initViewModel() {
-        this.viewModel = new ViewModelProvider(this).get(AddPrescriptionViewModel.class);
+        this.viewModel = new ViewModelProvider(requireActivity()).get(AddPrescriptionViewModel.class);
         // Gán ViewModel cho DataBinding
 //        this.binding.setViewModel(viewModel);
 //        this.binding.setLifecycleOwner(getViewLifecycleOwner());
     }
 
     private void setupRadio() {
-            if(this.viewModel.getFrequencyId() == null) {
-                this.viewModel.setFrequencyId(this.binding.radioDaily.getId());
+            if(this.viewModel.getFrequency() != null) {
+                this.updateLayoutVisibility(this.viewModel.getFrequency());
             }
-            this.binding.radioGroupFrequency.check(this.viewModel.getFrequencyId());
-            this.updateLayoutVisibility(this.viewModel.getFrequencyId());
+            else {
+                this.binding.radioGroupFrequency.check(this.binding.radioDaily.getId());
+            }
+
 
 
         this.binding.radioGroupFrequency.setOnCheckedChangeListener((group, checkedId) -> {
-            this.updateLayoutVisibility(checkedId);
+            binding.numberOfDaysLayout.setVisibility(checkedId == this.binding.radioEveryNDays.getId() ? View.VISIBLE : View.GONE);
+            binding.daysOfWeekLayout.setVisibility(checkedId == this.binding.radioSpecificDays.getId() ? View.VISIBLE : View.GONE);
         });
     }
 
-    private void updateLayoutVisibility(int checkedId) {
+    private void updateLayoutVisibility(Frequency frequency) {
         binding.numberOfDaysLayout.setVisibility(View.GONE);
         binding.daysOfWeekLayout.setVisibility(View.GONE);
 
-        if (checkedId == R.id.radioEveryNDays) {
-            binding.numberOfDaysLayout.setVisibility(View.VISIBLE);
-        } else if (checkedId == R.id.radioSpecificDays) {
-            binding.daysOfWeekLayout.setVisibility(View.VISIBLE);
+        switch (frequency) {
+            case DAILY:
+                this.binding.radioGroupFrequency.check(this.binding.radioDaily.getId());
+                break;
+            case EVERY_N_DAY:
+                this.binding.radioGroupFrequency.check(this.binding.radioEveryNDays.getId());
+                this.binding.numberOfDaysLayout.setVisibility(View.VISIBLE);
+                this.binding.tvCount.setText(this.viewModel.getDayBetween());
+                break;
+            case SPECIFIC_DAYS:
+                this.binding.radioGroupFrequency.check(this.binding.radioSpecificDays.getId());
+                this.binding.daysOfWeekLayout.setVisibility(View.VISIBLE);
+                this.setSelectedDays(this.viewModel.getSpecificDays());
+                break;
         }
     }
 
     private void setupBtnIncrease() {
         this.binding.btnIncrease.setOnClickListener(v -> {
-            int currentValue = Integer.parseInt(binding.tvCount.getText().toString());
-            binding.tvCount.setText(String.valueOf(currentValue + 1));
+                int currentValue = Integer.parseInt(binding.tvCount.getText().toString());
+                binding.tvCount.setText(String.valueOf(currentValue + 1));
         });
     }
 
@@ -122,24 +134,17 @@ public class FrequencySelectionFragment extends Fragment {
     private void setupBtnSelect() {
         this.binding.btnContinue.setOnClickListener(v -> {
             String result = "";
+
             int checkedId = binding.radioGroupFrequency.getCheckedRadioButtonId();
 
-//            if (checkedId == binding.radioDaily.getId()) {
-//                result = "Uống hằng ngày";
-//            } else if (checkedId == binding.radioEveryNDays.getId()) {
-//                result = "Uống cách " + binding.edtNumberOfDays.getText().toString() + " ngày";
-//            } else {
-//                result = "Uống vào các ngày: ";
-//                result += getSelectedDays();
-//            }
-//
-//            Toast.makeText(requireContext(), result, Toast.LENGTH_LONG).show();
-//            for(DrugInPres drug : this.viewModel.getPrescription().getDrugs()) {
-//                if(Objects.equals(drug.getId(), this.drugId)) {
-//                    drug.setSchedules(this.generateSchedules(checkedId, LocalDate.now()));
-//                    break;
-//                }
-//            }
+            if (checkedId == binding.radioDaily.getId()) {
+                this.viewModel.setFrequencyDaily();
+            } else if (checkedId == binding.radioEveryNDays.getId()) {
+                this.viewModel.setFrequencyEveryNDay(Integer.parseInt(this.binding.tvCount.getText().toString()));
+            } else {
+                this.viewModel.setFrequencySpecificDay(this.getSelectedDaysIndexes());
+            }
+
             this.setTimeDosageSelection();
         });
     }
@@ -187,37 +192,32 @@ public class FrequencySelectionFragment extends Fragment {
         return days;
     }
 
+    private void setSelectedDays(List<Integer> days) {
+        CheckBox[] checkBoxes = new CheckBox[]{
+                binding.cbMonday, binding.cbTuesday, binding.cbWednesday,
+                binding.cbThursday, binding.cbFriday, binding.cbSaturday,
+                binding.cbSunday
+        };
+
+        for (int i = 0; i < checkBoxes.length; i++) {
+            checkBoxes[i].setChecked(days.contains(i + 1));
+        }
+    }
+
     private void setTimeDosageSelection() {
-        Fragment newFragment = TimeDosageSelectionFragment.newInstance(this.drugId);
-        // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
-        this.getParentFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
-                .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
-                .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
-                .commit();
+//        Fragment newFragment = TimeDosageSelectionFragment.newInstance(this.drugId);
+//        // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
+//        this.getParentFragmentManager()
+//                .beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
+//                .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
+//                .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
+//                .commit();
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 
 
 
 
-    private String getSelectedDays() {
-        StringBuilder days = new StringBuilder();
-        CheckBox[] ids = {binding.cbMonday, binding.cbTuesday, binding.cbWednesday, binding.cbThursday, binding.cbFriday, binding.cbSaturday, binding.cbSunday};
-        String[] labels = {"Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy", "Chủ nhật"};
 
-        for (int i = 0; i < ids.length; i++) {
-            if (ids[i].isChecked()) {
-                days.append(labels[i]).append(", ");
-            }
-        }
-
-        if (days.length() > 0) {
-            days.setLength(days.length() - 2); // remove last comma
-        } else {
-            days.append("Không có ngày nào được chọn");
-        }
-
-        return days.toString();
-    }
 }

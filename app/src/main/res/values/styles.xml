@@ -28,5 +28,44 @@
     <!-- Style cho TabButton -->
     <!-- TabButton style -->
 
+    <style name="MyDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+
+    <style name="TimePickerTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="android:textColorPrimary">#FF0000</item> <!-- Màu đỏ -->
+        <item name="android:textColorSecondary">#FF0000</item> <!-- Màu đỏ -->
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="MyEmbeddedTimePickerStyle">
+        <!-- Kế thừa từ theme gốc của TimePicker nếu cần, ví dụ: -->
+        <!-- <item name="android:timePickerStyle">@android:style/Widget.Material.Light.TimePicker</item> -->
+        <!-- Hoặc để trống và chỉ định các thuộc tính bạn muốn thay đổi -->
+
+        <!-- === QUAN TRỌNG: Màu Text === -->
+        <!-- Thử các thuộc tính này để đổi màu số -->
+
+        <!-- Màu của số được chọn (ở giữa) -->
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="colorControlActivated">@android:color/black</item> <!-- Thường dùng cho trạng thái active/selected -->
+
+        <!-- Màu của các số không được chọn (mờ mờ ở trên/dưới) -->
+        <!-- Bạn có thể muốn màu này tối hơn nhưng không đen hoàn toàn để phân biệt -->
+        <item name="android:textColorSecondary">#666666</item> <!-- Màu xám đậm -->
+        <item name="colorControlNormal">#888888</item> <!-- Thường dùng cho trạng thái normal/inactive -->
+
+        <!-- Một số thuộc tính khác có thể ảnh hưởng (thử nếu các cái trên chưa đủ) -->
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:editTextColor">@android:color/black</item> <!-- TimePicker spinner dùng EditText bên trong -->
+        <item name="android:textColorHighlight">@color/black</item> <!-- Màu khi bôi đen text -->
+
+        <!-- Nếu dùng Material Components -->
+        <item name="colorOnSurface">@android:color/black</item>
+
+    </style>
+
+
 
 </resources>

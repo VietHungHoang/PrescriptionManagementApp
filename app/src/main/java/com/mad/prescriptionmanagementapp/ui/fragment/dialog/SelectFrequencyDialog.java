@@ -60,11 +60,11 @@ public class SelectFrequencyDialog extends DialogFragment {
     }
 
     private void setupRadio() {
-        if(this.viewModel.getFrequencyId() == null) {
-            this.viewModel.setFrequencyId(this.binding.radioDaily.getId());
-        }
-        this.binding.radioGroupFrequency.check(this.viewModel.getFrequencyId());
-        this.updateLayoutVisibility(this.viewModel.getFrequencyId());
+//        if(this.viewModel.getFrequencyId() == null) {
+//            this.viewModel.setFrequencyId(this.binding.radioDaily.getId());
+//        }
+//        this.binding.radioGroupFrequency.check(this.viewModel.getFrequencyId());
+//        this.updateLayoutVisibility(this.viewModel.getFrequencyId());
 
 
         this.binding.radioGroupFrequency.setOnCheckedChangeListener((group, checkedId) -> {

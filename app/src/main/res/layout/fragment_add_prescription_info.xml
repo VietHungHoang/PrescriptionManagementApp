@@ -267,7 +267,8 @@
                                     android:text="Bệnh viện / Phòng khám"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/lbl_textsize"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    />
 
                                 <EditText
                                     android:id="@+id/edt_hospital"
@@ -279,7 +280,8 @@
                                     android:paddingHorizontal="@dimen/edt_padding"
                                     android:textColor="@color/black"
                                     android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize" />
+                                    android:textSize="@dimen/edt_textsize"
+                                    />
 
                                 <!-- Tên bác sĩ -->
                                 <TextView
@@ -326,7 +328,8 @@
                                     android:paddingHorizontal="@dimen/edt_padding"
                                     android:textColor="@color/black"
                                     android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize" />
+                                    android:textSize="@dimen/edt_textsize"
+                                    />
 
                                 <!-- Ngày tái khám -->
                                 <TextView
@@ -352,7 +355,8 @@
                                     android:paddingHorizontal="@dimen/edt_padding"
                                     android:textColor="@color/black"
                                     android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize" />
+                                    android:textSize="@dimen/edt_textsize"
+                                    />
 
                             </LinearLayout>
                         </FrameLayout>

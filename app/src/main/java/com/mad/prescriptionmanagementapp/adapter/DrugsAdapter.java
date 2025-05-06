@@ -7,18 +7,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderDrugBinding;
-import com.mad.prescriptionmanagementapp.ui.listener.OnItemClickListener;
+import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHolder> {
-    private final OnItemClickListener<DrugResponse> listener;
+    private final OnDrugClickListener listener;
 
-    private final List<DrugResponse> drugs;
+    private List<DrugResponse> drugs;
+    private List<DrugResponse> filteredList;
 
-    public DrugsAdapter(List<DrugResponse> drugs, OnItemClickListener<DrugResponse> listener) {
+    public DrugsAdapter(List<DrugResponse> drugs, OnDrugClickListener listener) {
 //        super(DIFF_CALLBACK);
         this.drugs = drugs;
+        this.filteredList = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -40,11 +43,30 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
         return drugs.size();
     }
 
+    public void updateData(List<DrugResponse> newList) {
+        this.drugs = newList;
+        notifyDataSetChanged(); // hoặc notifyItemRangeChanged(...) cho tối ưu hơn
+    }
+
+    public void filter(String query) {
+        filteredList.clear();
+        if (query.isEmpty()) {
+            filteredList.addAll(drugs);
+        } else {
+            for (DrugResponse item : drugs) {
+                if (item.getName().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     static class DrugViewHolder extends RecyclerView.ViewHolder {
         private final ViewholderDrugBinding binding;
-        private final OnItemClickListener<DrugResponse> clickListener;
+        private final OnDrugClickListener clickListener;
 
-        public DrugViewHolder(ViewholderDrugBinding binding, OnItemClickListener<DrugResponse> clickListener) {
+        public DrugViewHolder(ViewholderDrugBinding binding, OnDrugClickListener clickListener) {
             super(binding.getRoot());
             this.binding = binding;
             this.clickListener = clickListener;
