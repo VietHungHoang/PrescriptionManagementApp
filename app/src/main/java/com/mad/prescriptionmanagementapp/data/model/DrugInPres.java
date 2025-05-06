@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DrugInPres {
     private DrugResponse drugResponse;
+    private Unit unit;
+    private String date;
     private List<TimeDosage> timeDosages = new ArrayList<>();
     private Frequency frequency = Frequency.DAILY;
     private int everyNDays; // nếu type = EVERY_N_DAYS

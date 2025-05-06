@@ -40,7 +40,7 @@ public class AddPrescriptionActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-                if (currentFragment == null || isFirstFragment()) {
+                if (currentFragment == null || isFirstFragment() || currentFragment instanceof AddPrescriptionInfoFragment) {
                     // Không còn fragment, gọi dispatcher để đóng Activity
                     finish();
                 } else {

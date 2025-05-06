@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.data.cache;
+package com.mad.prescriptionmanagementapp.data.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,13 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(tableName = "drug_cache")
+@Entity(tableName = "units")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DrugCache {
+public class Unit {
     @PrimaryKey
     private Long id;
-
     private String name;
 }

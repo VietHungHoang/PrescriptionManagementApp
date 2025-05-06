@@ -24,8 +24,8 @@ import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddScheduleBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
+import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.SelectTimeAndDosageDialog;
-import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
@@ -70,7 +70,7 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
 
         if (getArguments() != null) {
             Long drugId = getArguments().getLong(ARG_DRUG_ID);
-            List<DrugResponse> drugs=this.viewModel.getDrugsList().getValue();
+            List<DrugResponse> drugs=this.viewModel.getOriginalDrugList().getValue();
             this.drug = drugs.stream().filter(drug -> drug.getId() == drugId).findFirst().orElse(null);
         }
         return this.binding.getRoot();
@@ -120,12 +120,6 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
 
 
         });
-        this.binding.edtNote.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                // Cuộn ScrollView lên đến vị trí của EditText khi có focus
-                 this.binding.scrollView.post(() -> this.binding.scrollView.smoothScrollTo(0, this.binding.edtNote.getBottom()));
-            }
-        });
 
         this.setStartDate();
         this.binding.spinnerFrequency.setOnClickListener(v -> {
@@ -133,6 +127,29 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
                 });
         this.setAdapter();
         setAddTimeAndDosage();
+
+        this.binding.btnLuu.setOnClickListener(v -> {
+            if(this.viewModel.getListTimeDosage().getValue().isEmpty()) {
+                new ErrorDialog(this, "Vui lòng thêm thời gian uống thuốc").showDialog();
+            }
+            else {
+                this.viewModel.updateSelectedDrugs(this.binding.edtStartDate.getText().toString());
+                this.viewModel.setCurrentDrug(null);
+                Fragment newFragment = AddPrescriptionInfoFragment.newInstance();
+                // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
+                this.getParentFragmentManager()
+                        .beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
+                        .setCustomAnimations(
+                                R.anim.zoom_in,    // Fragment B vào (zoom in)
+                                R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
+                                R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
+                                R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
+                        .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
+                        .commit();
+//        new SelectFrequencyDialog().show(getParentFragmentManager(), "selectfrequency");
+            }
+        });
     }
 
     private void setStartDate() {
@@ -191,7 +208,7 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
 //        });
 
         // Quan sát danh sách thuốc từ cache
-        viewModel.getDrugsList().observe(getViewLifecycleOwner(), drug -> {
+        viewModel.getOriginalDrugList().observe(getViewLifecycleOwner(), drug -> {
             if (drug != null) {
                 Log.d("SelectDrugFragment", "Medication list updated from cache. Size: " + drug.size());
                 this.setAdapter();

@@ -9,11 +9,15 @@ import androidx.lifecycle.LiveData;
 import com.mad.prescriptionmanagementapp.data.cache.DrugCache;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.database.DrugDao;
+import com.mad.prescriptionmanagementapp.data.database.UnitDao;
 import com.mad.prescriptionmanagementapp.data.mapper.DrugMapper;
+import com.mad.prescriptionmanagementapp.data.mapper.UnitMapper;
+import com.mad.prescriptionmanagementapp.data.model.Unit;
 import com.mad.prescriptionmanagementapp.data.remote.NetworkClient;
 import com.mad.prescriptionmanagementapp.data.remote.api.DrugService;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.UnitResponse;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,11 +31,13 @@ public class DrugRepository {
     private static final String TAG = "DrugRepository";
 
     private final DrugDao drugDao;
+    private final UnitDao unitDao;
     private final ExecutorService databaseExecutor;
     private final DrugService drugService;
 
     // LiveData chính để Fragment observe - Luôn đọc từ cache Room
     private final LiveData<List<DrugCache>> cachedDrugs;
+    private final LiveData<List<Unit>> unitList;
 
 //    // LiveData báo trạng thái đang làm mới từ mạng
 //    private final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>(false);
@@ -40,14 +46,17 @@ public class DrugRepository {
 
     // Cờ để tránh gọi API liên tục
     private volatile boolean isFetchInProgress = false;
+    private volatile boolean isFetchUnit = false;
     // Constructor nhận Application context để lấy DAO và Executor
     // (Trong thực tế, các thành phần này nên được inject bởi Hilt/Dagger)
     public DrugRepository(Application application) {
         this.drugService = NetworkClient.getDrugService();
         AppDatabase database = AppDatabase.getDatabase(application);
         this.drugDao = database.drugDao(); // Lấy DAO từ AppDatabase
+        this.unitDao = database.unitDao();
         this.databaseExecutor = AppDatabase.databaseWriteExecutor; // Lấy Executor từ AppDatabase
         this.cachedDrugs = drugDao.getAllDrugsFromCache();
+        this.unitList = unitDao.getAllUnits();
         Integer t = drugDao.getDrugCount1().getValue(); // Lấy LiveData từ DAO
         List<DrugCache> test = this.cachedDrugs.getValue();
     }
@@ -58,8 +67,75 @@ public class DrugRepository {
      */
     public LiveData<List<DrugCache>> getCachedDrugs() {
         this.refreshDrugsIfNeeded(); // Kích hoạt kiểm tra/làm mới khi có người quan sát
-        List<DrugCache> caches = this.cachedDrugs.getValue();
         return cachedDrugs;
+    }
+
+    public LiveData<List<Unit>> getUnits() {
+        this.refreshUnit();
+        return this.unitList;
+    }
+
+    public void refreshUnit() {
+        databaseExecutor.execute(() -> {
+            boolean needsFetch = drugDao.getDrugCount() == 0;
+            if (isFetchUnit) {
+                Log.d(TAG, "Fetch already in progress.");
+                return;
+            }
+
+            if (needsFetch) {
+                this.fetchUnitsFromApi();
+            }
+        });
+    }
+
+    private void fetchUnitsFromApi() {
+        this.isFetchUnit = true;
+        Call<ResponseObject<List<UnitResponse>>> call = this.drugService.getAllUnit();
+        call.enqueue(new Callback<ResponseObject<List<UnitResponse>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseObject<List<UnitResponse>>> call,
+                                   @NonNull Response<ResponseObject<List<UnitResponse>>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d(TAG, "API call successful. Processing data...");
+                    List<UnitResponse> unitResponses = response.body().getData();
+
+                    if (unitResponses != null) {
+                        databaseExecutor.execute(() -> {
+                            Log.d(TAG, "Saving fetched data to Room cache...");
+                            List<Unit> units = unitResponses.stream()
+                                    .map(UnitMapper::responseToModel)
+                                    .collect(Collectors.toList());
+
+                            unitDao.deleteAll();
+                            unitDao.insertAll(units);
+                            Log.d(TAG, "Room cache updated successfully.");
+
+                            isFetchUnit = false;
+                        });
+                    } else {
+                        Log.w(TAG, "API response data is null.");
+                        isFetchUnit = false;
+                    }
+                } else {
+                    String errorMsg = "Lỗi tải danh sách unit: ";
+                    if (response.body() != null && response.body().getMessage() != null) {
+                        errorMsg += response.body().getMessage();
+                    } else {
+                        errorMsg += response.code() + " " + response.message();
+                    }
+                    Log.e(TAG, errorMsg);
+//                    errorMessage.postValue(errorMsg);
+//                    isRefreshing.postValue(false);
+                    isFetchInProgress = false;
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<ResponseObject<List<UnitResponse>>> call, @NonNull Throwable t) {
+                Log.e(TAG, "API call failed: " + t.getMessage(), t);
+                isFetchInProgress = false;
+            }
+        });
     }
 
     /**
@@ -115,6 +191,7 @@ public class DrugRepository {
         }
         fetchDrugsFromApi();
     }
+
 
 
     /**

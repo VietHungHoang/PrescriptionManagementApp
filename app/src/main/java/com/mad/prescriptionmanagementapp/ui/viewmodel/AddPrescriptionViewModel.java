@@ -11,6 +11,7 @@ import androidx.lifecycle.Transformations;
 import com.mad.prescriptionmanagementapp.data.mapper.DrugMapper;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
+import com.mad.prescriptionmanagementapp.data.model.Unit;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.data.repository.DrugRepository;
@@ -21,13 +22,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class AddPrescriptionViewModel extends AndroidViewModel {
     private DrugRepository drugRepository;
-    private LiveData<List<DrugResponse>> drugsList;
+    @Getter
+    private final LiveData<List<DrugResponse>> originalDrugList;
+    private LiveData<List<Unit>> originalUnitList;
     private final MutableLiveData<List<DrugInPres>> listSelectedDrug = new MutableLiveData<>();
-    public LiveData<List<DrugInPres>> selectedDrug = this.listSelectedDrug;
     private final MutableLiveData<DrugInPres> currentDrug = new MutableLiveData<>();
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private MutableLiveData<PrescriptionRequest> prescription = new MutableLiveData<>();
@@ -41,6 +42,24 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     @Getter
     private boolean nameEmpty;
+
+    public void updateSelectedDrugs(String date) {
+        DrugInPres currentDrug = this.currentDrug.getValue();
+        if(currentDrug != null) {
+            currentDrug.setTimeDosages(this.listTime.getValue());
+            currentDrug.setDate(date);
+            List<DrugInPres> selectedDrugs = this.listSelectedDrug.getValue();
+            selectedDrugs.add(currentDrug);
+            this.listSelectedDrug.setValue(selectedDrugs);
+            this.currentDrug.setValue(null);
+        }
+
+
+    }
+
+    public LiveData<List<DrugInPres>> getSelectedDrugs() {
+        return this.listSelectedDrug;
+    }
 
     public void removeTimeDosage(int position) {
         List<TimeDosage> tmp = this.listTime.getValue();
@@ -165,7 +184,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
 
-    public void addCurrentDrug(DrugInPres drug) {
+    public void setCurrentDrug(DrugInPres drug) {
         this.currentDrug.setValue(drug);
     }
     public void addDrug(DrugInPres drug) {
@@ -181,19 +200,15 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     public AddPrescriptionViewModel(@NonNull Application application) {
         super(application);
         this.drugRepository = new DrugRepository(application); // Consider upgrading to use DI
-
-        this.drugsList = Transformations.map(this.drugRepository.getCachedDrugs(), entities -> {
+        this.listTime.setValue(new ArrayList<>());
+        this.listSelectedDrug.setValue(new ArrayList<>());
+        this.originalDrugList = Transformations.map(this.drugRepository.getCachedDrugs(), entities -> {
             if (entities == null) return null;
             return entities.stream()
                     .map(DrugMapper::cacheToResponse) // Chuyển Entity -> DTO
                     .collect(Collectors.toList());
         });
-        List<DrugResponse> drugs = this.drugsList.getValue();
-        this.listTime.setValue(new ArrayList<>());
-    }
-
-    public LiveData<List<DrugResponse>> getDrugsList() {
-        return drugsList;
+        this.originalUnitList = this.drugRepository.getUnits();
     }
 
     // Hàm để lấy danh sách thuốc
@@ -224,7 +239,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
         } else {
             this.nameEmpty = false;
-            if(this.selectedDrug.getValue() == null || this.selectedDrug.getValue().isEmpty()) {
+            if(this.listSelectedDrug.getValue() == null || this.listSelectedDrug.getValue().isEmpty()) {
                 this.errorMessage.setValue("Vui lòng nhập ít nhất một thuốc");
                 return false;
             }

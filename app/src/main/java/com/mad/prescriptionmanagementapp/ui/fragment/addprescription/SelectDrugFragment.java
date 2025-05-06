@@ -108,7 +108,7 @@ public class SelectDrugFragment extends Fragment implements OnDrugClickListener 
 //        });
 
         // Quan sát danh sách thuốc từ cache
-        viewModel.getDrugsList().observe(getViewLifecycleOwner(), drug -> {
+        viewModel.getOriginalDrugList().observe(getViewLifecycleOwner(), drug -> {
             if (drug != null) {
                 Log.d("SelectDrugFragment", "Medication list updated from cache. Size: " + drug.size());
                 this.drugsAdapter.updateData(drug);
@@ -148,7 +148,7 @@ public class SelectDrugFragment extends Fragment implements OnDrugClickListener 
     @Override
     public void onItemClick(DrugResponse drug) {
         Fragment newFragment = AddScheduleFragment.newInstance(drug.getId());
-        this.viewModel.addCurrentDrug(new DrugInPres(drug));
+        this.viewModel.setCurrentDrug(new DrugInPres(drug));
         // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
         this.getParentFragmentManager()
                 .beginTransaction()
