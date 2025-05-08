@@ -48,14 +48,6 @@ public class SelectDrugFragment extends Fragment implements OnDrugClickListener 
         this.recyclerView  = this.binding.medicationRecycler;
         this.initViewModel();
         this.observeViewModel();
-        // Tạo Adapter và set cho RecyclerView
-        // (Tùy chọn) Thêm SwipeRefreshLayout để refresh thủ công
-//        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-//            Log.d("SelectDrugFragment", "Manual refresh triggered");
-//            viewModel.forceRefreshDrugs();
-//            // Tắt icon refreshing khi LiveData isLoading báo false (trong observeViewModel)
-//        });
-
         return this.binding.getRoot();
     }
 

@@ -8,10 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderTimeanddosageBinding;
-import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 import com.mad.prescriptionmanagementapp.util.Tools;

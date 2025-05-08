@@ -70,4 +70,5 @@ dependencies {
     implementation ("androidx.room:room-runtime:2.7.1")
     annotationProcessor ("androidx.room:room-compiler:2.7.1")
     implementation("org.modelmapper:modelmapper:3.2.2")
+    implementation ("com.google.code.gson:gson:2.13.1")
 }

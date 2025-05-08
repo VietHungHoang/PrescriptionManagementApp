@@ -7,16 +7,20 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.mad.prescriptionmanagementapp.data.model.Unit;
+import com.mad.prescriptionmanagementapp.data.model.entity.UnitEntity;
 
 import java.util.List;
 
 @Dao
 public interface UnitDao {
     @Query("SELECT * FROM units ORDER BY name ASC")
-    LiveData<List<Unit>> getAllUnits(); // Returns LiveData for reactive updates
+    LiveData<List<UnitEntity>> getAllUnits(); // Returns LiveData for reactive updates
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Unit> units);
+    void insertAll(List<UnitEntity> units);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long insert(UnitEntity unit);
 
     @Query("DELETE FROM units")
     void deleteAll();
@@ -27,4 +31,11 @@ public interface UnitDao {
 
     @Query("SELECT COUNT(*) FROM units")
     LiveData<Integer> getUnitCountLive(); // LiveData version of count
+
+    @Query("SELECT * FROM units WHERE id = :id")
+    LiveData<UnitEntity> getUnitById(Long id);
+
+    @Query("SELECT * FROM units WHERE id = :id")
+    UnitEntity getUnitByIdSync(Long id); // Cho việc lấy tên unit khi tạo ReminderInstance
 }
+

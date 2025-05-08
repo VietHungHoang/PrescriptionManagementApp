@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
+import com.mad.prescriptionmanagementapp.databinding.ViewholderSelectedDrugBinding;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderTimeanddosageBinding;
+import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
@@ -18,126 +22,63 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-// 1. Kế thừa RecyclerView.Adapter và chỉ định ViewHolder
-public class SelectedDrugAdapter extends RecyclerView.Adapter<SelectedDrugAdapter.TimeDosageViewHolder> {
+public class SelectedDrugAdapter extends RecyclerView.Adapter<SelectedDrugAdapter.SelectedDrugViewHolder> {
 
-    private final OnTimeDosageClickListener listener;
-
-    // 2. Biến để lưu trữ danh sách dữ liệu
-    private List<TimeDosage> timesList; // Khởi tạo để tránh NullPointerException
-
-    private AddPrescriptionViewModel viewModel;
-    // --- Các phương thức bắt buộc của Adapter ---
-
-    public SelectedDrugAdapter(List<TimeDosage> timeDosageList, AddPrescriptionViewModel viewModel, OnTimeDosageClickListener listener) {
-//        super(DIFF_CALLBACK);
-        this.timesList = timeDosageList;
+    private final OnSelectedDrugClickListener listener;
+    private List<DrugInPres> selectedDrugList;
+    public SelectedDrugAdapter(List<DrugInPres> selectedDrugList, OnSelectedDrugClickListener listener) {
+        this.selectedDrugList = selectedDrugList;
         this.listener = listener;
-        this.viewModel = viewModel;
     }
 
     @NonNull
     @Override
-    public TimeDosageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // 5. Inflate layout của item và tạo ViewHolder
-//        View itemView = LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.viewholder_timeanddosage, parent, false); // Sử dụng layout item của bạn
-//        return new MyViewHolder(itemView);
-
-        ViewholderTimeanddosageBinding binding = ViewholderTimeanddosageBinding.inflate(
+    public SelectedDrugViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ViewholderSelectedDrugBinding binding = ViewholderSelectedDrugBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
-        return new SelectedDrugAdapter.TimeDosageViewHolder(binding, listener);
+        return new SelectedDrugAdapter.SelectedDrugViewHolder(binding, listener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TimeDosageViewHolder holder, int position) {
-        // 6. Lấy dữ liệu tại vị trí 'position'
-        TimeDosage currentItem = timesList.get(position);
-        // 7. Gán dữ liệu vào các view trong ViewHolder
-        holder.bind(position, currentItem, this.viewModel.getDrugUnit().getValue());
+    public void onBindViewHolder(@NonNull SelectedDrugViewHolder holder, int position) {
+        DrugInPres currentItem = selectedDrugList.get(position);
+        holder.bind(currentItem);
     }
 
     @Override
     public int getItemCount() {
-        // 8. Trả về số lượng item trong danh sách
-        return timesList.size();
+        return selectedDrugList.size();
     }
+    public static class SelectedDrugViewHolder extends RecyclerView.ViewHolder {
+        ViewholderSelectedDrugBinding binding;
 
-    // --- ViewHolder ---
+        private final OnSelectedDrugClickListener clickListener;
+        private TimeDosageWithDrugAdapter timeDosageWithDrugAdapter;
 
-    // 3. Tạo lớp ViewHolder nội (inner class)
-    public static class TimeDosageViewHolder extends RecyclerView.ViewHolder {
-        // Khai báo các View trong item layout của bạn
-        TextView textViewTitle;
-        TextView textViewDescription;
-        // Khai báo các View khác...
-
-        // Hoặc dùng binding
-        ViewholderTimeanddosageBinding binding;
-
-        private final OnTimeDosageClickListener clickListener;
-
-        public TimeDosageViewHolder(ViewholderTimeanddosageBinding binding, OnTimeDosageClickListener listener) {
-//            super(itemView);
-//            // Ánh xạ các View từ layout
-//            textViewTitle = itemView.findViewById(R.id.textViewTitle); // ID từ list_item_layout.xml
-//            textViewDescription = itemView.findViewById(R.id.textViewDescription); // ID từ list_item_layout.xml
-//            // Ánh xạ các View khác...
+        public SelectedDrugViewHolder(ViewholderSelectedDrugBinding binding, OnSelectedDrugClickListener listener) {
             super(binding.getRoot());
             this.binding = binding;
             this.clickListener = listener;
 
-
         }
 
-        // Phương thức tiện ích để gán dữ liệu (giúp onBindViewHolder gọn gàng hơn)
-        public void bind(int position, TimeDosage item, String unit) {
-            String time = String.format(Locale.US, "%02d:%02d", item.getHour(), item.getMinutes());
-            this.binding.time.setText(time);
-            this.binding.dosage.setText(String.format(Locale.US, "%s %s", formatNumber(item.getDosage()), unit));
+        private void setAdapter(List<TimeDosage> timeDosageList) {
+            this.timeDosageWithDrugAdapter = new TimeDosageWithDrugAdapter(timeDosageList);
+            this.binding.rcvDrugTimeDosage.setLayoutManager( new LinearLayoutManager(this.binding.rcvDrugTimeDosage.getContext()));
+            this.binding.rcvDrugTimeDosage.setAdapter(this.timeDosageWithDrugAdapter);
+            // Thêm ItemDecoration nếu muốn có đường kẻ phân cách
+        }
+
+        public void bind(DrugInPres item) {
+            this.setAdapter(item.getTimeDosages());
+            this.binding.drugName.setText(item.getDrugResponse().getName());
             if (clickListener != null) {
-                this.binding.timeAndDosage.setOnClickListener(v -> {
+                this.binding.btnEdit.setOnClickListener(v -> {
                     clickListener.onItemClick(item);
                 });
-                this.binding.btnRemove.setOnClickListener(v -> {
-                    clickListener.onRemoveButtonClick(position);
-                });
+
             }
 
         }
-    }
-
-    // --- Phương thức cập nhật dữ liệu ---
-
-    // 4. Tạo phương thức để cập nhật danh sách dữ liệu từ bên ngoài (Activity/Fragment)
-    public void setData(List<TimeDosage> newData) {
-        if (newData == null) {
-            newData = new ArrayList<>(); // Đảm bảo không bao giờ là null
-        }
-        // Cách đơn giản nhất (không hiệu quả cho danh sách lớn hoặc cập nhật thường xuyên)
-        this.timesList.clear();
-        this.timesList.addAll(newData);
-        notifyDataSetChanged(); // Thông báo cho RecyclerView vẽ lại toàn bộ danh sách
-
-        /*
-         * CÁCH TỐT HƠN (Sử dụng DiffUtil):
-         * Để tối ưu hiệu năng, đặc biệt với danh sách lớn hoặc thay đổi thường xuyên,
-         * bạn nên sử dụng DiffUtil để chỉ cập nhật những item thực sự thay đổi.
-         * Việc này phức tạp hơn một chút, cần tạo một lớp DiffUtil.Callback.
-         * Nếu bạn cần, tôi có thể cung cấp ví dụ về DiffUtil.
-         */
-        // Ví dụ hàm dùng DiffUtil (cần tạo MyDiffCallback trước):
-         /*
-         public void submitList(List<MyDataModel> newList) {
-             if (newList == null) {
-                 newList = new ArrayList<>();
-             }
-             MyDiffCallback diffCallback = new MyDiffCallback(this.dataList, newList);
-             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-             this.dataList.clear();
-             this.dataList.addAll(newList);
-             diffResult.dispatchUpdatesTo(this); // Cập nhật hiệu quả hơn
-         }
-         */
     }
 }

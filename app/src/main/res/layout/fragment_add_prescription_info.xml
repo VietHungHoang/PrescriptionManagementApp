@@ -121,6 +121,16 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rcv_drug_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/search_drug"
+                            android:layout_alignParentBottom="true"
+                            android:clipToPadding="false"
+                            android:paddingBottom="8dp"
+                            android:scrollbars="vertical" />
+
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_add_drug"
                             android:layout_width="match_parent"

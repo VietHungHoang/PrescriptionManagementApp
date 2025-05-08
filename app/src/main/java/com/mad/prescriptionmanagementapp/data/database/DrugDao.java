@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.mad.prescriptionmanagementapp.data.cache.DrugCache;
+import com.mad.prescriptionmanagementapp.data.model.entity.DrugEntity;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ import java.util.List;
 public interface DrugDao {
     @Query("SELECT * FROM drug_cache ORDER BY name ASC")
     LiveData<List<DrugCache>> getAllDrugsFromCache(); // Trả về LiveData
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insert(DrugEntity drug);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<DrugCache> drugs);

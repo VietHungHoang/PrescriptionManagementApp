@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
 import android.text.Editable;
@@ -32,16 +33,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.adapter.SelectedDrugAdapter;
+import com.mad.prescriptionmanagementapp.adapter.TimeAndDosageAdapter;
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
+import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddPrescriptionInfoFragment extends Fragment {
+public class AddPrescriptionInfoFragment extends Fragment implements OnSelectedDrugClickListener {
     private FragmentAddPrescriptionInfoBinding binding;
     private AddPrescriptionViewModel viewModel;
+
+    private SelectedDrugAdapter selectedDrugAdapter;
 
     public AddPrescriptionInfoFragment() {
     }
@@ -82,7 +90,29 @@ public class AddPrescriptionInfoFragment extends Fragment {
             }
         });
         this.setOnclickDatePicker();
+        this.setAdapter();
+        this.observeData();
+        this.setupUI();
+    }
 
+    private void setupUI() {
+        PrescriptionRequest pres = this.viewModel.getPrescription().getValue();
+        this.binding.switchMedicalInfo.setChecked(this.viewModel.isOnMedicalInfo().getValue());
+        this.binding.edtPrescriptionName.setText(pres.getName());
+            this.binding.edtHospital.setText(pres.getHospital());
+            this.binding.edtDoctor.setText(pres.getDoctorName());
+            this.binding.edtConsultationDate.setText(pres.getConsultationDate());
+            this.binding.edtFollowUpDate.setText(pres.getFollowUpDate());
+    }
+
+    private void observeData() {
+    }
+
+    private void setAdapter() {
+        this.selectedDrugAdapter = new SelectedDrugAdapter(this.viewModel.getSelectedDrugs().getValue(), this);
+        this.binding.rcvDrugInfo.setLayoutManager( new LinearLayoutManager(this.getContext()));
+        this.binding.rcvDrugInfo.setAdapter(this.selectedDrugAdapter);
+        // Thêm ItemDecoration nếu muốn có đường kẻ phân cách
     }
 
     private void setOnclickDatePicker() {
@@ -128,7 +158,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
 
     private void setOnclickBtnSave() {
         this.binding.btnSave.setOnClickListener(v -> {
-            this.viewModel.handleBtnSavePres(this.binding.edtPrescriptionName.getText().toString());
+            this.updatePres();
+            this.viewModel.handleBtnSavePres();
 
         });
     }
@@ -226,4 +257,26 @@ public class AddPrescriptionInfoFragment extends Fragment {
     }
 
 
+    @Override
+    public void onItemClick(DrugInPres drugInPres) {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        this.updatePres();
+    }
+
+    private void updatePres() {
+        if(this.viewModel.getPrescription().getValue() != null) {
+            this.viewModel.updatePrescription(this.binding.edtPrescriptionName.getText().toString()
+                    ,this.binding.switchMedicalInfo.isChecked()
+                    ,this.binding.edtHospital.getText().toString()
+                    ,this.binding.edtDoctor.getText().toString()
+                    ,this.binding.edtConsultationDate.getText().toString()
+                    ,this.binding.edtFollowUpDate.getText().toString()
+            );
+        }
+    }
 }

@@ -40,4 +40,8 @@
     <color name="tab_unselected_bg_color">#FFFFFF</color>
     <color name="tab_unselected_text_color">#000000</color>
     <color name="btn_end_background">#40F8F8F8</color>
+    <color name="reminder_alert_background">#3F51B5</color> <!-- Indigo -->
+    <color name="button_taken_color">#4CAF50</color> <!-- Green -->
+    <color name="button_snooze_color">#FF9800</color> <!-- Orange -->
+    <color name="button_skip_color">#757575</color> <!-- Grey -->
 </resources>

@@ -16,24 +16,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class PrescriptionRequest {
+    private String name;
     private List<DrugInPres> drugs = new ArrayList<>();
     private String hospital;
     private Doctor doctor;
     private String doctorName;
-    private LocalDate consultationDate;
-    private LocalDate followUpDate;
+    private String consultationDate;
+    private String followUpDate;
 
     public void addDrug(DrugInPres drug) {
         this.drugs.add(drug);
     }
 
-    public String getConsultationDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        return sdf.format(this.consultationDate);
+    public PrescriptionRequest(String name, String hospital, String doctorName, String consultationDate, String followUpDate) {
+        this.name = name;
+        this.hospital = hospital;
+        this.doctorName = doctorName;
+        this.consultationDate = consultationDate;
+        this.followUpDate = followUpDate;
     }
 
-    public String getFollowUpDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        return sdf.format(this.followUpDate);
-    }
 }

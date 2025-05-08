@@ -35,4 +35,11 @@ public class DrugInPres {
         this.drugResponse = original.drugResponse;
         this.timeDosages = new ArrayList<>(original.timeDosages); // shallow copy, đủ xài nếu TimeDosage immutable
     }
+
+    public Drug getDrug() {
+        Drug res = new Drug();
+        res.setId(this.drugResponse.getId());
+        res.setName(this.drugResponse.getName());
+        return res;
+    }
 }

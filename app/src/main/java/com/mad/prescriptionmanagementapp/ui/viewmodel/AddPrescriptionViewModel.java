@@ -39,14 +39,41 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     private MutableLiveData<String> drugUnit = new MutableLiveData<>();
 
+    private MutableLiveData<Boolean> onMedicalInfo = new MutableLiveData<>();
+
+    public LiveData<Boolean> isOnMedicalInfo() {
+        return this.onMedicalInfo;
+    }
+
+    public void setOnMedicalInfo(boolean isOn) {
+        this.onMedicalInfo.setValue(isOn);
+    }
+
 
     @Getter
     private boolean nameEmpty;
 
+    public LiveData<PrescriptionRequest> getPrescription() {
+        return this.prescription;
+    }
+
+    public void updatePrescription(String presName, boolean isOnMedicationInfo, String hospital, String doctor, String consultationDate, String followUpDate) {
+        PrescriptionRequest pres;
+        this.onMedicalInfo.setValue(isOnMedicationInfo);
+        pres = new PrescriptionRequest(presName, hospital, doctor, consultationDate, followUpDate);
+        this.prescription.setValue(pres);
+    }
+
+    public LiveData<String> getDrugName() {
+        return Transformations.map(this.prescription, pres ->
+            pres != null ? pres.getName() : ""
+        );
+    }
+
     public void updateSelectedDrugs(String date) {
         DrugInPres currentDrug = this.currentDrug.getValue();
         if(currentDrug != null) {
-            currentDrug.setTimeDosages(this.listTime.getValue());
+            currentDrug.setTimeDosages(TimeDosage.deepCopyList(this.listTime.getValue()));
             currentDrug.setDate(date);
             List<DrugInPres> selectedDrugs = this.listSelectedDrug.getValue();
             selectedDrugs.add(currentDrug);
@@ -143,6 +170,10 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         this.listTime.setValue(list);
     }
 
+    public void resetListTimeDosage() {
+        this.listTime.setValue(new ArrayList<>());
+    }
+
     public String getDayBetween() {
         DrugInPres drug = this.currentDrug.getValue();
         if(drug != null) {
@@ -202,13 +233,15 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         this.drugRepository = new DrugRepository(application); // Consider upgrading to use DI
         this.listTime.setValue(new ArrayList<>());
         this.listSelectedDrug.setValue(new ArrayList<>());
+        this.onMedicalInfo.setValue(false);
         this.originalDrugList = Transformations.map(this.drugRepository.getCachedDrugs(), entities -> {
             if (entities == null) return null;
             return entities.stream()
                     .map(DrugMapper::cacheToResponse) // Chuyển Entity -> DTO
                     .collect(Collectors.toList());
         });
-        this.originalUnitList = this.drugRepository.getUnits();
+//        this.originalUnitList = this.drugRepository.getUnits();
+        this.prescription.setValue(new PrescriptionRequest());
     }
 
     // Hàm để lấy danh sách thuốc
@@ -247,9 +280,13 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         return true;
     }
 
-    public void handleBtnSavePres(String presName) {
-        if(this.validateAddPrescriptionInfo(presName)) {
+    public void handleBtnSavePres() {
+        PrescriptionRequest pres = this.prescription.getValue();
+        if(pres != null) {
+            if(this.validateAddPrescriptionInfo(pres.getName())) {
+                pres.setDrugs(this.listSelectedDrug.getValue());
 
+            }
         }
     }
 

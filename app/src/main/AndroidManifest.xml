@@ -4,6 +4,14 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- Cho Android 13+ -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+        />
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> --> <!-- Có thể không cần nếu dùng setExactAndAllowWhileIdle -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- Nếu bạn quyết định dùng service cho các tác vụ dài -->
     <application
         android:allowBackup="true"
         android:usesCleartextTraffic="true"
@@ -45,8 +53,56 @@
             android:name=".ui.activity.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login" />
-        <receiver android:name=".receiver.NotificationActionReceiver" />
+        <receiver
+            android:name=".receiver.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" /> <!-- exported="false" vì chỉ được gọi bởi hệ thống qua AlarmManager -->
+
+        <receiver
+            android:name=".receiver.NotificationActionReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="true"> <!-- exported="true" để nhận BOOT_COMPLETED từ hệ thống -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+        <!-- Activity màn hình báo thức (sẽ tạo) -->
+        <activity
+            android:name=".ui.activity.ReminderAlertActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:exported="true">
+
+        </activity>
+
+        <receiver android:name=".broadcast.NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver android:name=".broadcast.ActionHandlerBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver android:name=".receiver.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true">  <!-- Phải là true cho BOOT_COMPLETED -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
+
+
 
 </manifest>

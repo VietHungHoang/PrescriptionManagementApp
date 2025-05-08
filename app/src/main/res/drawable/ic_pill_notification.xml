@@ -1,0 +1,11 @@
+<!-- res/drawable/ic_pill_notification.xml (đổi tên nếu dùng icon này) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0"
+    android:tint="?attr/colorControlNormal">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M16.95,6.77 C16.52,6.34 15.88,6.13 15.22,6.13H8.78C7.13,6.13 5.83,7.43 5.83,9.08V14.92C5.83,16.57 7.13,17.87 8.78,17.87H15.22C16.87,17.87 18.17,16.57 18.17,14.92V9.08C18.17,8.17 17.69,7.33 16.95,6.77ZM14.5,12.5H9.5V11.5H14.5V12.5Z"/>
+</vector>

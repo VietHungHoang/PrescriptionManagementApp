@@ -37,7 +37,7 @@ public class DrugRepository {
 
     // LiveData chính để Fragment observe - Luôn đọc từ cache Room
     private final LiveData<List<DrugCache>> cachedDrugs;
-    private final LiveData<List<Unit>> unitList;
+//    private final LiveData<List<Unit>> unitList;
 
 //    // LiveData báo trạng thái đang làm mới từ mạng
 //    private final MutableLiveData<Boolean> isRefreshing = new MutableLiveData<>(false);
@@ -56,7 +56,7 @@ public class DrugRepository {
         this.unitDao = database.unitDao();
         this.databaseExecutor = AppDatabase.databaseWriteExecutor; // Lấy Executor từ AppDatabase
         this.cachedDrugs = drugDao.getAllDrugsFromCache();
-        this.unitList = unitDao.getAllUnits();
+//        this.unitList = unitDao.getAllUnits();
         Integer t = drugDao.getDrugCount1().getValue(); // Lấy LiveData từ DAO
         List<DrugCache> test = this.cachedDrugs.getValue();
     }
@@ -70,10 +70,10 @@ public class DrugRepository {
         return cachedDrugs;
     }
 
-    public LiveData<List<Unit>> getUnits() {
-        this.refreshUnit();
-        return this.unitList;
-    }
+//    public LiveData<List<Unit>> getUnits() {
+//        this.refreshUnit();
+//        return this.unitList;
+//    }
 
     public void refreshUnit() {
         databaseExecutor.execute(() -> {
@@ -108,7 +108,7 @@ public class DrugRepository {
                                     .collect(Collectors.toList());
 
                             unitDao.deleteAll();
-                            unitDao.insertAll(units);
+//                            unitDao.insertAll(units);
                             Log.d(TAG, "Room cache updated successfully.");
 
                             isFetchUnit = false;

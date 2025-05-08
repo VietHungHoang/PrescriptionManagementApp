@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Prescription {
     private Long id;
-    private List<Drug> drugs;
+    private List<DrugInPres> drugs;
     private String hospital;
     private Doctor doctor;
     private String doctorName;
