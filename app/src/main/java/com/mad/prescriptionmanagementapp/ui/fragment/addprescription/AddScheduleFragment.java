@@ -243,7 +243,7 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
             case DAILY:
                 this.binding.spinnerFrequency.setText("Mỗi ngày");
                 break;
-            case EVERY_N_DAY:
+            case EVERY_N_DAYS:
                 String day = String.format("Cách %d ngày", drugInPres.getEveryNDays());
                 this.binding.spinnerFrequency.setText(day);
                 break;

@@ -125,7 +125,7 @@ public class PrescriptionListViewModel extends AndroidViewModel {
 
         // amoxicillinInPres.setDate(LocalDate.now().plusDays(1).toString()); // Bắt đầu từ ngày mai
         amoxicillinInPres.setDate(LocalDate.now().plusDays(1).format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE));
-        amoxicillinInPres.setFrequency(Frequency.EVERY_N_DAY);
+        amoxicillinInPres.setFrequency(Frequency.EVERY_N_DAYS);
         amoxicillinInPres.setEveryNDays(2); // Uống mỗi 2 ngày
 
         List<TimeDosage> amoxicillinTimes = new ArrayList<>();

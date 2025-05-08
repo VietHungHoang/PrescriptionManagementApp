@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -19,7 +18,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduledReminderEntity;
+import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.ui.activity.HomeActivity;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
@@ -28,9 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -62,19 +59,19 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         // Thực hiện các tác vụ DB và network trên background thread
         executorService.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
-            ScheduledReminderEntity mainReminder = db.scheduledReminderDao().getById(reminderId);
+            ScheduleEntity mainReminder = db.scheduleDao().getById(reminderId);
 
-            if (mainReminder == null || !ReminderStatus.PENDING.equals(mainReminder.status)) {
+            if (mainReminder == null || !ReminderStatus.PENDING.equals(mainReminder.getStatus())) {
                 Log.w(TAG, "Reminder not found or not in PENDING state for ID: " + reminderId);
                 // Có thể đã được xử lý (confirm, skip, snooze) hoặc xóa
                 return;
             }
 
             // Nhóm các thuốc có cùng thời gian (ví dụ trong 1 phút)
-            long timeWindowStart = mainReminder.scheduledDateTimeMillis - (30 * 1000); // 30 giây trước
-            long timeWindowEnd = mainReminder.scheduledDateTimeMillis + (30 * 1000);   // 30 giây sau
+            long timeWindowStart = mainReminder.getScheduledDateTimeMillis() - (30 * 1000); // 30 giây trước
+            long timeWindowEnd = mainReminder.getScheduledDateTimeMillis() + (30 * 1000);   // 30 giây sau
 
-            List<ScheduledReminderEntity> remindersForThisTime = db.scheduledReminderDao()
+            List<ScheduleEntity> remindersForThisTime = db.scheduleDao()
                     .getRemindersAroundTime(timeWindowStart, timeWindowEnd, ReminderStatus.PENDING);
 
             if (remindersForThisTime.isEmpty()) {
@@ -84,7 +81,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             // Tạo Notification ID (có thể dùng alarmRequestCode của reminder chính)
             // hoặc một ID mới nếu bạn nhóm nhiều reminder vào 1 notif
-            int notificationId = mainReminder.alarmManagerRequestId; // Dùng request code làm notification ID
+            int notificationId = mainReminder.getAlarmManagerRequestId(); // Dùng request code làm notification ID
 
             // Tạo channel (chỉ cần làm 1 lần)
             createNotificationChannel(context);
@@ -114,29 +111,29 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
 
             ArrayList<Long> reminderIdsInNotification = new ArrayList<>();
-            for(ScheduledReminderEntity r : remindersForThisTime){
-                reminderIdsInNotification.add(r.id);
+            for(ScheduleEntity r : remindersForThisTime){
+                reminderIdsInNotification.add(r.getId());
             }
 
             // Nội dung thông báo
             if (remindersForThisTime.size() == 1) {
-                ScheduledReminderEntity singleReminder = remindersForThisTime.get(0);
+                ScheduleEntity singleReminder = remindersForThisTime.get(0);
                 builder.setContentText(String.format(Locale.getDefault(), "Uống: %s %.1f %s",
-                        singleReminder.drugName, singleReminder.dosage, singleReminder.unitName));
-                if (!TextUtils.isEmpty(singleReminder.drugImage)) {
-                    Bitmap largeIcon = getBitmapFromURL(singleReminder.drugImage);
-                    if (largeIcon != null) {
-                        builder.setLargeIcon(largeIcon);
-                    }
-                }
+                        singleReminder.getDrugName(), singleReminder.getDosage(), singleReminder.getUnitName()));
+//                if (!TextUtils.isEmpty(singleReminder.drugImage)) {
+//                    Bitmap largeIcon = getBitmapFromURL(singleReminder.drugImage);
+//                    if (largeIcon != null) {
+//                        builder.setLargeIcon(largeIcon);
+//                    }
+//                }
             } else {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 inboxStyle.setBigContentTitle("Đến giờ uống thuốc!");
                 StringBuilder summaryText = new StringBuilder();
                 for (int i = 0; i < remindersForThisTime.size(); i++) {
-                    ScheduledReminderEntity r = remindersForThisTime.get(i);
+                    ScheduleEntity r = remindersForThisTime.get(i);
                     String line = String.format(Locale.getDefault(), "• %s %.1f %s",
-                            r.drugName, r.dosage, r.unitName);
+                            r.getDrugName(), r.getDosage(), r.getUnitName());
                     inboxStyle.addLine(line);
                     if (i < 2) { // Hiển thị 2 dòng đầu ở dạng thu gọn
                         summaryText.append(line).append(i == 0 && remindersForThisTime.size() > 1 ? " | " : "");
@@ -206,8 +203,8 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
 
             // Cập nhật trạng thái các reminder đã được thông báo
-            for (ScheduledReminderEntity r : remindersForThisTime) {
-                db.scheduledReminderDao().updateStatus(r.id, ReminderStatus.NOTIFIED);
+            for (ScheduleEntity r : remindersForThisTime) {
+                db.scheduleDao().updateStatus(r.getId(), ReminderStatus.NOTIFIED);
             }
         });
     }

@@ -3,7 +3,6 @@ package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
-import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentFrequencySelectionBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
@@ -102,7 +100,7 @@ public class FrequencySelectionFragment extends Fragment {
             case DAILY:
                 this.binding.radioGroupFrequency.check(this.binding.radioDaily.getId());
                 break;
-            case EVERY_N_DAY:
+            case EVERY_N_DAYS:
                 this.binding.radioGroupFrequency.check(this.binding.radioEveryNDays.getId());
                 this.binding.numberOfDaysLayout.setVisibility(View.VISIBLE);
                 this.binding.tvCount.setText(this.viewModel.getDayBetween());

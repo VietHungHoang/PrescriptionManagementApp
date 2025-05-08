@@ -9,7 +9,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.relation.ScheduleWithDrug;
 import com.mad.prescriptionmanagementapp.data.repository.MedicationRepository;
 import com.mad.prescriptionmanagementapp.util.AlarmScheduler;

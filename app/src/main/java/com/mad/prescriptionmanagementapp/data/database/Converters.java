@@ -3,6 +3,7 @@ package com.mad.prescriptionmanagementapp.data.database;
 import androidx.room.TypeConverter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +16,16 @@ public class Converters {
 
     public enum Frequency {
         DAILY, EVERY_N_DAYS, SPECIFIC_DATES, UNKNOWN
+    }
+
+    @TypeConverter
+    public static ReminderStatus toReminderStatus(String name) {
+        return ReminderStatus.valueOf(name);
+    }
+
+    @TypeConverter
+    public static String fromReminderStatus(ReminderStatus status) {
+        return status.name();
     }
 
     @TypeConverter

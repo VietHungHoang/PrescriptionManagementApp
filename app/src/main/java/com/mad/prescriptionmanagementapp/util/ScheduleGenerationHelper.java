@@ -3,27 +3,26 @@ package com.mad.prescriptionmanagementapp.util;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduledReminderEntity;
+import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ReminderGenerationHelper {
+public class ScheduleGenerationHelper {
 
     // Dùng AtomicInteger để đảm bảo unique request code nếu tạo nhiều reminder cùng lúc
     private static final AtomicInteger alarmRequestCodeCounter = new AtomicInteger((int) System.currentTimeMillis());
 
-    public static List<ScheduledReminderEntity> generateReminders(Prescription prescription, LocalDate fromDate, LocalDate toDate) {
-        List<ScheduledReminderEntity> reminders = new ArrayList<>();
+    public static List<ScheduleEntity> generateSchedules(Prescription prescription, LocalDate toDate) {
+        List<ScheduleEntity> schedules = new ArrayList<>();
         if (prescription == null || prescription.getDrugs() == null) {
-            return reminders;
+            return schedules;
         }
 
         for (DrugInPres drugInPres : prescription.getDrugs()) {
@@ -33,17 +32,13 @@ public class ReminderGenerationHelper {
 
             LocalDate startDate = LocalDate.parse(drugInPres.getDate()); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
 
-            for (LocalDate currentDate = fromDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
-                if (currentDate.isBefore(startDate)) {
-                    continue; // Chưa đến ngày bắt đầu uống thuốc này
-                }
-
+            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
                 boolean shouldTakeToday = false;
                 switch (drugInPres.getFrequency()) {
                     case DAILY:
                         shouldTakeToday = true;
                         break;
-                    case EVERY_N_DAY:
+                    case EVERY_N_DAYS:
                         if (drugInPres.getEveryNDays() > 0) {
                             long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate);
                             if (daysBetween % drugInPres.getEveryNDays() == 0) {
@@ -51,28 +46,25 @@ public class ReminderGenerationHelper {
                             }
                         }
                         break;
-                    case SPECIFIC_DAYS: // Giả sử specificDays là List<Integer> với 1=MONDAY, ..., 7=SUNDAY
+                    case SPECIFIC_DAYS:
                         if (drugInPres.getSpecificDays() != null && !drugInPres.getSpecificDays().isEmpty()) {
-                            DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek(); // java.time.DayOfWeek
+                            DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
                             // DayOfWeek.getValue() trả về 1 (Thứ Hai) đến 7 (Chủ Nhật)
                             if (drugInPres.getSpecificDays().contains(currentDayOfWeek.getValue())) {
                                 shouldTakeToday = true;
                             }
                         }
                         break;
-                    // Thêm các case khác nếu có
                 }
 
                 if (shouldTakeToday) {
                     for (TimeDosage timeDosage : drugInPres.getTimeDosages()) {
                         LocalDateTime reminderDateTime = currentDate.atTime(timeDosage.getHour(), timeDosage.getMinutes());
                         long scheduledMillisUTC = reminderDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                        // Hoặc nếu backend trả giờ UTC:
-                        // long scheduledMillisUTC = reminderDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
 
                         // Chỉ tạo reminder cho tương lai
                         if (scheduledMillisUTC > System.currentTimeMillis()) {
-                            reminders.add(new ScheduledReminderEntity(
+                            schedules.add(new ScheduleEntity(
                                     prescription.getId(),
                                     // Cần có ID cho DrugInPres, hoặc bạn có thể dùng index/hashcode tạm
                                     // Nếu DrugInPres không có ID riêng, bạn cần cơ chế để xác định nó
@@ -91,7 +83,7 @@ public class ReminderGenerationHelper {
                 }
             }
         }
-        return reminders;
+        return schedules;
     }
 
     // Ví dụ cách sử dụng:

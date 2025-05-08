@@ -11,12 +11,14 @@ import com.mad.prescriptionmanagementapp.data.model.entity.DrugEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.PrescriptionEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduledReminderEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.TimeDosageEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.UnitEntity;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Database(entities = {DrugCache.class, UnitEntity.class, DrugEntity.class, PrescriptionEntity.class,
-        DrugInPresEntity.class, TimeDosageEntity.class, ScheduleEntity.class, ScheduledReminderEntity.class/*, Các entity khác */}, version = 3, exportSchema = false)
+        DrugInPresEntity.class, TimeDosageEntity.class, ScheduleEntity.class, ScheduleEntity.class/*, Các entity khác */}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UnitDao unitDao();
@@ -24,14 +26,14 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PrescriptionDao prescriptionDao();
     public abstract DrugInPresDao drugInPresDao();
     public abstract TimeDosageDao timeDosageDao();
+
     public abstract ScheduleDao scheduleDao();
-
-    public abstract ScheduledReminderDao scheduledReminderDao();
-
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4; // Số luồng cho DB executor
-    public static final java.util.concurrent.ExecutorService databaseWriteExecutor =
-            java.util.concurrent.Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+
+    public static final ExecutorService databaseWriteExecutor =
+            Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
 
     public static AppDatabase getDatabase(final Context context) {

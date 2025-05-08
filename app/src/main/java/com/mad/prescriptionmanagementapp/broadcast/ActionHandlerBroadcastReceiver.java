@@ -1,7 +1,6 @@
 package com.mad.prescriptionmanagementapp.broadcast;
 
 
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,13 +12,12 @@ import androidx.core.app.NotificationManagerCompat;
 // import com.yourapp.worker.UpdateReminderStatusWorker; // Nếu dùng WorkManager
 
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduledReminderEntity;
+import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -59,7 +57,7 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
             AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
 
             for (long reminderId : reminderIds) {
-                ScheduledReminderEntity reminder = db.scheduledReminderDao().getById(reminderId);
+                ScheduleEntity reminder = db.scheduleDao().getById(reminderId);
                 if (reminder == null) {
                     Log.w(TAG, "Reminder not found in DB for ID: " + reminderId + " during action: " + action);
                     continue;
@@ -68,7 +66,7 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                 switch (action) {
                     case Constants.ACTION_CONFIRM:
                         Log.d(TAG, "Processing CONFIRM for reminder ID: " + reminderId);
-                        db.scheduledReminderDao().updateStatus(reminderId, ReminderStatus.CONFIRMED);
+                        db.scheduleDao().updateStatus(reminderId, ReminderStatus.CONFIRMED);
                         // TODO: Gửi lên backend (dùng WorkManager là tốt nhất)
                         // BackendApiService.getInstance().confirmReminder(reminderId);
                         // Hoặc WorkManager.enqueue(UpdateReminderStatusWorker.forConfirm(reminderId));
@@ -81,7 +79,7 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                         reminder.scheduledDateTimeMillis = snoozeUntilMillis;
                         reminder.status = ReminderStatus.PENDING; // Đặt lại PENDING để AlarmScheduler xử lý
                         // Hoặc bạn có thể có status SNOOZED riêng và AlarmScheduler cũng query status này
-                        db.scheduledReminderDao().update(reminder); // Cập nhật thời gian và status
+                        db.scheduleDao().update(reminder); // Cập nhật thời gian và status
 
                         // Đặt lại alarm
                         AlarmScheduler.scheduleAlarm(context, reminder);
@@ -91,7 +89,7 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
 
                     case Constants.ACTION_SKIP:
                         Log.d(TAG, "Processing SKIP for reminder ID: " + reminderId);
-                        db.scheduledReminderDao().updateStatus(reminderId, ReminderStatus.SKIPPED);
+                        db.scheduleDao().updateStatus(reminderId, ReminderStatus.SKIPPED);
                         // TODO: Gửi lên backend (dùng WorkManager)
                         // BackendApiService.getInstance().skipReminder(reminderId);
                         Log.i(TAG, "Reminder ID " + reminderId + " Skipped.");

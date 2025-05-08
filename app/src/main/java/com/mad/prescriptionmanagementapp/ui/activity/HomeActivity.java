@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -13,8 +12,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,19 +23,18 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
-import com.mad.prescriptionmanagementapp.data.database.ScheduledReminderDao;
+import com.mad.prescriptionmanagementapp.data.database.ScheduleDao;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduledReminderEntity;
+import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
 import com.mad.prescriptionmanagementapp.databinding.ActivityHomeBinding;
 import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.HomeViewModel;
-import com.mad.prescriptionmanagementapp.ui.viewmodel.PrescriptionListViewModel;
 import com.mad.prescriptionmanagementapp.util.Frequency;
-import com.mad.prescriptionmanagementapp.util.ReminderGenerationHelper;
+import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivityTest";
     private AppDatabase db;
-    private ScheduledReminderDao reminderDao;
+    private ScheduleDao reminderDao;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private static final int EXACT_ALARM_PERMISSION_CODE = 102;
@@ -73,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         db = AppDatabase.getDatabase(getApplicationContext());
-        reminderDao = db.scheduledReminderDao();
+        reminderDao = db.scheduleDao();
 
 
         this.binding.fab2.setOnClickListener(v -> {
@@ -89,13 +85,13 @@ public class HomeActivity extends AppCompatActivity {
         this.binding.fab4.setOnClickListener(v -> {
             // Code này giúp bạn xem các reminder PENDING đã được lên lịch
             executor.execute(() -> {
-                List<ScheduledReminderEntity> pending = reminderDao.getPendingReminders("PENDING", System.currentTimeMillis());
+                List<ScheduleEntity> pending = reminderDao.getPendingReminders("PENDING", System.currentTimeMillis());
                 if (pending.isEmpty()) {
                     Log.d(TAG, "No PENDING reminders in DB.");
                     runOnUiThread(() -> Toast.makeText(HomeActivity.this, "No PENDING reminders in DB.", Toast.LENGTH_LONG).show());
                 } else {
                     Log.d(TAG, "PENDING Reminders in DB ("+pending.size()+"):");
-                    for (ScheduledReminderEntity r : pending) {
+                    for (ScheduleEntity r : pending) {
                         LocalDateTime ldt = LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(r.scheduledDateTimeMillis), ZoneId.systemDefault());
                         Log.d(TAG, " - ID: " + r.id + ", Drug: " + r.drugName + ", Time: " + ldt + ", ReqCode: " + r.alarmManagerRequestId);
                     }
@@ -205,7 +201,7 @@ public class HomeActivity extends AppCompatActivity {
             vitCInPres.setDrugResponse(drugResVitC);
             vitCInPres.setUnit(unitOng);
             vitCInPres.setDate(LocalDate.now().toString()); // Bắt đầu từ hôm nay
-            vitCInPres.setFrequency(Frequency.EVERY_N_DAY);
+            vitCInPres.setFrequency(Frequency.EVERY_N_DAYS);
             vitCInPres.setEveryNDays(2); // Uống cách ngày
 
             List<TimeDosage> vitCTimes = new ArrayList<>();
@@ -221,9 +217,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
             // Sinh ScheduledReminderEntity
-            List<ScheduledReminderEntity> reminders = new ArrayList<>();
+            List<ScheduleEntity> reminders = new ArrayList<>();
             // Sinh cho 7 ngày tới
-            reminders.addAll(ReminderGenerationHelper.generateReminders(prescription1, LocalDate.now(), LocalDate.now().plusDays(7)));
+            reminders.addAll(ScheduleGenerationHelper.generateSchedules(prescription1, LocalDate.now(), LocalDate.now().plusDays(7)));
             // reminders.addAll(ReminderGenerationHelper.generateReminders(prescription2, LocalDate.now(), LocalDate.now().plusDays(7)));
 
             if (!reminders.isEmpty()) {

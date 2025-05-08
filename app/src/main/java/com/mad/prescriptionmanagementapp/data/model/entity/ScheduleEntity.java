@@ -1,59 +1,53 @@
 package com.mad.prescriptionmanagementapp.data.model.entity;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.Index;
 
-@Entity(tableName = "schedules", // Đổi tên nếu có bảng cũ
+import com.mad.prescriptionmanagementapp.util.ReminderStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity(tableName = "schedules",
         foreignKeys = {
-                @ForeignKey(entity = DrugInPresEntity.class,
-                        parentColumns = "localId", // Liên kết với localId của DrugInPresEntity
-                        childColumns = "drugInPresLocalId",
-                        onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = DrugEntity.class,
-                        parentColumns = "id",
-                        childColumns = "drugId",
-                        onDelete = ForeignKey.CASCADE) // Để dễ truy vấn thông tin thuốc
+                // Giả sử bạn có PrescriptionEntity và DrugInPresEntity
+                // @ForeignKey(entity = PrescriptionEntity.class, parentColumns = "id", childColumns = "prescriptionId", onDelete = ForeignKey.CASCADE),
+                // @ForeignKey(entity = DrugInPresEntity.class, parentColumns = "id", childColumns = "drugInPresId", onDelete = ForeignKey.CASCADE)
         },
         indices = {
-                @Index(value = "drugInPresLocalId"),
-                @Index(value = "drugId"),
-                @Index(value = "reminderTime", unique = true) // Mỗi thời điểm nhắc nhở cho một thuốc là duy nhất
-                // Cân nhắc nếu có thể có 2 liều cùng lúc (khác thuốc)
+                // @Index(value = {"prescriptionId"}),
+                // @Index(value = {"drugInPresId"}),
+                @Index(value = {"scheduledDateTimeMillis"})
         }
 )
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ScheduleEntity {
     @PrimaryKey(autoGenerate = true)
-    public long id; // Khóa chính tự tăng
+    private long id;
 
-    public long drugInPresLocalId; // FK - Biết được instance này thuộc lịch trình nào
-    public long drugId;            // FK - Biết được đây là thuốc gì
+    @ColumnInfo(name = "prescription_id")
+    private Long prescriptionId; // ID của đơn thuốc gốc
+    @ColumnInfo(name = "drug_in_pres_id")
+    private Long drugInPresId;   // ID của thuốc trong đơn thuốc (để liên kết với DrugInPres)
 
-    public long reminderTime;      // Thời gian chính xác cần nhắc (timestamp milliseconds UTC)
-    public double dosageToTake;    // Liều lượng cần uống tại thời điểm này
-    public String unitNameForDisplay; // Tên đơn vị (lấy từ UnitEntity, lưu vào đây để tiện hiển thị)
+    @ColumnInfo(name="drug_name")
+    private String drugName;
+    private double dosage;
+    @ColumnInfo(name="unit_name")
+    private String unitName;
 
-    public long actualTakenTime;   // Thời gian thực tế uống (timestamp, 0 nếu chưa uống)
-    public String status;          // PENDING, TAKEN, SKIPPED, SNOOZED
+    @ColumnInfo(name="schedule_date_time_millis")
+    private long scheduledDateTimeMillis; // Thời gian UTC để nhắc nhở
+    private ReminderStatus status; // Ví dụ: "PENDING", "NOTIFIED", "CONFIRMED", "SKIPPED", "SNOOZED"
 
-    public int snoozeCount;
+    // ID dùng cho AlarmManager để có thể hủy.
+    // Có thể dùng chính `id` ở trên làm request code, nhưng để riêng cho rõ ràng
+    @ColumnInfo(name="alarm_manager_request_id")
+    private int alarmManagerRequestId;
 
-    public static final String STATUS_PENDING = "PENDING";
-    public static final String STATUS_TAKEN = "TAKEN";
-    public static final String STATUS_SKIPPED = "SKIPPED";
-    public static final String STATUS_SNOOZED = "SNOOZED";
-
-    public ScheduleEntity(long drugInPresLocalId, long drugId, long reminderTime,
-                                  double dosageToTake, String unitNameForDisplay, String status) {
-        this.drugInPresLocalId = drugInPresLocalId;
-        this.drugId = drugId;
-        this.reminderTime = reminderTime;
-        this.dosageToTake = dosageToTake;
-        this.unitNameForDisplay = unitNameForDisplay;
-        this.status = status;
-        this.snoozeCount = 0;
-        this.actualTakenTime = 0;
-    }
-    public ScheduleEntity() {}
 }

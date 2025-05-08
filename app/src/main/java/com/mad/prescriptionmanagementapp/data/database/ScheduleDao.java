@@ -5,49 +5,53 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.model.relation.ScheduleWithDrug;
+import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
 import java.util.List;
 
 @Dao
 public interface ScheduleDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE) // Nếu reminderTime + drugId đã tồn tại, thay thế (hữu ích khi snooze)
-    long insert(ScheduleEntity scheduleEntity);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE) // IGNORE khi tạo loạt, nếu có trùng thì bỏ qua
-    void insertAll(List<ScheduleEntity> scheduleEntity);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insert(ScheduleEntity reminder);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<ScheduleEntity> reminders);
 
     @Update
-    int update(ScheduleEntity scheduleEntity); // Trả về số hàng bị ảnh hưởng
+    void update(ScheduleEntity schedule);
 
     @Query("SELECT * FROM schedules WHERE id = :id")
-    ScheduleEntity getScheduleByIdSync(long id);
+    ScheduleEntity getById(long id);
 
-    @Transaction // Để join với DrugEntity
-    @Query("SELECT * FROM schedules WHERE id = :id")
-    LiveData<ScheduleWithDrug> getReminderInstanceWithDrugById(long id);
+    @Query("SELECT * FROM schedules WHERE alarm_manager_request_id = :requestId")
+    ScheduleEntity getByAlarmManagerRequestId(int requestId);
 
-    @Query("SELECT * FROM schedules WHERE (status = :statusPending OR status = :statusSnoozed) AND reminderTime <= :currentTimeMillis ORDER BY reminderTime ASC")
-    List<ScheduleEntity> getPendingOrSnoozedRemindersBefore(long currentTimeMillis, String statusPending, String statusSnoozed);
+    @Query("SELECT * FROM schedules WHERE status = :status AND schedule_date_time_millis >= :currentTimeMillis ORDER BY schedule_date_time_millis ASC")
+    List<ScheduleEntity> getPendingReminders(ReminderStatus status, long currentTimeMillis);
 
-    @Transaction
-    @Query("SELECT * FROM schedules WHERE (status = :statusPending OR status = :statusSnoozed) AND reminderTime >= :fromTimeMillis ORDER BY reminderTime ASC")
-    LiveData<List<ScheduleWithDrug>> getUpcomingRemindersWithDrug(long fromTimeMillis, String statusPending, String statusSnoozed);
+    // Lấy các reminder có cùng thời gian (ví dụ trong khoảng 1 phút)
+    @Query("SELECT * FROM schedules WHERE schedule_date_time_millis BETWEEN :startTimeMillis AND :endTimeMillis AND status = :status")
+    List<ScheduleEntity> getRemindersAroundTime(long startTimeMillis, long endTimeMillis, ReminderStatus status);
 
-    // Xóa các reminder trong tương lai cho một lịch trình thuốc cụ thể (khi lịch trình thay đổi/bị xóa)
-    @Query("DELETE FROM schedules WHERE drugInPresLocalId = :drugInPresLocalId AND reminderTime > :currentTimeMillis AND (status = :statusPending OR status = :statusSnoozed)")
-    void deleteFuturePendingSchedulesForDrugInPres(long drugInPresLocalId, long currentTimeMillis, String statusPending, String statusSnoozed);
 
-    @Query("SELECT * FROM schedules WHERE status = :statusPending OR status = :statusSnoozed")
-    List<ScheduleEntity> getAllPendingOrSnoozedSchedulesSync(String statusPending, String statusSnoozed);
+    @Query("UPDATE schedules SET status = :newStatus WHERE id = :id")
+    void updateStatus(long id, ReminderStatus newStatus);
 
-    @Query("DELETE FROM schedules WHERE drugInPresLocalId = :drugInPresLocalId")
-    void deleteAllSchedulesForDrugInPres(long drugInPresLocalId);
+    @Query("UPDATE schedules SET status = :newStatus, schedule_date_time_millis = :newTime WHERE id = :id")
+    void updateStatusAndSnoozeTime(long id, String newStatus, long newTime);
 
-    @Query("DELETE FROM schedules WHERE reminderTime < :olderThanTimestamp AND (status = :statusTaken OR status = :statusSkipped)")
-    void deleteOldTakenOrSkippedSchedules(long olderThanTimestamp, String statusTaken, String statusSkipped);
+
+    @Query("DELETE FROM schedules WHERE id = :id")
+    void deleteById(long id);
+
+    @Query("DELETE FROM schedules WHERE prescription_id = :prescriptionId")
+    void deleteByPrescriptionId(long prescriptionId);
+
+    // LiveData để quan sát thay đổi (nếu bạn dùng trong UI)
+    @Query("SELECT * FROM schedules ORDER BY schedule_date_time_millis DESC")
+    LiveData<List<ScheduleEntity>> getAllRemindersLiveData();
 }

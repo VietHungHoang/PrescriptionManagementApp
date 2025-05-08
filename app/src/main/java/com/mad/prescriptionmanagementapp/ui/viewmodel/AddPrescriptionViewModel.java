@@ -199,7 +199,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         DrugInPres oldDrug = this.currentDrug.getValue();
         if(oldDrug != null) {
             DrugInPres drug = new DrugInPres(oldDrug);
-            drug.setFrequency(Frequency.EVERY_N_DAY);
+            drug.setFrequency(Frequency.EVERY_N_DAYS);
             drug.setEveryNDays(days);
             this.currentDrug.setValue(drug);
         }
