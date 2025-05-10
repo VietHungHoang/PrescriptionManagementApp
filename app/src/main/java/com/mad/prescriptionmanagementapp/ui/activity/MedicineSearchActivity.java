@@ -6,7 +6,9 @@ import android.app.Activity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;  // Thêm import cho ProgressBar
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,7 @@ public class MedicineSearchActivity extends Activity {
     private static final String TAG = "MedicineSearchActivity";
     private EditText searchInput;
     private RecyclerView medicineListRecyclerView, alphabetIndexRecyclerView;
+    private ProgressBar loadingProgressBar;  // Thêm ProgressBar
     private MedicineAdapter medicineAdapter;
     private AlphabetAdapter alphabetAdapter;
     private List<Drug> drugList;
@@ -45,6 +48,7 @@ public class MedicineSearchActivity extends Activity {
             searchInput = findViewById(R.id.search_input);
             medicineListRecyclerView = findViewById(R.id.medicine_list);
             alphabetIndexRecyclerView = findViewById(R.id.alphabet_index);
+            loadingProgressBar = findViewById(R.id.loading_progress_bar);  // Khởi tạo ProgressBar
             Log.d(TAG, "Initialized views");
 
             // Initialize data
@@ -91,24 +95,6 @@ public class MedicineSearchActivity extends Activity {
             loadDrugsFromApi();
 
             // Setup search
-//            searchInput.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//                @Override
-//                public void onTextChanged(CharSequence s, int start, int before, int count) {}
-//                @Override
-//                public void afterTextChanged(Editable s) {
-//                    String query = s != null ? s.toString() : "";
-//                    if (query.trim().isEmpty()) {
-//                        filteredDrugList.clear();
-//                        filteredDrugList.addAll(drugList);
-//                        medicineAdapter.notifyDataSetChanged();
-//                    } else {
-//                        searchDrugsFromApi(query);
-//                    }
-//                }
-//            });
-//            Log.d(TAG, "Set up search TextWatcher");
             searchInput.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -138,18 +124,32 @@ public class MedicineSearchActivity extends Activity {
     }
 
     private void loadDrugsFromApi() {
+        // Hiển thị ProgressBar và ẩn RecyclerViews
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        medicineListRecyclerView.setVisibility(View.GONE);
+        alphabetIndexRecyclerView.setVisibility(View.GONE);
+
         DrugService drugService = RetrofitClient.getDrugService();
         Call<ResponseObject<List<Drug>>> call = drugService.getAllDrugs();
         call.enqueue(new Callback<ResponseObject<List<Drug>>>() {
             @Override
             public void onResponse(Call<ResponseObject<List<Drug>>> call, Response<ResponseObject<List<Drug>>> response) {
+                // Ẩn ProgressBar sau khi nhận phản hồi
+                loadingProgressBar.setVisibility(View.GONE);
+
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     drugList.clear();
                     drugList.addAll(response.body().getData());
                     filteredDrugList.clear();
                     filteredDrugList.addAll(drugList);
                     medicineAdapter.notifyDataSetChanged();
+
+                    // Hiển thị RecyclerViews
+                    medicineListRecyclerView.setVisibility(View.VISIBLE);
+                    alphabetIndexRecyclerView.setVisibility(View.VISIBLE);
+
                     Log.d(TAG, "Loaded drugs from API, drugList size: " + drugList.size());
+                    Toast.makeText(MedicineSearchActivity.this, "Cập nhật danh sách thuốc thành công", Toast.LENGTH_SHORT).show();
                     if (drugList.isEmpty()) {
                         Toast.makeText(MedicineSearchActivity.this, "Không có dữ liệu thuốc", Toast.LENGTH_SHORT).show();
                     }
@@ -161,36 +161,14 @@ public class MedicineSearchActivity extends Activity {
 
             @Override
             public void onFailure(Call<ResponseObject<List<Drug>>> call, Throwable t) {
+                // Ẩn ProgressBar nếu xảy ra lỗi
+                loadingProgressBar.setVisibility(View.GONE);
                 Log.e(TAG, "Error loading drugs from API", t);
                 Toast.makeText(MedicineSearchActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-//    searchDrugsFromApi
-//    private void searchDrugsFromApi(String query) {
-//        DrugService drugService = RetrofitClient.getDrugService();
-//        Call<ResponseObject<List<Drug>>> call = drugService.searchDrugs(query);
-//        call.enqueue(new Callback<ResponseObject<List<Drug>>>() {
-//            @Override
-//            public void onResponse(Call<ResponseObject<List<Drug>>> call, Response<ResponseObject<List<Drug>>> response) {
-//                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-//                    filteredDrugList.clear();
-//                    filteredDrugList.addAll(response.body().getData());
-//                    medicineAdapter.notifyDataSetChanged();
-//                    Log.d(TAG, "Search results for query '" + query + "', filteredDrugList size: " + filteredDrugList.size());
-//                } else {
-//                    Log.e(TAG, "Failed to search drugs, response code: " + response.code());
-//                    Toast.makeText(MedicineSearchActivity.this, "Không thể tìm kiếm thuốc", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseObject<List<Drug>>> call, Throwable t) {
-//                Log.e(TAG, "Error searching drugs", t);
-//                Toast.makeText(MedicineSearchActivity.this, "Lỗi tìm kiếm: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+
     private void searchDrugsFromApi(String query) {
         filteredDrugList.clear();
         for (Drug drug : drugList) {
@@ -201,6 +179,7 @@ public class MedicineSearchActivity extends Activity {
         medicineAdapter.notifyDataSetChanged();
         Log.d(TAG, "Filtered drugs for query: " + query + ", found: " + filteredDrugList.size());
     }
+
     private int findFirstDrugPositionByLetter(String letter) {
         if (letter == null) {
             Log.w(TAG, "Letter is null in findFirstDrugPositionByLetter");

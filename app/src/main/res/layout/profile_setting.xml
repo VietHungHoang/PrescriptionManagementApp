@@ -78,6 +78,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_edit_text_bg"
                     android:hint="Nhập tên người dùng"
+                    android:textColor="@color/black"
+                    android:textColorHint="#333333"
                     android:padding="12sp" />
 
                 <TextView
@@ -97,6 +99,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_edit_text_bg"
                     android:hint="DD/MM/YYYY"
+                    android:textColor="@color/black"
+                    android:textColorHint="#333333"
                     android:padding="12sp" />
 
                 <TextView
@@ -116,6 +120,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_edit_text_bg"
                     android:hint="Nhập số điện thoại"
+                    android:textColor="@color/black"
+                    android:textColorHint="#333333"
                     android:padding="12sp"
                     android:inputType="phone" />
 
@@ -136,6 +142,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_edit_text_bg"
                     android:hint="Nhập cân nặng"
+                    android:textColor="@color/black"
+                    android:textColorHint="#333333"
                     android:padding="12sp"
                     android:inputType="numberDecimal" />
 
@@ -156,6 +164,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_edit_text_bg"
                     android:hint="Nhập chiều cao"
+                    android:textColor="@color/black"
+                    android:textColorHint="#333333"
                     android:padding="12sp"
                     android:inputType="numberDecimal" />
 
@@ -188,6 +198,7 @@
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="Nam"
+                        android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -202,6 +213,7 @@
                         android:gravity="center"
                         android:padding="8dp"
                         android:text="Nữ"
+                        android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </RadioGroup>

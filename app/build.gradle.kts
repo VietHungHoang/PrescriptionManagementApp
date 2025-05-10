@@ -46,6 +46,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("org.threeten:threetenbp:1.6.8")
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("androidx.transition:transition:1.4.1")
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")

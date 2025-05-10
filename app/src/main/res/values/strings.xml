@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">PrescriptionManagementApp</string>
+    <string name="app_name">MedPTIT</string>
     <string name="hello_text">Hi, Viet Hung Hoang</string>
     <string name="how_are_you_today">How are you today?</string>
     <string name="tra_cuu_thu">Tra cứu thuốc</string>
-    <string name="terms_of_service">Điều Khoản Dịch Vụ\n\nCập nhật lần cuối: 14/08/2024\n\n
-Xin chào mừng bạn đến với [Tên Ứng Dụng]! Trước khi sử dụng dịch vụ của chúng tôi, vui lòng đọc kỹ các điều khoản dưới đây. Khi bạn sử dụng ứng dụng, có nghĩa là bạn đã đồng ý với các điều khoản này.\n\n
+    <string name="terms_of_service">
+Xin chào mừng bạn đến với MedPTIT! Trước khi sử dụng dịch vụ của chúng tôi, vui lòng đọc kỹ các điều khoản dưới đây. Khi bạn sử dụng ứng dụng, có nghĩa là bạn đã đồng ý với các điều khoản này.\n\n
 1. Chấp Nhận Điều Khoản\n
 Bằng cách tải xuống, cài đặt và sử dụng ứng dụng [Tên Ứng Dụng], bạn đồng ý tuân thủ tất cả các điều khoản và điều kiện được quy định trong tài liệu này. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng không tiếp tục sử dụng ứng dụng.\n\n
 2. Quyền và Trách Nhiệm của Người Dùng\n

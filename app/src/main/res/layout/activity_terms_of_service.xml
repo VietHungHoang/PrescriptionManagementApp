@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <!-- Nút quay lại -->
     <ImageView
@@ -21,6 +20,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:paddingTop="8dp"
+        android:text="Điều Khoản\nDịch Vụ"
+        android:textAlignment="center"
+        android:textColor="@color/lightBlue_dang"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Nội dung cuộn -->
     <ScrollView
@@ -43,7 +56,7 @@
                 android:id="@+id/tv_last_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Update: 14/08/2024"
+                android:text="Last Update: 05/2025"
                 android:textSize="20sp"
                 android:textColor="@color/lightBlue_dang"
                 android:textStyle="bold" />
@@ -81,20 +94,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:paddingTop="8dp"
-        android:text="Điều Khoản\nDịch Vụ"
-        android:textAlignment="center"
-        android:textColor="@color/lightBlue_dang"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

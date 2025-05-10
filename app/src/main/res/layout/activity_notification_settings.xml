@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.189"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/c_i_t_th_ng" />
+        app:layout_constraintTop_toBottomOf="@+id/cai_dat_thong_bao" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/mySwitch2"
@@ -130,7 +130,7 @@
         app:layout_constraintTop_toBottomOf="@+id/thongbaochung" />
 
     <TextView
-        android:id="@+id/c_i_t_th_ng"
+        android:id="@+id/cai_dat_thong_bao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

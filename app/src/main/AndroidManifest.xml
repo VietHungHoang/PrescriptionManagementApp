@@ -12,28 +12,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.PrescriptionManagementApp"
         android:supportsRtl="true">
-<!--        DrugDetailActivity-->
         <activity
-            android:name=".ui.activity.DrugDetailActivity"
-            android:exported="false" />
-<!--        MedicineSearchActivity-->
-        <activity
-            android:name=".ui.activity.MedicineSearchActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        ProfileActivity-->
+        <!-- DrugDetailActivity -->
         <activity
-            android:name=".ui.activity.ProfileActivity"
-            android:exported="true" >
+            android:name=".ui.activity.DrugDetailActivity"
+            android:exported="false" />
+        <!-- MedicineSearchActivity -->
+        <activity
+            android:name=".ui.activity.MedicineSearchActivity"
+            android:exported="false" >
 
         </activity>
-        <!--        ProfileSettingActivity-->
+        <!-- ProfileActivity -->
+        <activity
+            android:name=".ui.activity.ProfileActivity"
+            android:exported="false">
+
+        </activity>
+        <!-- ProfileSettingActivity -->
         <activity
             android:name=".ui.activity.ProfileSettingActivity"
+            android:exported="false" />
+        <!-- TermsOfServiceActivity -->
+        <activity
+            android:name=".ui.activity.TermsOfServiceActivity"
+            android:exported="false" />
+<!--        NotificationSettingsActivity-->
+        <activity
+            android:name=".ui.activity.NotificationSettingsActivity"
             android:exported="false" />
     </application>
 
