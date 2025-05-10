@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AppointmentApp</string>
+    <string name="app_name">PrescriptionManagementApp</string>
     <string name="hello_text">Hi, Viet Hung Hoang</string>
     <string name="how_are_you_today">How are you today?</string>
     <string name="tra_cuu_thu">Tra cứu thuốc</string>

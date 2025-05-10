@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="16dp"> <!-- Thêm padding tổng thể -->
+    android:padding="16dp">
 
     <!-- Tiêu đề -->
     <TextView
@@ -79,7 +79,8 @@
         android:scrollbars="vertical"
         app:layout_constraintEnd_toStartOf="@id/alphabet_index"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- Bảng chữ cái bên phải -->
     <androidx.recyclerview.widget.RecyclerView
@@ -88,16 +89,7 @@
         android:layout_height="0dp"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
-
-    <!-- Thanh điều hướng dưới -->
-
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-    <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-    <!--        android:id="@+id/bottom_nav"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"/>-->

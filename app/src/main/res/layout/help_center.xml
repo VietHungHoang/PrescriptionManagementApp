@@ -55,13 +55,14 @@
             android:id="@+id/icSearch"
             android:layout_width="30dp"
             android:layout_height="29dp"
-            android:layout_marginStart="16dp"
             android:fillColor="@android:color/transparent"
             android:src="@drawable/dang_search"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintMarginStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.048"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.304" />
 
         <EditText
             android:id="@+id/helpSearch"
@@ -77,9 +78,7 @@
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.428"
-            app:layout_constraintMarginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/icSearch"
+            app:layout_constraintHorizontal_bias="0.75"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
