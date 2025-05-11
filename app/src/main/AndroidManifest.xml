@@ -48,6 +48,10 @@
         <activity
             android:name=".ui.activity.NotificationSettingsActivity"
             android:exported="false" />
+<!--        TDEEActivity-->
+        <activity
+            android:name=".ui.activity.TDEEActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

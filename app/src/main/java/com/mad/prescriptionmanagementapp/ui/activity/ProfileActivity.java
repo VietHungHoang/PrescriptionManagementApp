@@ -50,7 +50,20 @@ public class ProfileActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btn_update);
         layoutTermsOfService = findViewById(R.id.layout_terms_of_service);
         layoutNotificationSettings = findViewById(R.id.layout_notification_settings);
-
+        LinearLayout layoutTdee = findViewById(R.id.layout_tdee);
+//       Sự kiện tính chỉ số TDEE
+        layoutTdee.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, TDEEActivity.class);
+            try {
+                String bmrText = tvBmr.getText().toString().replace("BMR\n", "").replace(" kcal", "");
+                double bmrValue = Double.parseDouble(bmrText);
+                intent.putExtra("bmr", bmrValue);
+            } catch (NumberFormatException e) {
+                Toast.makeText(ProfileActivity.this, "Lỗi: Không thể lấy giá trị BMR", Toast.LENGTH_SHORT).show();
+                intent.putExtra("bmr", 1402.0); // Giá trị mặc định
+            }
+            startActivity(intent);
+        });
         // Lấy dữ liệu user từ Intent
         user = (User) getIntent().getSerializableExtra("user");
         if (user == null) {
@@ -150,6 +163,7 @@ public class ProfileActivity extends AppCompatActivity {
         double heightInMeters = height / 100.0;
         double bmi = (heightInMeters > 0) ? weight / (heightInMeters * heightInMeters) : 0.0;
         double bmr;
+//        Đây là công thức Mifflin-St Jeor, được sử dụng để tính BMR (Basal Metabolic Rate),
         if (user.getGender() != null && user.getGender().equalsIgnoreCase("male")) {
             bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * calculateAge(user.getDateOfBirth()));
         } else {

@@ -4,13 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/white"
     android:gravity="center">
 
     <Button
         android:id="@+id/btn_medicine_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medicine Search"
+        android:text="Tra cứu thuốc"
+        android:textSize="32dp"
         android:background="@drawable/background_for_medicine"
         android:layout_marginBottom="16dp"/>
 
@@ -18,6 +20,7 @@
         android:id="@+id/btn_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="32dp"
         android:background="@drawable/background_for_medicine"
-        android:text="Profile"/>
+        android:text="Hồ sơ\nNgười dùng"/>
 </LinearLayout>
