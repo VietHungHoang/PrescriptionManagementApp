@@ -94,7 +94,7 @@ public class TimeDosageSelectionFragment extends Fragment {
     }
 
     private void setSchedule() {
-        Fragment newFragment = AddScheduleFragment.newInstance(drugId);
+        Fragment newFragment = AddScheduleFragment.newInstance(drugId, false);
         // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
         this.getParentFragmentManager()
                 .beginTransaction()

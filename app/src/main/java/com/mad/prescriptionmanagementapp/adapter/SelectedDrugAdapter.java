@@ -1,10 +1,7 @@
 package com.mad.prescriptionmanagementapp.adapter;
 
-import static com.mad.prescriptionmanagementapp.util.Tools.formatNumber;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,14 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderSelectedDrugBinding;
-import com.mad.prescriptionmanagementapp.databinding.ViewholderTimeanddosageBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener;
-import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
-import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SelectedDrugAdapter extends RecyclerView.Adapter<SelectedDrugAdapter.SelectedDrugViewHolder> {
 
@@ -71,7 +63,7 @@ public class SelectedDrugAdapter extends RecyclerView.Adapter<SelectedDrugAdapte
 
         public void bind(DrugInPres item) {
             this.setAdapter(item.getTimeDosages());
-            this.binding.drugName.setText(item.getDrugResponse().getName());
+            this.binding.drugName.setText(item.getSimpleDrug().getName());
             if (clickListener != null) {
                 this.binding.btnEdit.setOnClickListener(v -> {
                     clickListener.onItemClick(item);

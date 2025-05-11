@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DrugResponse implements Parcelable {
+public class SimpleDrug implements Parcelable {
     private Long id;
     private String name;
 
-    protected DrugResponse(Parcel in) {
+    protected SimpleDrug(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -25,15 +25,15 @@ public class DrugResponse implements Parcelable {
         name = in.readString();
     }
 
-    public static final Creator<DrugResponse> CREATOR = new Creator<DrugResponse>() {
+    public static final Creator<SimpleDrug> CREATOR = new Creator<SimpleDrug>() {
         @Override
-        public DrugResponse createFromParcel(Parcel in) {
-            return new DrugResponse(in);
+        public SimpleDrug createFromParcel(Parcel in) {
+            return new SimpleDrug(in);
         }
 
         @Override
-        public DrugResponse[] newArray(int size) {
-            return new DrugResponse[size];
+        public SimpleDrug[] newArray(int size) {
+            return new SimpleDrug[size];
         }
     };
 

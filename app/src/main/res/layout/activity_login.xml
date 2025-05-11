@@ -105,7 +105,6 @@
         android:layout_marginTop="8dp"
         android:gravity="end"
         android:text="Quên mật khẩu?"
-        android:onClick="@{() -> viewModel.handle()}"
         android:textColor="@color/mainColor" />
 </LinearLayout>
 

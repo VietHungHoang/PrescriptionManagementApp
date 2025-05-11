@@ -1,6 +1,6 @@
 package com.mad.prescriptionmanagementapp.data.remote.api;
 
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.UnitResponse;
 
@@ -12,7 +12,7 @@ import retrofit2.http.GET;
 public interface DrugService {
 
     @GET("drugs/simple")
-    Call<ResponseObject<List<DrugResponse>>> getDrugsSimple();
+    Call<ResponseObject<List<SimpleDrug>>> getDrugsSimple();
 
     @GET("drugs/unit")
     Call<ResponseObject<List<UnitResponse>>> getAllUnit();

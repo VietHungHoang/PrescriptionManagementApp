@@ -13,9 +13,10 @@ import com.mad.prescriptionmanagementapp.data.database.UnitDao;
 import com.mad.prescriptionmanagementapp.data.mapper.DrugMapper;
 import com.mad.prescriptionmanagementapp.data.mapper.UnitMapper;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
+import com.mad.prescriptionmanagementapp.data.model.entity.DrugEntity;
 import com.mad.prescriptionmanagementapp.data.remote.NetworkClient;
 import com.mad.prescriptionmanagementapp.data.remote.api.DrugService;
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.UnitResponse;
 
@@ -36,7 +37,7 @@ public class DrugRepository {
     private final DrugService drugService;
 
     // LiveData chính để Fragment observe - Luôn đọc từ cache Room
-    private final LiveData<List<DrugCache>> cachedDrugs;
+    private final LiveData<List<DrugEntity>> cachedDrugs;
 //    private final LiveData<List<Unit>> unitList;
 
 //    // LiveData báo trạng thái đang làm mới từ mạng
@@ -58,14 +59,14 @@ public class DrugRepository {
         this.cachedDrugs = drugDao.getAllDrugsFromCache();
 //        this.unitList = unitDao.getAllUnits();
         Integer t = drugDao.getDrugCount1().getValue(); // Lấy LiveData từ DAO
-        List<DrugCache> test = this.cachedDrugs.getValue();
+        List<DrugEntity> test = this.cachedDrugs.getValue();
     }
 
     /**
      * Lấy LiveData chứa danh sách thuốc TỪ CACHE.
      * Đồng thời kích hoạt kiểm tra và làm mới từ mạng nếu cần.
      */
-    public LiveData<List<DrugCache>> getCachedDrugs() {
+    public LiveData<List<DrugEntity>> getCachedDrugs() {
         this.refreshDrugsIfNeeded(); // Kích hoạt kiểm tra/làm mới khi có người quan sát
         return cachedDrugs;
     }
@@ -203,20 +204,20 @@ public class DrugRepository {
 //        errorMessage.postValue(null); // Xóa lỗi cũ
         Log.d(TAG, "Fetching drugs from API...");
 
-        Call<ResponseObject<List<DrugResponse>>> call = this.drugService.getDrugsSimple();
-        call.enqueue(new Callback<ResponseObject<List<DrugResponse>>>() {
+        Call<ResponseObject<List<SimpleDrug>>> call = this.drugService.getDrugsSimple();
+        call.enqueue(new Callback<ResponseObject<List<SimpleDrug>>>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseObject<List<DrugResponse>>> call,
-                                   @NonNull Response<ResponseObject<List<DrugResponse>>> response) {
+            public void onResponse(@NonNull Call<ResponseObject<List<SimpleDrug>>> call,
+                                   @NonNull Response<ResponseObject<List<SimpleDrug>>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "API call successful. Processing data...");
-                    List<DrugResponse> drugRespons = response.body().getData();
+                    List<SimpleDrug> drugRespons = response.body().getData();
 
                     if (drugRespons != null) {
                         // Chuyển đổi DTO sang Entity và lưu vào Room DB trên background thread
                         databaseExecutor.execute(() -> {
                             Log.d(TAG, "Saving fetched data to Room cache...");
-                            List<DrugCache> drugEntities = drugRespons.stream()
+                            List<DrugEntity> drugEntities = drugRespons.stream()
                                     .map(DrugMapper::responseToCache)
                                     .collect(Collectors.toList());
 
@@ -251,7 +252,7 @@ public class DrugRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseObject<List<DrugResponse>>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseObject<List<SimpleDrug>>> call, @NonNull Throwable t) {
                 // Xử lý lỗi mạng hoặc lỗi khác khi thực hiện request
                 Log.e(TAG, "API call failed: " + t.getMessage(), t);
 //                errorMessage.postValue("Lỗi kết nối mạng: " + t.getMessage());
@@ -261,8 +262,8 @@ public class DrugRepository {
         });
     }
 
-    public void getAllDrugsSimple(@NonNull Callback<ResponseObject<List<DrugResponse>>> callback) {
-        Call<ResponseObject<List<DrugResponse>>> call = this.drugService.getDrugsSimple();
+    public void getAllDrugsSimple(@NonNull Callback<ResponseObject<List<SimpleDrug>>> callback) {
+        Call<ResponseObject<List<SimpleDrug>>> call = this.drugService.getDrugsSimple();
         call.enqueue(callback);
     }
 }

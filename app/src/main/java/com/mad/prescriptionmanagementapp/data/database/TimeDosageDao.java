@@ -18,13 +18,13 @@ public interface TimeDosageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(TimeDosageEntity timeDosage);
 
-    @Query("SELECT * FROM time_dosages WHERE drugInPresLocalId = :drugInPresLocalId ORDER BY hour, minutes")
-    LiveData<List<TimeDosageEntity>> getTimeDosagesForDrugInPres(long drugInPresLocalId);
-
-    // Lấy đồng bộ để tạo ReminderInstance
-    @Query("SELECT * FROM time_dosages WHERE drugInPresLocalId = :drugInPresLocalId ORDER BY hour, minutes")
-    List<TimeDosageEntity> getTimeDosagesForDrugInPresSync(long drugInPresLocalId);
-
-    @Query("DELETE FROM time_dosages WHERE drugInPresLocalId = :drugInPresLocalId")
-    void deleteByDrugInPresLocalId(long drugInPresLocalId);
+//    @Query("SELECT * FROM time_dosages WHERE drugInPresLocalId = :drugInPresLocalId ORDER BY hour, minutes")
+//    LiveData<List<TimeDosageEntity>> getTimeDosagesForDrugInPres(long drugInPresLocalId);
+//
+//    // Lấy đồng bộ để tạo ReminderInstance
+//    @Query("SELECT * FROM time_dosages WHERE drugInPresLocalId = :drugInPresLocalId ORDER BY hour, minutes")
+//    List<TimeDosageEntity> getTimeDosagesForDrugInPresSync(long drugInPresLocalId);
+//
+//    @Query("DELETE FROM time_dosages WHERE drugInPresLocalId = :drugInPresLocalId")
+//    void deleteByDrugInPresLocalId(long drugInPresLocalId);
 }

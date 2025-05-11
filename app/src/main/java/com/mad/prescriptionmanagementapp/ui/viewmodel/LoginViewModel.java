@@ -32,7 +32,6 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.response.LoginResponse;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.GoogleAuthRespone;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.repository.LoginRepository;
-import com.mad.prescriptionmanagementapp.reminder.ReminderWorker;
 import com.mad.prescriptionmanagementapp.util.AuthStatus;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.Event;
@@ -131,17 +130,6 @@ public class LoginViewModel extends AndroidViewModel {
         }
         return isValid;
     }
-
-    public void handle() {
-        OneTimeWorkRequest request =
-                new OneTimeWorkRequest.Builder(ReminderWorker.class)
-                        .setInitialDelay(100, TimeUnit.MILLISECONDS)
-                        .build();
-
-        WorkManager.getInstance(this.getApplication()).enqueue(request);
-    }
-
-
 
     // Start the Google login flow
     public void startGoogleSignIn(View view) { // Context is required to call getCredentialAsync

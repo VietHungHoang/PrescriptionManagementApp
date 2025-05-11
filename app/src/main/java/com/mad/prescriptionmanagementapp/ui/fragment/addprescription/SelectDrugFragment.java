@@ -19,9 +19,10 @@ import android.view.ViewGroup;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.DrugsAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.databinding.FragmentSelectDrugBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
+import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
@@ -138,20 +139,38 @@ public class SelectDrugFragment extends Fragment implements OnDrugClickListener 
 //    }
 
     @Override
-    public void onItemClick(DrugResponse drug) {
-        Fragment newFragment = AddScheduleFragment.newInstance(drug.getId());
+    public void onItemClick(SimpleDrug drug) {
+        if(this.viewModel.existedDrug(drug.getId())) {
+            ConfirmDialog.showCancelConfirmationDialog(requireContext(), new ConfirmDialog.ConfirmationDialogListener() {
+                @Override
+                public void onConfirm() {
+                    moveToNextFragment(drug);
+                }
+                @Override
+                public void onCancel() {
+                }
+            }, "Xác nhận", "Bạn đã thêm lịch cho thuốc này, tiếp tục thêm ", "Tiếp tục");
+        } else {
+            moveToNextFragment(drug);
+        }
+    }
+
+    private void moveToNextFragment(SimpleDrug drug) {
+        Fragment newFragment = AddScheduleFragment.newInstance(drug.getId(), false);
         this.viewModel.setCurrentDrug(new DrugInPres(drug));
         // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
         this.getParentFragmentManager()
                 .beginTransaction()
 //                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
                 .setCustomAnimations(
-                R.anim.zoom_in,    // Fragment B vào (zoom in)
-                R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
-                R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
-                R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
+                        R.anim.zoom_in,    // Fragment B vào (zoom in)
+                        R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
+                        R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
+                        R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
                 .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
                 .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
                 .commit();
     }
 }
+
+

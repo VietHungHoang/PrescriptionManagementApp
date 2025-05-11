@@ -38,7 +38,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "NotificationReceiver";
     public static final String EXTRA_REMINDER_ID = "extra_reminder_id";
     public static final String EXTRA_ALARM_REQUEST_CODE = "extra_alarm_request_code"; // Dùng để log hoặc debug
-
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 
@@ -50,14 +49,13 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         int alarmRequestCode = intent.getIntExtra(EXTRA_ALARM_REQUEST_CODE, -1); // Lấy request code
         Log.d(TAG, "Received reminder ID: " + reminderId + ", AlarmRequestCode: " + alarmRequestCode);
 
-
         if (reminderId == -1) {
             Log.e(TAG, "Invalid reminder ID received.");
             return;
         }
 
         // Thực hiện các tác vụ DB và network trên background thread
-        executorService.execute(() -> {
+        this.executorService.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
             ScheduleEntity mainReminder = db.scheduleDao().getById(reminderId);
 
@@ -112,14 +110,14 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             ArrayList<Long> reminderIdsInNotification = new ArrayList<>();
             for(ScheduleEntity r : remindersForThisTime){
-                reminderIdsInNotification.add(r.getId());
+                reminderIdsInNotification.add(r.getLocalId());
             }
 
             // Nội dung thông báo
             if (remindersForThisTime.size() == 1) {
                 ScheduleEntity singleReminder = remindersForThisTime.get(0);
                 builder.setContentText(String.format(Locale.getDefault(), "Uống: %s %.1f %s",
-                        singleReminder.getDrugName(), singleReminder.getDosage(), singleReminder.getUnitName()));
+                        singleReminder.getLocalId(), singleReminder.getLocalId(), singleReminder.getLocalId()));
 //                if (!TextUtils.isEmpty(singleReminder.drugImage)) {
 //                    Bitmap largeIcon = getBitmapFromURL(singleReminder.drugImage);
 //                    if (largeIcon != null) {
@@ -133,7 +131,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 for (int i = 0; i < remindersForThisTime.size(); i++) {
                     ScheduleEntity r = remindersForThisTime.get(i);
                     String line = String.format(Locale.getDefault(), "• %s %.1f %s",
-                            r.getDrugName(), r.getDosage(), r.getUnitName());
+                            r.getLocalId(), r.getLocalId(), r.getLocalId());
                     inboxStyle.addLine(line);
                     if (i < 2) { // Hiển thị 2 dòng đầu ở dạng thu gọn
                         summaryText.append(line).append(i == 0 && remindersForThisTime.size() > 1 ? " | " : "");
@@ -204,7 +202,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             // Cập nhật trạng thái các reminder đã được thông báo
             for (ScheduleEntity r : remindersForThisTime) {
-                db.scheduleDao().updateStatus(r.getId(), ReminderStatus.NOTIFIED);
+                db.scheduleDao().updateStatus(r.getLocalId(), ReminderStatus.NOTIFIED);
             }
         });
     }
@@ -231,18 +229,18 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     }
 
     // Hàm helper để tải ảnh từ URL (chạy trên background thread)
-    public static Bitmap getBitmapFromURL(String src) {
-        if (src == null || src.isEmpty()) return null;
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            Log.e(TAG, "Error downloading image: " + src, e);
-            return null;
-        }
-    }
+//    public static Bitmap getBitmapFromURL(String src) {
+//        if (src == null || src.isEmpty()) return null;
+//        try {
+//            URL url = new URL(src);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setDoInput(true);
+//            connection.connect();
+//            InputStream input = connection.getInputStream();
+//            return BitmapFactory.decodeStream(input);
+//        } catch (IOException e) {
+//            Log.e(TAG, "Error downloading image: " + src, e);
+//            return null;
+//        }
+//    }
 }

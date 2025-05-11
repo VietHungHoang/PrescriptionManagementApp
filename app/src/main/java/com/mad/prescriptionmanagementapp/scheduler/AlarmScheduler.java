@@ -41,7 +41,7 @@ public class AlarmScheduler {
 
         Intent intent = new Intent(context, NotificationBroadcastReceiver.class);
         // Đưa ID của ScheduledReminderEntity (hoặc alarmManagerRequestId) để Receiver biết xử lý reminder nào
-        intent.putExtra(NotificationBroadcastReceiver.EXTRA_REMINDER_ID, schedule.getId());
+        intent.putExtra(NotificationBroadcastReceiver.EXTRA_REMINDER_ID, schedule.getLocalId());
         intent.putExtra(NotificationBroadcastReceiver.EXTRA_ALARM_REQUEST_CODE, schedule.getAlarmManagerRequestId());
         // Quan trọng: Action khác nhau hoặc data khác nhau (uri) để tạo PendingIntent khác nhau
         // Ở đây ta dùng request code duy nhất là đủ
@@ -71,7 +71,7 @@ public class AlarmScheduler {
             } else {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, schedule.getScheduledDateTimeMillis(), pendingIntent);
             }
-            Log.d(TAG, "Scheduled alarm for reminder ID: " + schedule.getId() + " at " + schedule.getScheduledDateTimeMillis() + " with request code: " + schedule.getAlarmManagerRequestId());
+            Log.d(TAG, "Scheduled alarm for reminder ID: " + schedule.getLocalId() + " at " + schedule.getScheduledDateTimeMillis() + " with request code: " + schedule.getAlarmManagerRequestId());
         } catch (SecurityException se) {
             Log.e(TAG, "SecurityException: Missing SCHEDULE_EXACT_ALARM or USE_EXACT_ALARM permission.", se);
             // Xử lý trường hợp thiếu quyền

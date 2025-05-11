@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.databinding.ActivityAddPrescriptionBinding;
 import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddPrescriptionInfoFragment;
+import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddScheduleFragment;
+import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 public class AddPrescriptionActivity extends AppCompatActivity {
@@ -41,11 +43,36 @@ public class AddPrescriptionActivity extends AppCompatActivity {
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
                 if (currentFragment == null || isFirstFragment() || currentFragment instanceof AddPrescriptionInfoFragment) {
+                    if (currentFragment instanceof AddPrescriptionInfoFragment && viewModel.existedPres()) {
+                            ConfirmDialog.showCancelConfirmationDialog(AddPrescriptionActivity.this, new ConfirmDialog.ConfirmationDialogListener() {
+                                @Override
+                                public void onConfirm() {
+                                    finish();
+                                }
+                                @Override
+                                public void onCancel() {
+                                }
+                            }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
+                    }
                     // Không còn fragment, gọi dispatcher để đóng Activity
-                    finish();
+                    else {
+                        finish();
+                    }
                 } else {
-                    // Nếu còn fragment, pop fragment
-                    getSupportFragmentManager().popBackStack();
+                    if(currentFragment instanceof AddScheduleFragment) {
+                        ConfirmDialog.showCancelConfirmationDialog(AddPrescriptionActivity.this, new ConfirmDialog.ConfirmationDialogListener() {
+                            @Override
+                            public void onConfirm() {
+                                getSupportFragmentManager().popBackStack();
+                            }
+                            @Override
+                            public void onCancel() {
+                            }
+                        }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
+                    }
+                    else {
+                        getSupportFragmentManager().popBackStack();
+                    }
                 }
             }
         });

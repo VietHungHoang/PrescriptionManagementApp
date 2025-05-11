@@ -1,40 +1,29 @@
 package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.SelectedDrugAdapter;
-import com.mad.prescriptionmanagementapp.adapter.TimeAndDosageAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
@@ -43,6 +32,7 @@ import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class AddPrescriptionInfoFragment extends Fragment implements OnSelectedDrugClickListener {
@@ -87,6 +77,39 @@ public class AddPrescriptionInfoFragment extends Fragment implements OnSelectedD
         this.binding.edtPrescriptionName.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 this.viewModel.resetErrorMessage();
+            }
+            if (!hasFocus) {
+                // Người dùng nhập xong và rời khỏi ô
+                String text = ((EditText) v).getText().toString();
+                this.viewModel.addPresName(text);
+            }
+        });
+
+        this.binding.edtHospital.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String text = ((EditText) v).getText().toString();
+                this.viewModel.addHospital(text);
+            }
+        });
+
+        this.binding.edtDoctor.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String text = ((EditText) v).getText().toString();
+                this.viewModel.addDoctor(text);
+            }
+        });
+
+        this.binding.edtConsultationDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String text = ((EditText) v).getText().toString();
+                this.viewModel.addConsultionDate(text);
+            }
+        });
+
+        this.binding.edtFollowUpDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                String text = ((EditText) v).getText().toString();
+                this.viewModel.addFollowUpDate(text);
             }
         });
         this.setOnclickDatePicker();
@@ -159,7 +182,7 @@ public class AddPrescriptionInfoFragment extends Fragment implements OnSelectedD
     private void setOnclickBtnSave() {
         this.binding.btnSave.setOnClickListener(v -> {
             this.updatePres();
-            this.viewModel.handleBtnSavePres();
+            this.viewModel.handleBtnSavePres(this.requireContext());
 
         });
     }
@@ -259,7 +282,25 @@ public class AddPrescriptionInfoFragment extends Fragment implements OnSelectedD
 
     @Override
     public void onItemClick(DrugInPres drugInPres) {
+        List<DrugInPres> drugs = this.viewModel.getSelectedDrugs().getValue();
+        this.viewModel.setCurrentDrug(drugs.stream().filter(drug -> drug.getDrug().getId() == drugInPres.getDrug().getId()).findFirst().orElse(null));
+        this.moveToNextFragment(drugInPres.getDrug().getId());
+    }
 
+    private void moveToNextFragment(long id) {
+        Fragment newFragment = AddScheduleFragment.newInstance(id, true);
+        // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
+        this.getParentFragmentManager()
+                .beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
+                .setCustomAnimations(
+                        R.anim.zoom_in,    // Fragment B vào (zoom in)
+                        R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
+                        R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
+                        R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
+                .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
+                .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
+                .commit();
     }
 
     @Override

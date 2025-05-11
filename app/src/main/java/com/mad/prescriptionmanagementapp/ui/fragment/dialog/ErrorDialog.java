@@ -23,9 +23,11 @@ public class ErrorDialog {
     private final String errorMessage;
     private View dialogView;
     private AlertDialog alertDialog;
-    public ErrorDialog(Fragment fragment, String errorMessage) {
+    private boolean isResetDimmed;
+    public ErrorDialog(Fragment fragment, String errorMessage,boolean isRestDimmed) {
         this.fragment = fragment;
         this.errorMessage = errorMessage;
+        this.isResetDimmed = isRestDimmed;
         this.initDialog();
 
 
@@ -60,7 +62,11 @@ public class ErrorDialog {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setGravity(Gravity.TOP); // Đặt vị trí của dialog gần phía trên
             window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            window.setDimAmount(0f);
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+
+            if(this.isResetDimmed) {
+                window.setDimAmount(0f);
+            }
 
             // Set vị trí cách top 80px
             WindowManager.LayoutParams layoutParams = window.getAttributes();

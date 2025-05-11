@@ -76,8 +76,8 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                     case Constants.ACTION_SNOOZE:
                         Log.d(TAG, "Processing SNOOZE for reminder ID: " + reminderId);
                         long snoozeUntilMillis = System.currentTimeMillis() + (long) Constants.SNOOZE_DURATION_MINUTES * 60 * 1000;
-                        reminder.scheduledDateTimeMillis = snoozeUntilMillis;
-                        reminder.status = ReminderStatus.PENDING; // Đặt lại PENDING để AlarmScheduler xử lý
+                        reminder.setScheduledDateTimeMillis(snoozeUntilMillis);
+                        reminder.setStatus(ReminderStatus.PENDING); // Đặt lại PENDING để AlarmScheduler xử lý
                         // Hoặc bạn có thể có status SNOOZED riêng và AlarmScheduler cũng query status này
                         db.scheduleDao().update(reminder); // Cập nhật thời gian và status
 

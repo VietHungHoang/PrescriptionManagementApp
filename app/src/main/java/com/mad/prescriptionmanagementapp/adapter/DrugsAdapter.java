@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderDrugBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 
@@ -15,10 +15,10 @@ import java.util.List;
 public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHolder> {
     private final OnDrugClickListener listener;
 
-    private List<DrugResponse> drugs;
-    private List<DrugResponse> filteredList;
+    private List<SimpleDrug> drugs;
+    private List<SimpleDrug> filteredList;
 
-    public DrugsAdapter(List<DrugResponse> drugs, OnDrugClickListener listener) {
+    public DrugsAdapter(List<SimpleDrug> drugs, OnDrugClickListener listener) {
 //        super(DIFF_CALLBACK);
         this.drugs = drugs;
         this.filteredList = new ArrayList<>();
@@ -43,7 +43,7 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
         return drugs.size();
     }
 
-    public void updateData(List<DrugResponse> newList) {
+    public void updateData(List<SimpleDrug> newList) {
         this.drugs = newList;
         notifyDataSetChanged(); // hoặc notifyItemRangeChanged(...) cho tối ưu hơn
     }
@@ -53,7 +53,7 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
         if (query.isEmpty()) {
             filteredList.addAll(drugs);
         } else {
-            for (DrugResponse item : drugs) {
+            for (SimpleDrug item : drugs) {
                 if (item.getName().toLowerCase().contains(query.toLowerCase())) {
                     filteredList.add(item);
                 }
@@ -72,7 +72,7 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
             this.clickListener = clickListener;
         }
 
-        public void bind(DrugResponse drug) {
+        public void bind(SimpleDrug drug) {
             this.binding.drugName.setText(drug.getName());
             this.binding.getRoot().setOnClickListener(v -> {
                 if (clickListener != null) {

@@ -13,22 +13,22 @@ import java.util.List;
 
 @Dao
 public interface DrugDao {
-    @Query("SELECT * FROM drug_cache ORDER BY name ASC")
-    LiveData<List<DrugCache>> getAllDrugsFromCache(); // Trả về LiveData
+    @Query("SELECT * FROM drugs ORDER BY name ASC")
+    LiveData<List<DrugEntity>> getAllDrugsFromCache(); // Trả về LiveData
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(DrugEntity drug);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<DrugCache> drugs);
+    void insertAll(List<DrugEntity> drugs);
 
-    @Query("DELETE FROM drug_cache")
+    @Query("DELETE FROM drugs")
     void deleteAll();
 
     // (Tùy chọn) Đếm số lượng bản ghi trong cache
-    @Query("SELECT COUNT(*) FROM drug_cache")
+    @Query("SELECT COUNT(*) FROM drugs")
     int getDrugCount();
 
-    @Query("SELECT COUNT(*) FROM drug_cache")
+    @Query("SELECT COUNT(*) FROM drugs")
     LiveData<Integer> getDrugCount1();
 }

@@ -1,32 +1,35 @@
 package com.mad.prescriptionmanagementapp.data.model.entity;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(tableName = "time_dosages",
-        foreignKeys = @ForeignKey(entity = DrugInPresEntity.class,
-                parentColumns = "localId", // Liên kết với localId của DrugInPresEntity
-                childColumns = "drugInPresLocalId",
-                onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = "drugInPresLocalId")}
+        foreignKeys = {@ForeignKey(entity = DrugInPresEntity.class,
+                parentColumns = "local_id",
+                childColumns = "drug_in_pres_id",
+                onDelete = ForeignKey.CASCADE)},
+        indices = {@Index(value = "drug_in_pres_id")}
 )
 public class TimeDosageEntity {
     @PrimaryKey(autoGenerate = true)
-    public long localId; // Khóa chính cục bộ
+    @ColumnInfo(name = "local_id")
+    public long localId;
 
-    public long drugInPresLocalId; // FK
+    @ColumnInfo(name = "drug_in_pres_id")
+    public long drugInPresId;
 
-    public int hour;
-    public int minutes;
     public double dosage;
-
-    public TimeDosageEntity(long drugInPresLocalId, int hour, int minutes, double dosage) {
-        this.drugInPresLocalId = drugInPresLocalId;
-        this.hour = hour;
-        this.minutes = minutes;
-        this.dosage = dosage;
-    }
-    public TimeDosageEntity() {}
 }

@@ -1,6 +1,6 @@
 package com.mad.prescriptionmanagementapp.data.model;
 
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import java.util.ArrayList;
@@ -14,16 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DrugInPres {
-    private DrugResponse drugResponse;
+    private SimpleDrug simpleDrug;
     private Unit unit;
-    private String date;
+    private String startDate;
     private List<TimeDosage> timeDosages = new ArrayList<>();
     private Frequency frequency = Frequency.DAILY;
     private int everyNDays; // nếu type = EVERY_N_DAYS
     private List<Integer> specificDays; // nếu type = SPECIFIC_DATES
+    private String note;
 
-    public DrugInPres(DrugResponse drugResponse) {
-        this.drugResponse = drugResponse;
+    public DrugInPres(SimpleDrug simpleDrug) {
+        this.simpleDrug = simpleDrug;
         this.timeDosages = new ArrayList<>();
     }
 
@@ -32,14 +33,14 @@ public class DrugInPres {
     }
 
     public DrugInPres(DrugInPres original) {
-        this.drugResponse = original.drugResponse;
+        this.simpleDrug = original.simpleDrug;
         this.timeDosages = new ArrayList<>(original.timeDosages); // shallow copy, đủ xài nếu TimeDosage immutable
     }
 
     public Drug getDrug() {
         Drug res = new Drug();
-        res.setId(this.drugResponse.getId());
-        res.setName(this.drugResponse.getName());
+        res.setId(this.simpleDrug.getId());
+        res.setName(this.simpleDrug.getName());
         return res;
     }
 }

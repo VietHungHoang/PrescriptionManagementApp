@@ -1,54 +1,74 @@
 package com.mad.prescriptionmanagementapp.data.model.entity;
 
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.Relation;
 import androidx.room.TypeConverters;
 
 import com.mad.prescriptionmanagementapp.data.database.Converters;
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
+import com.mad.prescriptionmanagementapp.data.model.entitydto.DrugInPresEntityDTO;
+//import com.mad.prescriptionmanagementapp.data.model.entitydto.PrescriptionEntityDTO;
+import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity(tableName = "drug_in_prescriptions",
         foreignKeys = {
-                @ForeignKey(entity = PrescriptionEntity.class, parentColumns = "id", childColumns = "prescriptionId", onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = DrugEntity.class, parentColumns = "id", childColumns = "drugId", onDelete = ForeignKey.RESTRICT), // Không cho xóa thuốc nếu đang dùng
-                @ForeignKey(entity = UnitEntity.class, parentColumns = "id", childColumns = "unitId", onDelete = ForeignKey.RESTRICT)
+                @ForeignKey(entity = PrescriptionEntity.class, parentColumns = "local_id", childColumns = "prescription_id", onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = DrugEntity.class, parentColumns = "id", childColumns = "drug_id", onDelete = ForeignKey.CASCADE), // Không cho xóa thuốc nếu đang dùng
+                @ForeignKey(entity = UnitEntity.class, parentColumns = "id", childColumns = "unit_id", onDelete = ForeignKey.CASCADE)
         },
         indices = {
-                @Index(value = "prescriptionId"),
-                @Index(value = "drugId"),
-                @Index(value = "unitId")
+                @Index(value = "prescription_id"),
+                @Index(value = "drug_id"),
+                @Index(value = "unit_id")
         }
 )
 @TypeConverters(Converters.class)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DrugInPresEntity {
     @PrimaryKey(autoGenerate = true)
-    public long localId; // Khóa chính cục bộ tự tăng cho bảng này
+    @ColumnInfo(name = "local_id")
+    private Long localId;
 
-    public Long prescriptionId; // FK
-    public Long drugId;         // FK (từ drugResponse.id)
-    public Long unitId;         // FK (từ unit.id)
+    @ColumnInfo(name = "prescription_id")
+    private Long prescriptionId;
 
-    // 'date' field từ model của bạn, giả sử là ngày bắt đầu uống thuốc này
-    // Nếu 'date' có ý nghĩa khác, cần điều chỉnh kiểu và tên
-    public LocalDate startDate;
+    @ColumnInfo(name = "drug_id")
+    private Long drugId;
 
-    public Converters.Frequency frequency;
-    public int everyNDays; // Chỉ có ý nghĩa nếu frequency = EVERY_N_DAYS
-    public List<Integer> specificDays; // Chỉ có ý nghĩa nếu frequency = SPECIFIC_DATES
-    // (ví dụ: [1, 15] cho ngày 1 và 15 hàng tháng,
-    // hoặc các hằng số Calendar.MONDAY, Calendar.TUESDAY...)
+    @ColumnInfo(name = "unit_id")
+    private Long unitId;
 
-    // List<TimeDosage> sẽ được biểu diễn qua TimeDosageEntity có drugInPresLocalId
-    // Thêm trường này để map từ DTO của bạn nếu có
-    public Long originalApiId; // Nếu DrugInPres có ID riêng từ API
+    @ColumnInfo(name = "start_date")
+    private LocalDate startDate;
 
-    public DrugInPresEntity(Long prescriptionId, Long drugId, Long unitId, LocalDate startDate,
-                            Converters.Frequency frequency, int everyNDays, List<Integer> specificDays, Long originalApiId) {
+    private Frequency frequency;
+
+    @ColumnInfo(name = "every_n_days")
+    private int everyNDays;
+
+    @ColumnInfo(name = "specific_days")
+    private List<Integer> specificDays;
+
+    private String note;
+
+    @ColumnInfo(name = "is_synced")
+    private Boolean isSynced;
+
+    public DrugInPresEntity(Long prescriptionId, Long drugId, Long unitId, LocalDate startDate, Frequency frequency, int everyNDays, List<Integer> specificDays) {
         this.prescriptionId = prescriptionId;
         this.drugId = drugId;
         this.unitId = unitId;
@@ -56,7 +76,9 @@ public class DrugInPresEntity {
         this.frequency = frequency;
         this.everyNDays = everyNDays;
         this.specificDays = specificDays;
-        this.originalApiId = originalApiId;
     }
-    public DrugInPresEntity() {}
+
+    public static DrugInPresEntity modelToEntity(DrugInPres drugInPres) {
+        return new DrugInPresEntity(null, drugInPres.getDrug().getId(),1L, null, drugInPres.getFrequency(), drugInPres.getEveryNDays(), drugInPres.getSpecificDays());
+    }
 }

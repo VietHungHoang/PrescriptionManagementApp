@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {DrugCache.class, UnitEntity.class, DrugEntity.class, PrescriptionEntity.class,
-        DrugInPresEntity.class, TimeDosageEntity.class, ScheduleEntity.class, ScheduleEntity.class/*, Các entity khác */}, version = 3, exportSchema = false)
+        DrugInPresEntity.class, TimeDosageEntity.class, ScheduleEntity.class/*, Các entity khác */}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UnitDao unitDao();

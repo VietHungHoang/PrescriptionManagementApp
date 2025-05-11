@@ -9,6 +9,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,64 +27,82 @@ public class ScheduleGenerationHelper {
         }
 
         for (DrugInPres drugInPres : prescription.getDrugs()) {
-            if (drugInPres.getTimeDosages() == null || drugInPres.getTimeDosages().isEmpty()) {
+            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
                 continue;
             }
 
-            LocalDate startDate = LocalDate.parse(drugInPres.getDate()); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
+            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate()); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
 
             for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
-                boolean shouldTakeToday = false;
-                switch (drugInPres.getFrequency()) {
-                    case DAILY:
-                        shouldTakeToday = true;
-                        break;
-                    case EVERY_N_DAYS:
-                        if (drugInPres.getEveryNDays() > 0) {
-                            long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate);
-                            if (daysBetween % drugInPres.getEveryNDays() == 0) {
-                                shouldTakeToday = true;
-                            }
-                        }
-                        break;
-                    case SPECIFIC_DAYS:
-                        if (drugInPres.getSpecificDays() != null && !drugInPres.getSpecificDays().isEmpty()) {
-                            DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
-                            // DayOfWeek.getValue() trả về 1 (Thứ Hai) đến 7 (Chủ Nhật)
-                            if (drugInPres.getSpecificDays().contains(currentDayOfWeek.getValue())) {
-                                shouldTakeToday = true;
-                            }
-                        }
-                        break;
-                }
-
-                if (shouldTakeToday) {
-                    for (TimeDosage timeDosage : drugInPres.getTimeDosages()) {
-                        LocalDateTime reminderDateTime = currentDate.atTime(timeDosage.getHour(), timeDosage.getMinutes());
-                        long scheduledMillisUTC = reminderDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-
-                        // Chỉ tạo reminder cho tương lai
-                        if (scheduledMillisUTC > System.currentTimeMillis()) {
-                            schedules.add(new ScheduleEntity(
-                                    prescription.getId(),
-                                    // Cần có ID cho DrugInPres, hoặc bạn có thể dùng index/hashcode tạm
-                                    // Nếu DrugInPres không có ID riêng, bạn cần cơ chế để xác định nó
-                                    // Giả sử DrugInPres có một ID (ví dụ drugInPres.getLocalId() hoặc tạo 1 ID khi parse)
-                                    (drugInPres.getDrugResponse() != null && drugInPres.getDrugResponse().getId() != null) ? drugInPres.getDrugResponse().getId() : -1L, // ID của thuốc
-                                    drugInPres.getDrugResponse() != null ? drugInPres.getDrugResponse().getName() : "N/A",
-                                    timeDosage.getDosage(),
-                                    drugInPres.getUnit() != null ? drugInPres.getUnit().getName() : "N/A",
-                                    drugInPres.getDrugResponse() != null ? drugInPres.getDrugResponse().getName() : null,
-                                    scheduledMillisUTC,
-                                    ReminderStatus.PENDING,
-                                    alarmRequestCodeCounter.getAndIncrement() // Tạo request code duy nhất
-                            ));
-                        }
-                    }
+                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                    addTimeSchedule(schedules, drugInPres, currentDate);
                 }
             }
         }
         return schedules;
+    }
+
+    public static List<ScheduleEntity> generateSchedulesForADrug(DrugInPres drugInPres, LocalDate toDate) {
+        List<ScheduleEntity> schedules = new ArrayList<>();
+
+            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
+               return schedules;
+            }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
+
+            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
+                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                    addTimeSchedule(schedules, drugInPres, currentDate);
+                }
+            }
+        return schedules;
+    }
+
+    private static boolean isShouldTakeToday(DrugInPres drugInPres, LocalDate startDate, LocalDate currentDate) {
+        switch (drugInPres.getFrequency()) {
+            case DAILY:
+                return true;
+            case EVERY_N_DAYS:
+                if (drugInPres.getEveryNDays() > 0) {
+                    long daysBetween = ChronoUnit.DAYS.between(startDate, currentDate);
+                    if (daysBetween % drugInPres.getEveryNDays() == 0) {
+                        return true;
+                    }
+                }
+                break;
+            case SPECIFIC_DAYS:
+                if (drugInPres.getSpecificDays() != null && !drugInPres.getSpecificDays().isEmpty()) {
+                    DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
+                    // DayOfWeek.getValue() trả về 1 (Thứ Hai) đến 7 (Chủ Nhật)
+                    if (drugInPres.getSpecificDays().contains(currentDayOfWeek.getValue())) {
+                        return true;
+                    }
+                }
+                break;
+        }
+        return false;
+    }
+
+    private static void addTimeSchedule(List<ScheduleEntity> scheduleEntities, DrugInPres drugInPres, LocalDate currentDate) {
+        for (TimeDosage timeDosage : drugInPres.getTimeDosages()) {
+            LocalDateTime reminderDateTime = currentDate.atTime(timeDosage.getHour(), timeDosage.getMinutes());
+            long scheduledMillisUTC = reminderDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+            // Chỉ tạo reminder cho tương lai
+            if (scheduledMillisUTC > System.currentTimeMillis()) {
+                Long simpleDrugId = (drugInPres.getSimpleDrug() != null && drugInPres.getSimpleDrug().getId() != null) ? drugInPres.getSimpleDrug().getId() : -1L;
+                double dosage = timeDosage.getDosage();
+                scheduleEntities.add(new ScheduleEntity(
+                        simpleDrugId,
+                        null,
+                        scheduledMillisUTC,
+                        ReminderStatus.PENDING,
+                        alarmRequestCodeCounter.getAndIncrement()
+                ));
+            }
+        }
     }
 
     // Ví dụ cách sử dụng:

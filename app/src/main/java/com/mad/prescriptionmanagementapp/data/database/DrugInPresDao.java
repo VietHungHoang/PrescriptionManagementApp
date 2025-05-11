@@ -19,7 +19,7 @@ public interface DrugInPresDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<DrugInPresEntity> items);
 
-    @Query("SELECT * FROM drug_in_prescriptions WHERE prescriptionId = :prescriptionId")
+    @Query("SELECT * FROM drug_in_prescriptions WHERE prescription_id = :prescriptionId")
     LiveData<List<DrugInPresEntity>> getDrugsInPrescriptionRaw(Long prescriptionId);
 
     // Lấy một DrugInPres và các TimeDosage của nó
@@ -33,12 +33,12 @@ public interface DrugInPresDao {
 //    LiveData<List<DrugInPresWithTimeDosages>> getAllDrugInPresWithTimeDosagesForPrescription(Long prescriptionId);
 
     // Lấy tất cả DrugInPresEntity (không join) để tạo ReminderInstance
-    @Query("SELECT * FROM drug_in_prescriptions")
-    List<DrugInPresEntity> getAllDrugInPresSync();
-
-    @Query("SELECT * FROM drug_in_prescriptions WHERE localId = :localId")
-    DrugInPresEntity getDrugInPresByIdSync(long localId);
-
-    @Query("DELETE FROM drug_in_prescriptions WHERE prescriptionId = :prescriptionId")
-    void deleteByPrescriptionId(Long prescriptionId);
+//    @Query("SELECT * FROM drug_in_prescriptions")
+//    List<DrugInPresEntity> getAllDrugInPresSync();
+//
+//    @Query("SELECT * FROM drug_in_prescriptions WHERE local_id = :localId")
+//    DrugInPresEntity getDrugInPresByIdSync(long localId);
+//
+//    @Query("DELETE FROM drug_in_prescriptions WHERE prescription_id = :prescriptionId")
+//    void deleteByPrescriptionId(Long prescriptionId);
 }

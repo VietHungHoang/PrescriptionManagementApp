@@ -44,4 +44,5 @@
     <color name="button_taken_color">#4CAF50</color> <!-- Green -->
     <color name="button_snooze_color">#FF9800</color> <!-- Orange -->
     <color name="button_skip_color">#757575</color> <!-- Grey -->
+    <color name="error_background">#FDE5E5</color>
 </resources>

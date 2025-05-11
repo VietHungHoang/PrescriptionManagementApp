@@ -29,7 +29,8 @@ import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.DrugResponse;
+import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.databinding.ActivityHomeBinding;
 import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.HomeViewModel;
@@ -37,9 +38,7 @@ import com.mad.prescriptionmanagementapp.util.Frequency;
 import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -84,19 +83,22 @@ public class HomeActivity extends AppCompatActivity {
 
         this.binding.fab4.setOnClickListener(v -> {
             // Code này giúp bạn xem các reminder PENDING đã được lên lịch
+//            executor.execute(() -> {
+//                List<ScheduleEntity> pending = reminderDao.getPendingReminders(ReminderStatus.PENDING, System.currentTimeMillis());
+//                if (pending.isEmpty()) {
+//                    Log.d(TAG, "No PENDING reminders in DB.");
+//                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "No PENDING reminders in DB.", Toast.LENGTH_LONG).show());
+//                } else {
+//                    Log.d(TAG, "PENDING Reminders in DB ("+pending.size()+"):");
+//                    for (ScheduleEntity r : pending) {
+//                        LocalDateTime ldt = LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(r.getScheduledDateTimeMillis()), ZoneId.systemDefault());
+////                        Log.d(TAG, " - ID: " + r.id + ", Drug: " + r.drugName + ", Time: " + ldt + ", ReqCode: " + r.alarmManagerRequestId);
+//                    }
+//                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Found " + pending.size() + " PENDING reminders. Check Logcat.", Toast.LENGTH_LONG).show());
+//                }
+//            });
             executor.execute(() -> {
-                List<ScheduleEntity> pending = reminderDao.getPendingReminders("PENDING", System.currentTimeMillis());
-                if (pending.isEmpty()) {
-                    Log.d(TAG, "No PENDING reminders in DB.");
-                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "No PENDING reminders in DB.", Toast.LENGTH_LONG).show());
-                } else {
-                    Log.d(TAG, "PENDING Reminders in DB ("+pending.size()+"):");
-                    for (ScheduleEntity r : pending) {
-                        LocalDateTime ldt = LocalDateTime.ofInstant(java.time.Instant.ofEpochMilli(r.scheduledDateTimeMillis), ZoneId.systemDefault());
-                        Log.d(TAG, " - ID: " + r.id + ", Drug: " + r.drugName + ", Time: " + ldt + ", ReqCode: " + r.alarmManagerRequestId);
-                    }
-                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Found " + pending.size() + " PENDING reminders. Check Logcat.", Toast.LENGTH_LONG).show());
-                }
+                List<ScheduleEntityDTO> s = reminderDao.getAllScheduleWithRelations();
             });
         });
     }
@@ -176,12 +178,12 @@ public class HomeActivity extends AppCompatActivity {
             List<DrugInPres> drugsInPres1 = new ArrayList<>();
 
             // Thuốc 1: Paracetamol, uống hàng ngày, 2 lần/ngày
-            DrugResponse drugResPara = new DrugResponse(101L, "Paracetamol 500mg");
+            SimpleDrug drugResPara = new SimpleDrug(101L, "Paracetamol 500mg");
             Unit unitVien = new Unit(1L, "viên");
             DrugInPres paraInPres = new DrugInPres();
-            paraInPres.setDrugResponse(drugResPara);
+            paraInPres.setSimpleDrug(drugResPara);
             paraInPres.setUnit(unitVien);
-            paraInPres.setDate(LocalDate.now().toString()); // Bắt đầu từ hôm nay
+            paraInPres.setStartDate(LocalDate.now().toString()); // Bắt đầu từ hôm nay
             paraInPres.setFrequency(Frequency.DAILY);
 
             List<TimeDosage> paraTimes = new ArrayList<>();
@@ -195,12 +197,12 @@ public class HomeActivity extends AppCompatActivity {
 
 
             // Thuốc 2: Vitamin C, uống cách ngày (EVERY_N_DAYS, n=2), 1 lần/ngày
-            DrugResponse drugResVitC = new DrugResponse(102L, "Vitamin C 1000mg");
+            SimpleDrug drugResVitC = new SimpleDrug(102L, "Vitamin C 1000mg");
             Unit unitOng = new Unit(2L, "ống");
             DrugInPres vitCInPres = new DrugInPres();
-            vitCInPres.setDrugResponse(drugResVitC);
+            vitCInPres.setSimpleDrug(drugResVitC);
             vitCInPres.setUnit(unitOng);
-            vitCInPres.setDate(LocalDate.now().toString()); // Bắt đầu từ hôm nay
+            vitCInPres.setStartDate(LocalDate.now().toString()); // Bắt đầu từ hôm nay
             vitCInPres.setFrequency(Frequency.EVERY_N_DAYS);
             vitCInPres.setEveryNDays(2); // Uống cách ngày
 
@@ -219,7 +221,7 @@ public class HomeActivity extends AppCompatActivity {
             // Sinh ScheduledReminderEntity
             List<ScheduleEntity> reminders = new ArrayList<>();
             // Sinh cho 7 ngày tới
-            reminders.addAll(ScheduleGenerationHelper.generateSchedules(prescription1, LocalDate.now(), LocalDate.now().plusDays(7)));
+            reminders.addAll(ScheduleGenerationHelper.generateSchedules(prescription1, LocalDate.now().plusDays(7)));
             // reminders.addAll(ReminderGenerationHelper.generateReminders(prescription2, LocalDate.now(), LocalDate.now().plusDays(7)));
 
             if (!reminders.isEmpty()) {
