@@ -24,9 +24,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UnitDao unitDao();
     public abstract DrugDao drugDao();
     public abstract PrescriptionDao prescriptionDao();
-    public abstract DrugInPresDao drugInPresDao();
-    public abstract TimeDosageDao timeDosageDao();
-
     public abstract ScheduleDao scheduleDao();
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4; // Số luồng cho DB executor

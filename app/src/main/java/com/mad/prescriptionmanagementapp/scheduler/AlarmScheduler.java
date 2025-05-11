@@ -10,6 +10,7 @@ import android.util.Log;
 import com.mad.prescriptionmanagementapp.broadcast.NotificationBroadcastReceiver;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
+import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
 import java.util.List;
@@ -22,17 +23,17 @@ public class AlarmScheduler {
         AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
         // Chạy trên background thread
         new Thread(() -> {
-            List<ScheduleEntity> pendingSchedules = db.scheduleDao()
+            List<ScheduleEntityDTO> pendingSchedules = db.scheduleDao()
                     .getPendingReminders(ReminderStatus.PENDING, System.currentTimeMillis());
 
-            for (ScheduleEntity schedule : pendingSchedules) {
+            for (ScheduleEntityDTO schedule : pendingSchedules) {
                 scheduleAlarm(context, schedule);
             }
             Log.d(TAG, "Scheduled " + pendingSchedules.size() + " alarms.");
         }).start();
     }
 
-    public static void scheduleAlarm(Context context, ScheduleEntity schedule) {
+    public static void scheduleAlarm(Context context, ScheduleEntityDTO schedule) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
             Log.e(TAG, "AlarmManager is null");
@@ -41,15 +42,15 @@ public class AlarmScheduler {
 
         Intent intent = new Intent(context, NotificationBroadcastReceiver.class);
         // Đưa ID của ScheduledReminderEntity (hoặc alarmManagerRequestId) để Receiver biết xử lý reminder nào
-        intent.putExtra(NotificationBroadcastReceiver.EXTRA_REMINDER_ID, schedule.getLocalId());
-        intent.putExtra(NotificationBroadcastReceiver.EXTRA_ALARM_REQUEST_CODE, schedule.getAlarmManagerRequestId());
+        intent.putExtra(NotificationBroadcastReceiver.EXTRA_REMINDER_ID, schedule.getScheduleEntity().getLocalId());
+        intent.putExtra(NotificationBroadcastReceiver.EXTRA_ALARM_REQUEST_CODE, schedule.getScheduleEntity().getAlarmManagerRequestId());
         // Quan trọng: Action khác nhau hoặc data khác nhau (uri) để tạo PendingIntent khác nhau
         // Ở đây ta dùng request code duy nhất là đủ
-        intent.setAction("REMINDER_TRIGGER_" + schedule.getAlarmManagerRequestId()); // Action duy nhất
+        intent.setAction("REMINDER_TRIGGER_" + schedule.getScheduleEntity().getAlarmManagerRequestId()); // Action duy nhất
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
-                schedule.getAlarmManagerRequestId(), // Request code phải là duy nhất cho mỗi alarm
+                schedule.getScheduleEntity().getAlarmManagerRequestId(), // Request code phải là duy nhất cho mỗi alarm
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
@@ -67,11 +68,11 @@ public class AlarmScheduler {
         try {
             // Sử dụng setExactAndAllowWhileIdle để cố gắng hoạt động cả trong Doze mode
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, schedule.getScheduledDateTimeMillis(), pendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, schedule.getScheduleEntity().getScheduledDateTimeMillis(), pendingIntent);
             } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, schedule.getScheduledDateTimeMillis(), pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, schedule.getScheduleEntity().getScheduledDateTimeMillis(), pendingIntent);
             }
-            Log.d(TAG, "Scheduled alarm for reminder ID: " + schedule.getLocalId() + " at " + schedule.getScheduledDateTimeMillis() + " with request code: " + schedule.getAlarmManagerRequestId());
+            Log.d(TAG, "Scheduled alarm for reminder ID: " + schedule.getScheduleEntity().getLocalId() + " at " + schedule.getScheduleEntity().getScheduledDateTimeMillis() + " with request code: " + schedule.getScheduleEntity().getAlarmManagerRequestId());
         } catch (SecurityException se) {
             Log.e(TAG, "SecurityException: Missing SCHEDULE_EXACT_ALARM or USE_EXACT_ALARM permission.", se);
             // Xử lý trường hợp thiếu quyền

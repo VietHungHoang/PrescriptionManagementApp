@@ -23,21 +23,21 @@ public interface ScheduleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<ScheduleEntity> reminders);
 
-    @Update
-    void update(ScheduleEntity schedule);
+//    @Update
+//    void update(ScheduleEntityDTO schedule);
 
     @Query("SELECT * FROM schedules WHERE local_id = :id")
-    ScheduleEntity getById(long id);
+    ScheduleEntityDTO getById(long id);
 
     @Query("SELECT * FROM schedules WHERE alarm_manager_request_id = :requestId")
     ScheduleEntity getByAlarmManagerRequestId(int requestId);
 
     @Query("SELECT * FROM schedules WHERE status = :status AND schedule_date_time_millis >= :currentTimeMillis ORDER BY schedule_date_time_millis ASC")
-    List<ScheduleEntity> getPendingReminders(ReminderStatus status, long currentTimeMillis);
+    List<ScheduleEntityDTO> getPendingReminders(ReminderStatus status, long currentTimeMillis);
 
     // Lấy các reminder có cùng thời gian (ví dụ trong khoảng 1 phút)
     @Query("SELECT * FROM schedules WHERE schedule_date_time_millis BETWEEN :startTimeMillis AND :endTimeMillis AND status = :status")
-    List<ScheduleEntity> getRemindersAroundTime(long startTimeMillis, long endTimeMillis, ReminderStatus status);
+    List<ScheduleEntityDTO> getRemindersAroundTime(long startTimeMillis, long endTimeMillis, ReminderStatus status);
 
 
     @Query("UPDATE schedules SET status = :newStatus WHERE local_id = :id")

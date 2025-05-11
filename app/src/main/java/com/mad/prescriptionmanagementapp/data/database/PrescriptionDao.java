@@ -1,17 +1,13 @@
 package com.mad.prescriptionmanagementapp.data.database;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.mad.prescriptionmanagementapp.data.mapper.DrugInPresMapper;
-import com.mad.prescriptionmanagementapp.data.mapper.PrescriptionMapper;
 import com.mad.prescriptionmanagementapp.data.mapper.TimeDosageMapper;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.PrescriptionEntity;
@@ -21,11 +17,9 @@ import com.mad.prescriptionmanagementapp.data.model.entity.UnitEntity;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Dao
 public interface PrescriptionDao {

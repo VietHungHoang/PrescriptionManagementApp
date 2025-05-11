@@ -24,7 +24,7 @@ public class ErrorDialog {
     private View dialogView;
     private AlertDialog alertDialog;
     private boolean isResetDimmed;
-    public ErrorDialog(Fragment fragment, String errorMessage,boolean isRestDimmed) {
+    public ErrorDialog(Fragment fragment, String errorMessage, boolean isRestDimmed) {
         this.fragment = fragment;
         this.errorMessage = errorMessage;
         this.isResetDimmed = isRestDimmed;

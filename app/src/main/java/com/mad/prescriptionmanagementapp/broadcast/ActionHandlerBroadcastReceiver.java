@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
+import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
@@ -57,7 +58,7 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
             AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
 
             for (long reminderId : reminderIds) {
-                ScheduleEntity reminder = db.scheduleDao().getById(reminderId);
+                ScheduleEntityDTO reminder = db.scheduleDao().getById(reminderId);
                 if (reminder == null) {
                     Log.w(TAG, "Reminder not found in DB for ID: " + reminderId + " during action: " + action);
                     continue;
@@ -76,10 +77,10 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                     case Constants.ACTION_SNOOZE:
                         Log.d(TAG, "Processing SNOOZE for reminder ID: " + reminderId);
                         long snoozeUntilMillis = System.currentTimeMillis() + (long) Constants.SNOOZE_DURATION_MINUTES * 60 * 1000;
-                        reminder.setScheduledDateTimeMillis(snoozeUntilMillis);
-                        reminder.setStatus(ReminderStatus.PENDING); // Đặt lại PENDING để AlarmScheduler xử lý
+                        reminder.getScheduleEntity().setScheduledDateTimeMillis(snoozeUntilMillis);
+                        reminder.getScheduleEntity().setStatus(ReminderStatus.PENDING); // Đặt lại PENDING để AlarmScheduler xử lý
                         // Hoặc bạn có thể có status SNOOZED riêng và AlarmScheduler cũng query status này
-                        db.scheduleDao().update(reminder); // Cập nhật thời gian và status
+//                        db.scheduleDao().update(reminder); // Cập nhật thời gian và status
 
                         // Đặt lại alarm
                         AlarmScheduler.scheduleAlarm(context, reminder);

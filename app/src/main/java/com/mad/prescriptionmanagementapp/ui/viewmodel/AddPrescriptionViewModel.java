@@ -394,8 +394,10 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     private void setupReminder(Context context) {
         PrescriptionRequest pres = this.prescription.getValue();
-        this.prescriptionRepository.insert(pres);
-        AlarmScheduler.scheduleAlarmsForPendingReminders(context);
+        executor.execute(() -> {
+            this.prescriptionRepository.insert(pres);
+            AlarmScheduler.scheduleAlarmsForPendingReminders(context);
+        });
     }
 
 
