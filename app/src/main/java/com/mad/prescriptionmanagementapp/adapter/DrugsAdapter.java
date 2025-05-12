@@ -21,7 +21,7 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
     public DrugsAdapter(List<SimpleDrug> drugs, OnDrugClickListener listener) {
 //        super(DIFF_CALLBACK);
         this.drugs = drugs;
-        this.filteredList = new ArrayList<>();
+        this.filteredList = drugs;
         this.listener = listener;
     }
 
@@ -35,16 +35,17 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DrugViewHolder holder, int position) {
-        holder.bind(drugs.get(position));
+        holder.bind(filteredList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return drugs.size();
+        return filteredList.size();
     }
 
     public void updateData(List<SimpleDrug> newList) {
         this.drugs = newList;
+        this.filteredList = new ArrayList<>(drugs);
         notifyDataSetChanged(); // hoặc notifyItemRangeChanged(...) cho tối ưu hơn
     }
 

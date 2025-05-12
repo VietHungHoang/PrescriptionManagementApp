@@ -34,7 +34,7 @@ import lombok.Getter;
 public class AddPrescriptionViewModel extends AndroidViewModel {
     private DrugRepository drugRepository;
     @Getter
-    private final LiveData<List<SimpleDrug>> originalDrugList;
+//    private final LiveData<List<SimpleDrug>> originalDrugList;
     private LiveData<List<Unit>> originalUnitList;
     private final MutableLiveData<List<DrugInPres>> listSelectedDrug = new MutableLiveData<>();
 
@@ -336,12 +336,12 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         this.listTime.setValue(new ArrayList<>());
         this.listSelectedDrug.setValue(new ArrayList<>());
         this.onMedicalInfo.setValue(false);
-        this.originalDrugList = Transformations.map(this.drugRepository.getCachedDrugs(), entities -> {
-            if (entities == null) return null;
-            return entities.stream()
-                    .map(DrugMapper::cacheToResponse) // Chuyển Entity -> DTO
-                    .collect(Collectors.toList());
-        });
+//        this.originalDrugList = Transformations.map(this.drugRepository.getCachedDrugs(), entities -> {
+//            if (entities == null) return null;
+//            return entities.stream()
+//                    .map(DrugMapper::cacheToResponse) // Chuyển Entity -> DTO
+//                    .collect(Collectors.toList());
+//        });
 //        this.originalUnitList = this.drugRepository.getUnits();
         this.prescription.setValue(new PrescriptionRequest());
     }

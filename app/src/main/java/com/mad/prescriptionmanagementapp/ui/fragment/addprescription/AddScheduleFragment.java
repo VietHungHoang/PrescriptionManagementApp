@@ -81,8 +81,8 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
 
         if (getArguments() != null) {
             Long drugId = getArguments().getLong(ARG_DRUG_ID);
-            List<SimpleDrug> drugs=this.viewModel.getOriginalDrugList().getValue();
-            this.drug = drugs.stream().filter(drug -> drug.getId() == drugId).findFirst().orElse(null);
+//            List<SimpleDrug> drugs=this.viewModel.getOriginalDrugList().getValue();
+            this.drug = this.viewModel.getCurrentDrug().getValue().getSimpleDrug();
         }
         return this.binding.getRoot();
     }
@@ -243,9 +243,9 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
     private void observeViewModel() {
 
         // Quan sát danh sách thuốc từ cache
-        viewModel.getOriginalDrugList().observe(getViewLifecycleOwner(), drug -> {
+        viewModel.getCurrentDrug().observe(getViewLifecycleOwner(), drug -> {
             if (drug != null) {
-                Log.d("SelectDrugFragment", "Medication list updated from cache. Size: " + drug.size());
+//                Log.d("SelectDrugFragment", "Medication list updated from cache. Size: " + drug.size());
                 this.setAdapter();
             }
         });

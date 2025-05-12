@@ -15,7 +15,6 @@ public class ConfirmDialog {
 
     public interface ConfirmationDialogListener {
         void onConfirm();
-        void onCancel();
     }
 
     public static Dialog showConfirmationDialog(
