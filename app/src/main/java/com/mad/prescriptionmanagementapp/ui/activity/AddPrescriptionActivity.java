@@ -19,10 +19,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.databinding.ActivityAddPrescriptionBinding;
+import com.mad.prescriptionmanagementapp.ui.fragment.FragmentType;
 import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddPrescriptionInfoFragment;
 import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddScheduleFragment;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.util.FragmentName;
 
 public class AddPrescriptionActivity extends AppCompatActivity {
     private ActivityAddPrescriptionBinding binding;
@@ -106,6 +108,7 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(binding.fragmentContainer.getId(), fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 

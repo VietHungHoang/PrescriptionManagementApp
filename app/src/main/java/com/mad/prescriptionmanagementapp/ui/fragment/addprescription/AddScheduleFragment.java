@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -30,6 +32,7 @@ import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.SelectTimeAndDosageDialog;
 import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.util.FragmentName;
 
 import java.util.Calendar;
 import java.util.List;
@@ -157,18 +160,22 @@ public class AddScheduleFragment extends Fragment implements OnTimeDosageClickLi
             else {
                 this.viewModel.updateSelectedDrugs(this.binding.edtStartDate.getText().toString());
                 this.viewModel.setCurrentDrug(null);
-                Fragment newFragment = AddPrescriptionInfoFragment.newInstance();
-                // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
-                this.getParentFragmentManager()
-                        .beginTransaction()
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
-                        .setCustomAnimations(
-                                R.anim.zoom_in,    // Fragment B vào (zoom in)
-                                R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
-                                R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
-                                R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
-                        .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
-                        .commit();
+                getActivity().getSupportFragmentManager().popBackStack(FragmentName.SD_TO_AS, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getSupportFragmentManager().popBackStack(FragmentName.API_TO_SD, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+
+//                Fragment newFragment = AddPrescriptionInfoFragment.newInstance();
+//                // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
+//                this.getParentFragmentManager()
+//                        .beginTransaction()
+////                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
+//                        .setCustomAnimations(
+//                                R.anim.zoom_in,    // Fragment B vào (zoom in)
+//                                R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
+//                                R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
+//                                R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
+//                        .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
+//                        .commit();
 //        new SelectFrequencyDialog().show(getParentFragmentManager(), "selectfrequency");
             }
         });

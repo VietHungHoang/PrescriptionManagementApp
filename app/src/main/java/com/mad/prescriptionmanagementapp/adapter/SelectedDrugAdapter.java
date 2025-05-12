@@ -66,7 +66,7 @@ public class SelectedDrugAdapter extends RecyclerView.Adapter<SelectedDrugAdapte
             this.binding.drugName.setText(item.getSimpleDrug().getName());
             if (clickListener != null) {
                 this.binding.btnEdit.setOnClickListener(v -> {
-                    clickListener.onItemClick(item);
+                    clickListener.onDrugClick(item);
                 });
 
             }

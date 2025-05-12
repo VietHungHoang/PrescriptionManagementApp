@@ -25,6 +25,8 @@ import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.util.FragmentName;
+import com.mad.prescriptionmanagementapp.util.Tools;
 
 import java.util.ArrayList;
 
@@ -115,29 +117,6 @@ public class SelectDrugFragment extends Fragment implements OnDrugClickListener 
 //            binding.swipeRefreshLayout.setRefreshing(false);
         });
     }
-
-    // Xử lý khi một thuốc được chọn trong Adapter
-//    @Override
-//    public void onMedicationClick(Medication medication) {
-//        Log.d("SelectDrugFragment", "Medication clicked: " + medication.name + " (ID: " + medication.id + ")");
-//        // Chuyển sang màn hình AddDrugScheduleFragment, truyền ID và Tên thuốc
-//        // Sử dụng Safe Args (khuyến nghị)
-//        SelectDrugFragmentDirections.ActionSelectDrugFragmentToAddDrugScheduleFragment action =
-//                SelectDrugFragmentDirections.actionSelectDrugFragmentToAddDrugScheduleFragment(
-//                        medication.id,
-//                        medication.name
-//                );
-//        NavHostFragment.findNavController(this).navigate(action);
-//
-//        /* // Hoặc dùng Bundle thủ công
-//        Bundle args = new Bundle();
-//        args.putInt("selectedDrugId", medication.id);
-//        args.putString("selectedDrugName", medication.name);
-//        NavHostFragment.findNavController(this)
-//               .navigate(R.id.action_selectDrugFragment_to_addDrugScheduleFragment, args);
-//        */
-//    }
-
     @Override
     public void onItemClick(SimpleDrug drug) {
         if(this.viewModel.existedDrug(drug.getId())) {
@@ -158,18 +137,7 @@ public class SelectDrugFragment extends Fragment implements OnDrugClickListener 
     private void moveToNextFragment(SimpleDrug drug) {
         Fragment newFragment = AddScheduleFragment.newInstance(drug.getId(), false);
         this.viewModel.setCurrentDrug(new DrugInPres(drug));
-        // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
-        this.getParentFragmentManager()
-                .beginTransaction()
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_CLOSE)
-                .setCustomAnimations(
-                        R.anim.zoom_in,    // Fragment B vào (zoom in)
-                        R.anim.fade_out,   // Fragment A ra (fade out) - fragment cũ
-                        R.anim.zoom_out,    // Fragment A vào lại khi Back (fade in) - fragment cũ
-                        R.anim.fade_out )  // Fragment B ra khi Back (zoom out)
-                .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
-                .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
-                .commit();
+        Tools.changeFragment(this.requireActivity(), newFragment, FragmentName.SD_TO_AS);
     }
 }
 
