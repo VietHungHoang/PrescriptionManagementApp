@@ -86,18 +86,7 @@
                 android:backgroundTint="@android:color/white"
                 android:elevation="4dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_no_remind"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="Không nhắc"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:layout_weight="1"
-                app:cornerRadius="24dp"
-                app:rippleColor="@color/colorAccent"
-                android:backgroundTint="@android:color/white"
-                android:elevation="4dp" />
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_done"

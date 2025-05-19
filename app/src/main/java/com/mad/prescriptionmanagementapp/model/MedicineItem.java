@@ -1,13 +1,16 @@
 package com.mad.prescriptionmanagementapp.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-public class MedicineItem implements Serializable { // 🔹 Bắt buộc để truyền qua Bundle
+public class MedicineItem implements Serializable {
     private String time;
-    private String date; // 🔹 Thêm biến ngày uống thuốc
+    private String date;
     private String medicineList;
     private boolean isUsed;
     private boolean isSkipped;
+    private Long scheduleId;
 
     public MedicineItem(String time, String date, String medicineList) {
         this.time = time;
@@ -18,7 +21,6 @@ public class MedicineItem implements Serializable { // 🔹 Bắt buộc để t
     }
     public MedicineItem(String time, String medicineList) {
         this.time = time;
-        this.date = date;
         this.medicineList = medicineList;
         this.isUsed = false;
         this.isSkipped = false;
@@ -60,5 +62,13 @@ public class MedicineItem implements Serializable { // 🔹 Bắt buộc để t
         if (skipped) {
             this.isUsed = false;
         }
+    }
+
+    public Long getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(Long scheduleId) {
+        this.scheduleId = scheduleId;
     }
 }

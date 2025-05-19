@@ -138,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Bỏ Qua"
-                        android:textColor="#000000"
+                        android:textColor="#E91E1E"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>

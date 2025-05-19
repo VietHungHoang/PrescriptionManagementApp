@@ -10,12 +10,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.model.DayModel;
 
 import java.util.List;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
-    private List<String> days;
-    private int selectedDay;
+    private List<DayModel> days;
+    private int selectedDay, selectedMonth;
+
     private int lastSelectedPosition = -1;
     private final OnItemClickListener listener;
 
@@ -23,17 +25,14 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         void onItemClick(int dayNumber);
     }
 
-    public DayAdapter(List<String> days, int selectedDay, OnItemClickListener listener) {
+    public DayAdapter(List<DayModel> days, int selectedDay,int selectedMonth, OnItemClickListener listener) {
+
+        this.listener = listener;
         this.days = days;
         this.selectedDay = selectedDay;
-        this.listener = listener;
+        this.selectedMonth = selectedMonth;
 
-        for (int i = 0; i < days.size(); i++) {
-            if (Integer.parseInt(days.get(i).split(" ")[1]) == selectedDay) {
-                lastSelectedPosition = i;
-                break;
-            }
-        }
+
     }
 
     @NonNull
@@ -67,63 +66,42 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
             }
         }
 
-        public void bind(String day, int position) {
+        public void bind(DayModel day, int position) {
             Context context = itemView.getContext();
-            String[] parts = day.split(" ");
-            tvDayOfWeek.setText(parts[0]);
-            tvDayNumber.setText(parts[1]);
+            tvDayOfWeek.setText(day.getDayOfWeek());
+            tvDayNumber.setText(String.valueOf(day.getDayNumber()));
 
-            int dayNumber = Integer.parseInt(parts[1]);
-            boolean isSelected = (position == lastSelectedPosition);
+            // Chỉ bôi nếu cả ngày và tháng đều trùng
+            boolean isSelected = (day.getDayNumber() == selectedDay && day.getMonth() == selectedMonth);
 
-            // Cập nhật màu nền và màu chữ cho item
             itemView.setBackgroundResource(isSelected ? R.drawable.bg_selected_day : android.R.color.transparent);
             int textColor = ContextCompat.getColor(context, isSelected ? android.R.color.white : android.R.color.black);
             tvDayOfWeek.setTextColor(textColor);
             tvDayNumber.setTextColor(textColor);
 
-            // Cập nhật click event
             itemView.setOnClickListener(v -> {
-                if (lastSelectedPosition != position) {
-                    int previousPosition = lastSelectedPosition;
-                    lastSelectedPosition = position;
-                    selectedDay = dayNumber;
+                int previousPosition = getAdapterPosition();
+                selectedDay = day.getDayNumber();
+                selectedMonth = day.getMonth();
 
-                    if (previousPosition != -1) notifyItemChanged(previousPosition);
-                    notifyItemChanged(position);
-
-                    listener.onItemClick(dayNumber);
-                }
+                notifyDataSetChanged(); // hoặc gọi notifyItemChanged(previous/new) nếu cần hiệu năng
+                listener.onItemClick(day.getDayNumber());
             });
         }
     }
 
-    public void updateDays(List<String> newDays, int selectedDay) {
+    public void updateDays(List<DayModel> newDays, int selectedDay, int selectedMonth) {
         this.days = newDays;
         this.selectedDay = selectedDay;
         lastSelectedPosition = -1;
 
-        for (int i = 0; i < newDays.size(); i++) {
-            if (Integer.parseInt(newDays.get(i).split(" ")[1]) == selectedDay) {
-                lastSelectedPosition = i;
-                break;
-            }
-        }
 
         notifyDataSetChanged();
     }
 
-    public void setSelectedDate(int day) {
-        for (int i = 0; i < days.size(); i++) {
-            if (Integer.parseInt(days.get(i).split(" ")[1]) == day) {
-                int previousPosition = lastSelectedPosition;
-                lastSelectedPosition = i;
-                selectedDay = day;
-
-                if (previousPosition != -1) notifyItemChanged(previousPosition);
-                notifyItemChanged(i);
-                break;
-            }
-        }
+    public void setSelectedDate(int day, int month) {
+        this.selectedDay = day;
+        this.selectedMonth = month;
+        notifyDataSetChanged();
     }
 }

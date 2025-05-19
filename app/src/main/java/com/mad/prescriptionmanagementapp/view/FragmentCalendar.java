@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.DayAdapter;
+import com.mad.prescriptionmanagementapp.model.DayModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +30,11 @@ public class FragmentCalendar extends Fragment {
     private ImageView btnPrevWeek, btnNextWeek;
     private Calendar calendar;
     private DayAdapter adapter;
-    private List<String> weekDays = new ArrayList<>();
+    private List<DayModel> weekDays = new ArrayList<>();
     private final String[] weekLabels = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
-    private int selectedDay = -1; // Ngày được chọn
+    private int selectedDay = -1;
+    private int selectedMonth = -1;
     private OnDateSelectedListener dateSelectedListener;
-
 
     @Nullable
     @Override
@@ -45,7 +47,8 @@ public class FragmentCalendar extends Fragment {
         btnNextWeek = view.findViewById(R.id.btnNextWeek);
 
         calendar = Calendar.getInstance();
-        selectedDay = calendar.get(Calendar.DAY_OF_MONTH); // Lấy ngày hiện tại
+        selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
+        selectedMonth = calendar.get(Calendar.MONTH);
 
         updateMonthYearText();
         updateWeekDays();
@@ -53,7 +56,7 @@ public class FragmentCalendar extends Fragment {
         tvMonthYear.setOnClickListener(v -> showMonthYearPickerDialog());
 
         recyclerViewDays.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        adapter = new DayAdapter(weekDays, selectedDay, this::onDaySelected);
+        adapter = new DayAdapter(weekDays, selectedDay, selectedMonth, this::onDaySelected);
         recyclerViewDays.setAdapter(adapter);
 
         btnPrevWeek.setOnClickListener(v -> {
@@ -67,25 +70,34 @@ public class FragmentCalendar extends Fragment {
             updateMonthYearText();
             updateWeekDays();
         });
+        onDaySelected(selectedDay);
 
         return view;
     }
 
     private void onDaySelected(int day) {
         selectedDay = day;
-        adapter.setSelectedDate(selectedDay);
 
-        // Lấy ngày tháng năm đã chọn
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        calendar.set(Calendar.DAY_OF_MONTH, selectedDay);
-        String selectedDate = sdf.format(calendar.getTime());
+        // Tìm đúng DayModel theo day để lấy ra tháng tương ứng
+        for (DayModel model : weekDays) {
+            if (model.getDayNumber() == day) {
+                selectedMonth = model.getMonth(); // <- cập nhật đúng tháng thực tế của ngày được chọn
+                break;
+            }
+        }
 
-        // Gửi về Activity nếu listener không null
+        adapter.setSelectedDate(selectedDay, selectedMonth);
+
+        Calendar selectedCalendar = (Calendar) calendar.clone();
+        selectedCalendar.set(Calendar.MONTH, selectedMonth); // cập nhật lại tháng
+        selectedCalendar.set(Calendar.DAY_OF_MONTH, selectedDay);
+
+        String selectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedCalendar.getTime());
+
         if (dateSelectedListener != null) {
             dateSelectedListener.onDateSelected(selectedDate);
         }
     }
-
 
     private void updateMonthYearText() {
         String monthYear = new SimpleDateFormat("MMMM yyyy", new Locale("vi", "VN")).format(calendar.getTime());
@@ -93,20 +105,27 @@ public class FragmentCalendar extends Fragment {
     }
 
     private void updateWeekDays() {
-        SimpleDateFormat sdfDay = new SimpleDateFormat("dd", Locale.getDefault());
         weekDays.clear();
 
         Calendar tempCalendar = (Calendar) calendar.clone();
         tempCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
         for (int i = 0; i < 7; i++) {
-            String day = sdfDay.format(tempCalendar.getTime());
-            weekDays.add(weekLabels[i] + " " + day);
+            int dayNumber = tempCalendar.get(Calendar.DAY_OF_MONTH);
+            int month = tempCalendar.get(Calendar.MONTH); // Quan trọng để phân biệt tháng
+
+            DayModel dayModel = new DayModel(
+                    weekLabels[i],
+                    dayNumber,
+                    month
+            );
+
+            weekDays.add(dayModel);
             tempCalendar.add(Calendar.DAY_OF_WEEK, 1);
         }
 
         if (adapter != null) {
-            adapter.updateDays(weekDays, selectedDay);
+            adapter.updateDays(weekDays, selectedDay, selectedMonth);
         }
     }
 
@@ -118,15 +137,25 @@ public class FragmentCalendar extends Fragment {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getActivity(),
-                (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
-                    calendar.set(selectedYear, selectedMonth, selectedDayOfMonth);
+                (view, selectedYear, selectedMonthDialog, selectedDayOfMonth) -> {
+                    calendar.set(selectedYear, selectedMonthDialog, selectedDayOfMonth);
                     selectedDay = selectedDayOfMonth;
+                    selectedMonth = selectedMonthDialog;
 
                     updateMonthYearText();
                     updateWeekDays();
 
                     if (adapter != null) {
-                        adapter.setSelectedDate(selectedDay);
+                        adapter.setSelectedDate(selectedDay, selectedMonth);
+                    }
+                    Calendar selectedCalendar = Calendar.getInstance();
+                    selectedCalendar.set(selectedYear, selectedMonth, selectedDayOfMonth);
+
+                    String selectedDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            .format(selectedCalendar.getTime());
+
+                    if (dateSelectedListener != null) {
+                        dateSelectedListener.onDateSelected(selectedDate);
                     }
                 },
                 year, month, selectedDay
@@ -134,8 +163,8 @@ public class FragmentCalendar extends Fragment {
 
         datePickerDialog.show();
     }
+
     public void setOnDateSelectedListener(OnDateSelectedListener listener) {
         this.dateSelectedListener = listener;
     }
-
 }

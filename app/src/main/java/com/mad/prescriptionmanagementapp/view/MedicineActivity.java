@@ -21,8 +21,7 @@ public class MedicineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_medicine_item); // đổi tên file layout đúng
-
+        setContentView(R.layout.fragment_medicine_item);
         tvTime = findViewById(R.id.tvTime);
 
         tvMedicineList = findViewById(R.id.tvMedicineList);

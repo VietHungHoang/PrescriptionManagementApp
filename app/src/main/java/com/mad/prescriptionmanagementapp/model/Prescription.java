@@ -1,6 +1,6 @@
 package com.mad.prescriptionmanagementapp.model;
 
-public class Prescription {
+public class Prescription  extends  BaseItem{
     private String drugName;
     private String schedule;
 
@@ -30,5 +30,8 @@ public class Prescription {
     }
 
 
-
+    @Override
+    public int getType() {
+        return TYPE_PRESCRIPTION;
+    }
 }

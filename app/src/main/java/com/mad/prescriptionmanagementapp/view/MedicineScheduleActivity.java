@@ -26,7 +26,7 @@ public class MedicineScheduleActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
         // Thêm FragmentCalendar vào calendarContainer
         FragmentCalendar fragmentCalendar = new FragmentCalendar();
-        fragmentCalendar.setOnDateSelectedListener(this::onDateSelected); // Nhận ngày từ lịch
+        fragmentCalendar.setOnDateSelectedListener(this::onDateSelected);
         transaction.replace(R.id.calendarContainer, fragmentCalendar);
 
         // Thêm MedicineFragment vào fragment_container
