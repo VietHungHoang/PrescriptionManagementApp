@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;  // Thêm import cho ProgressBar
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ public class MedicineSearchActivity extends Activity {
 
     private static final String TAG = "MedicineSearchActivity";
     private EditText searchInput;
+    private ImageButton btnBack;
     private RecyclerView medicineListRecyclerView, alphabetIndexRecyclerView;
     private ProgressBar loadingProgressBar;  // Thêm ProgressBar
     private MedicineAdapter medicineAdapter;
@@ -59,7 +61,15 @@ public class MedicineSearchActivity extends Activity {
                 alphabetList.add(String.valueOf(c));
             }
             Log.d(TAG, "Initialized data lists");
-
+            // Ánh xạ nút Back
+            btnBack = findViewById(R.id.btn_back);
+            // Sự kiện nút Back
+            btnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish(); // Đóng ProfileActivity
+                }
+            });
             // Setup RecyclerViews
             medicineListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             medicineAdapter = new MedicineAdapter(filteredDrugList, drug -> {

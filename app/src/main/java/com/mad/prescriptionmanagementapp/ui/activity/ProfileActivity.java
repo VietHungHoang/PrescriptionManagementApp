@@ -2,11 +2,14 @@ package com.mad.prescriptionmanagementapp.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.RetrofitClient;
 import com.mad.prescriptionmanagementapp.data.model.User;
@@ -22,8 +25,8 @@ import org.threeten.bp.format.DateTimeParseException;
 import android.util.Log;
 public class ProfileActivity extends AppCompatActivity {
     private TextView tvUsername, tvGenderAge, tvHeight, tvWeight, tvBmi, tvBmr;
-    private ImageButton btnUpdate;
-    private LinearLayout layoutTermsOfService, layoutNotificationSettings;
+    private ImageButton btnUpdate, btnBack;
+    private LinearLayout layoutTermsOfService, layoutNotificationSettings,layoutLogout;
     private User user;
     private UserSetting userSetting;
     private ApiService apiService;
@@ -51,6 +54,27 @@ public class ProfileActivity extends AppCompatActivity {
         layoutTermsOfService = findViewById(R.id.layout_terms_of_service);
         layoutNotificationSettings = findViewById(R.id.layout_notification_settings);
         LinearLayout layoutTdee = findViewById(R.id.layout_tdee);
+        // Ánh xạ nút Back
+        btnBack = findViewById(R.id.btn_back);
+
+        // Sự kiện nút Back
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Đóng ProfileActivity
+            }
+        });
+        // Đảm bảo layoutLogout đã được ánh xạ
+        layoutLogout = findViewById(R.id.layout_logout);
+
+        // Sự kiện nút Đăng Xuất
+        layoutLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLogoutConfirmationDialog();
+            }
+        });
+
 //       Sự kiện tính chỉ số TDEE
         layoutTdee.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, TDEEActivity.class);
@@ -200,5 +224,42 @@ public class ProfileActivity extends AppCompatActivity {
             }
             loadUserData(user.getId());
         }
+    }
+    private void showLogoutConfirmationDialog() {
+        // Inflate layout XML
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_logout_confirmation, null);
+
+        // Tìm các thành phần trong dialog
+        TextView tvConfirm = dialogView.findViewById(R.id.tv_confirm);
+        TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
+
+        // Tạo AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+
+        // Tạo dialog
+        final AlertDialog dialog = builder.create();
+
+        // Xử lý nút Xác nhận
+        tvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProfileActivity.this, "Đã xác nhận đăng xuất", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        // Xử lý nút Hủy
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProfileActivity.this, "Đã hủy đăng xuất", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        // Hiển thị dialog
+        dialog.show();
     }
 }

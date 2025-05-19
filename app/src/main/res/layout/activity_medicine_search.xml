@@ -7,7 +7,18 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="16dp">
-
+    <!-- Nút Back (Thêm mới) -->
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/dang_nutback"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Quay lại"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp" />
     <!-- Tiêu đề -->
     <TextView
         android:id="@+id/title"
