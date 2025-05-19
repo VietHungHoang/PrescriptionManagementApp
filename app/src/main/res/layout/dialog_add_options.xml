@@ -23,30 +23,57 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:paddingHorizontal="24dp"
+    android:background="@drawable/add_option_background"
+    android:paddingTop="8dp"
+    android:paddingBottom="24dp"
 
-    <TextView
-        android:id="@+id/dialog_title"
-        android:layout_width="wrap_content"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bạn muốn thêm..."
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="8dp"
+        >
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bạn muốn thêm..."
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            android:layout_marginRight="-12dp"
+            android:src="@drawable/ic_close"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/option_prescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp"
-        android:background="?android:attr/selectableItemBackground">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/add_options_item">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_prescription"
             android:scaleType="fitCenter"
             android:layout_marginEnd="16dp" />
@@ -56,7 +83,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/option_add_prescription"
-            android:text="Thuốc theo toa"
+            android:text="Lịch uống thuốc"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="16sp" />
 
         <ImageView
@@ -70,17 +99,19 @@
 <LinearLayout
     android:id="@+id/option_medicine"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="56dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="12dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:layout_marginTop="8dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="4dp"
+    android:background="@drawable/add_options_item"
+    android:layout_marginTop="8dp"
+    >
 
     <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_medication" android:scaleType="fitCenter"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_appointment_color" android:scaleType="fitCenter"
         android:layout_marginEnd="16dp"/>
 
     <TextView
@@ -88,7 +119,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Thuốc"
+        android:text="Lịch hẹn"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:textSize="16sp"/>
 
     <ImageView

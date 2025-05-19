@@ -36,6 +36,7 @@ import com.mad.prescriptionmanagementapp.util.AuthStatus;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.Event;
 import com.mad.prescriptionmanagementapp.util.Resource;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -92,12 +93,15 @@ public class LoginViewModel extends AndroidViewModel {
     private static final String PREF_NAME = "UserSession";
     private static final String KEY_JWT_TOKEN = "jwt_token";
 
+    private SharedPrefUtils sharedPrefUtils;
+
     public LoginViewModel(@NonNull Application application) {
         super(application);
         this.loginRepository = new LoginRepository(); // Consider upgrading to use DI
         this.sharedPreferences = application.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.mainExecutor = ContextCompat.getMainExecutor(application);
         this.credentialManager = CredentialManager.create(application);
+        this.sharedPrefUtils = new SharedPrefUtils(application);
     }
 
     public void onClickBtnLogin(View view) {
@@ -155,21 +159,19 @@ public class LoginViewModel extends AndroidViewModel {
                 .build();
 
         this.credentialManager.getCredentialAsync(
-                view.getContext(), // Context from Activity/Fragment
+                view.getContext(),
                 request,
                 cancellationSignal,
                 mainExecutor,
                 new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
                     @Override
                     public void onResult(GetCredentialResponse result) {
-                        Log.i(Constants.TAG, "Google Credential received.");
                         LoginViewModel.this._authStatus.setValue(AuthStatus.GOOGLE_SUCCESS);
                         LoginViewModel.this.handleGoogleCredential(result.getCredential());
                     }
 
                     @Override
                     public void onError(@NonNull GetCredentialException e) {
-                        Log.e(Constants.TAG, "GetCredentialException", e);
                         LoginViewModel.this._authStatus.setValue(AuthStatus.GOOGLE_FAILED);
                         LoginViewModel.this._errorMessage.setValue(new Event<>("Get information from Google error: " + e.getMessage()));
                     }
@@ -198,9 +200,9 @@ public class LoginViewModel extends AndroidViewModel {
             public void onResponse(@NonNull Call<GoogleAuthRespone> call, @NonNull Response<GoogleAuthRespone> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     GoogleAuthRespone verifyResponse = response.body();
-                    Log.i(Constants.TAG, "Backend verify response: status=" + verifyResponse.getStatus());
                     if (verifyResponse.getStatus().equals("LOGIN_SUCCESS")) {
-                        self.saveUserSession(verifyResponse.getToken(), null);
+//                        self.saveUserSession(verifyResponse.getToken(), null);
+                        sharedPrefUtils.saveToken(verifyResponse.getToken(), verifyResponse.getName());
                         self._authStatus.setValue(AuthStatus.LOGIN_SUCCESS);
                         self._navigateToMain.setValue(new Event<>(true)); // Navigate to app
                         pendingIdToken = null; // Delete temporary token
@@ -237,7 +239,6 @@ public class LoginViewModel extends AndroidViewModel {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_JWT_TOKEN, token);
         editor.apply();
-        Log.i(Constants.TAG, "User session saved (JWT Token).");
     }
 
     private String generateNonce(int length) {

@@ -1,6 +1,7 @@
 package com.mad.prescriptionmanagementapp.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,11 +38,15 @@ import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.HomeViewModel;
 import com.mad.prescriptionmanagementapp.util.Frequency;
 import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -55,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private static final int EXACT_ALARM_PERMISSION_CODE = 102;
+    private SharedPrefUtils sharedPrefUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +225,7 @@ public class HomeActivity extends AppCompatActivity {
 //    }
 //
 //
+    @SuppressLint("SetTextI18n")
     private void initParam() {
         EdgeToEdge.enable(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -231,9 +238,10 @@ public class HomeActivity extends AppCompatActivity {
         this.viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         this.binding.setViewModel(this.viewModel);
         this.binding.setLifecycleOwner(this);
-
+        this.sharedPrefUtils = new SharedPrefUtils(this);
         this.binding.fab.setOnClickListener(v -> showOptions());
-
+        this.binding.tvGreeting.setText(this.sharedPrefUtils.getName() != null ? "Chào, " + this.sharedPrefUtils.getName() : "Chào, Guest");
+        this.binding.tvDate.setText("Hôm nay, " + new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()));
     }
 
     private void showOptions() {

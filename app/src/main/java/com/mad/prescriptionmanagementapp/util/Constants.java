@@ -16,4 +16,5 @@ public class Constants {
     public static final String EXTRA_REMINDER_IDS_LIST = "extra_reminder_ids_list"; // ArrayList<Long>
 
     public static final int SNOOZE_DURATION_MINUTES = 5;
+
 }

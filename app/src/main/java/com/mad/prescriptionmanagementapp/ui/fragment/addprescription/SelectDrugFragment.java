@@ -58,7 +58,6 @@ public class SelectDrugFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AddPrescriptionActivity) this.requireActivity()).setCustomTitle("Chọn thuốc");
         this.setAdapter();
         this.setupSearch();
         this.observeViewModel();

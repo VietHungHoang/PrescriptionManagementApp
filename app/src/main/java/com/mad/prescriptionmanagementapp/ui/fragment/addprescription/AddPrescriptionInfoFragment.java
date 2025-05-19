@@ -2,6 +2,7 @@ package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +19,7 @@ import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
+import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
 import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionInfoViewModel;
@@ -35,6 +37,7 @@ public class AddPrescriptionInfoFragment extends Fragment {
     private FragmentAddPrescriptionInfoBinding binding;
     private AddPrescriptionViewModel shareViewModel;
     private AddPrescriptionInfoViewModel viewModel;
+
 
     public static AddPrescriptionInfoFragment newInstance() {
         return new AddPrescriptionInfoFragment();
@@ -64,12 +67,12 @@ public class AddPrescriptionInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AddPrescriptionActivity) requireActivity()).setCustomTitle("Thêm đơn thuốc");
         this.setupUI();
         this.setOnclickView();
         this.setOnFocusEditText();
         this.observeError();
         this.setAdapter();
+        this.setBack();
     }
 
     private void setupUI() {
@@ -177,6 +180,40 @@ public class AddPrescriptionInfoFragment extends Fragment {
         });
 
         this.viewModel.getSwitchState().observe(getViewLifecycleOwner(), this::enableMedicalInfo);
+    }
+
+    private void setBack() {
+//        this.binding.btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+        this.requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if(!validateInput()) {
+                            ConfirmDialog.showCancelConfirmationDialog(requireContext(), new ConfirmDialog.ConfirmationDialogListener() {
+                                @Override
+                                public void onConfirm() {
+                                    requireActivity().finish();
+                                }
+                            }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
+                        }
+                        else {
+                            requireActivity().finish();
+                        }
+                    }
+                });
+    }
+
+    private boolean validateInput() {
+        if(this.binding.edtPrescriptionName.getText().toString() != ""
+        || this.binding.edtHospital.getText().toString() != ""
+        || this.binding.edtDoctor.getText().toString() != ""
+        || this.binding.edtConsultationDate.getText().toString() != ""
+        || this.binding.edtFollowUpDate.getText().toString() != ""
+        || this.shareViewModel.getSelectedDrugs().getValue().size() > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override

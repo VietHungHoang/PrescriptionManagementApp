@@ -16,389 +16,443 @@
         android:layout_height="match_parent"
         tools:context=".ui.fragment.addprescription.AddPrescriptionInfoFragment">
 
-        <LinearLayout
-            android:id="@+id/ui_add_prescription_info"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
-
-            <!-- Nút lưu -->
-            <ScrollView
+            <LinearLayout
+                android:id="@+id/ui_add_prescription_info"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="26dp">
-
-                <LinearLayout
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                >
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="@color/white"
+                    app:contentInsetStart="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="8dp"
+                    >
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:paddingHorizontal="@dimen/edt_padding">
-                        <!-- Nhập tên đơn thuốc -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+                        <ImageButton
+                            android:id="@+id/btnBack"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="* "
-                                android:textColor="@color/red"
-                                android:textSize="@dimen/lbl_textsize"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tên đơn thuốc"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/lbl_textsize"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <EditText
-                            android:id="@+id/edt_prescription_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/edt_height"
-                            android:background="@drawable/edittext_bg_normal"
-                            android:hint="Nhập tên đơn thuốc"
-                            android:paddingHorizontal="@dimen/edt_padding"
-                            android:textColor="@color/black"
-                            android:textColorHint="#84888C"
-                            android:textSize="@dimen/edt_textsize" />
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="Back"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_arrow_back"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginLeft="16dp"/>
 
                         <TextView
-                            android:id="@+id/txtErrorName"
-                            android:layout_width="match_parent"
+                            android:id="@+id/txtTitle"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:drawableStart="@drawable/ic_attention"
-                            android:drawablePadding="6dp"
-                            android:text="@{viewModel.errorMessage}"
-                            android:textColor="@color/red"
-                            android:textSize="@dimen/error_textsize"
-                            android:textStyle="normal"
-                            android:visibility="gone"/>
+                            android:gravity="center"
+                            android:text="Thêm đơn thuốc"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <!-- Danh sách thuốc -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginBottom="8dp"
-                            android:orientation="horizontal">
+                        <View
+                            android:id="@+id/lineLeft9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="12dp"
+                            android:background="@color/lineSelectColor"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txtTitle" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="* "
-                                android:textColor="@color/red"
-                                android:textSize="@dimen/lbl_textsize"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Danh sách thuốc"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/lbl_textsize"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rcv_drug_info"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/search_drug"
-                            android:layout_alignParentBottom="true"
-                            android:clipToPadding="false"
-                            android:paddingBottom="8dp"
-                            android:scrollbars="vertical" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_add_drug"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:background="@drawable/bg_add_btn"
-                            android:text="+ Thêm thuốc"
-                            android:textAllCaps="false"
-                            android:textColor="@color/blue"
-                            android:textSize="16sp"
-                            app:backgroundTint="@null" />
-                    </LinearLayout>
-
-                    <!-- Nhắc nhở uống thuốc -->
-                    <!--                <Switch-->
-                    <!--                    android:id="@+id/switch_nhac_nho"-->
-                    <!--                    android:layout_width="match_parent"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:checked="true"-->
-                    <!--                    android:paddingTop="10dp"-->
-                    <!--                    android:text="Nhắc nhở uống thuốc"-->
-                    <!--                    android:textSize="16sp" />-->
-
-                    <!-- Layout ẩn/hiện theo switch nhắc nhở -->
-                    <!--                <LinearLayout-->
-                    <!--                    android:id="@+id/layout_nhac_nho"-->
-                    <!--                    android:layout_width="match_parent"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:orientation="vertical"-->
-                    <!--                    >-->
-
-                    <!--                    &lt;!&ndash; Ngày bắt đầu uống &ndash;&gt;-->
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_marginTop="8dp"-->
-                    <!--                        android:text="Ngày bắt đầu uống"-->
-                    <!--                        android:textSize="16sp"-->
-                    <!--                        android:textStyle="bold" />-->
-
-                    <!--                    <com.google.android.material.textfield.TextInputLayout-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        app:boxBackgroundMode="outline">-->
-
-                    <!--                        <com.google.android.material.textfield.TextInputEditText-->
-                    <!--                            android:id="@+id/edt_ngay_bat_dau"-->
-                    <!--                            android:layout_width="match_parent"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:clickable="true"-->
-                    <!--                            android:focusable="false"-->
-                    <!--                            android:hint="Chọn ngày bắt đầu"-->
-                    <!--                            android:textColor="@android:color/black" />-->
-                    <!--                    </com.google.android.material.textfield.TextInputLayout>-->
-
-                    <!--                    &lt;!&ndash; Số ngày uống &ndash;&gt;-->
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_marginTop="8dp"-->
-                    <!--                        android:text="Số ngày uống"-->
-                    <!--                        android:textSize="16sp"-->
-                    <!--                        android:textStyle="bold" />-->
-
-                    <!--                    <com.google.android.material.textfield.TextInputLayout-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        app:boxBackgroundMode="outline">-->
-
-                    <!--                        <com.google.android.material.textfield.TextInputEditText-->
-                    <!--                            android:id="@+id/edt_so_ngay"-->
-                    <!--                            android:layout_width="match_parent"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:inputType="number"-->
-                    <!--                            android:textColor="@android:color/black" />-->
-                    <!--                    </com.google.android.material.textfield.TextInputLayout>-->
-                    <!--                </LinearLayout>-->
-
-
-                    <View
-                        android:id="@+id/line"
-                        android:layout_width="wrap_content"
-                        android:layout_height="8dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="24dp"
-                        android:layout_weight="1"
-                        android:background="@color/lineSelectColor"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/txtTitle" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.appcompat.widget.Toolbar>
+                <!-- Nút lưu -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="26dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="48dp"
+                        android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:paddingHorizontal="@dimen/edt_padding">
-                        <!-- Thông tin khám bệnh -->
-                        <Switch
-                            android:id="@+id/switch_medical_info"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Thông tin khám bệnh"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/lbl_textsize"
-                            android:textStyle="bold"
-                            android:thumb="@drawable/toggle_thumb"
-                            android:track="@drawable/toggle_track"
-                            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-
-                        <!-- CardView chứa thông tin khám bệnh -->
-
-                        <FrameLayout
-                            android:id="@+id/card_medical_info"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:visibility="gone">
-
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="@dimen/edt_padding">
+                            <!-- Nhập tên đơn thuốc -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
-                                <View
-                                    android:id="@+id/lineLeft"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="1dp"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:background="@color/lineSelectColor"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/txtTitle" />
-
-                                <!-- Bệnh viện / Phòng khám -->
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="16dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="Bệnh viện / Phòng khám"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/lbl_textsize"
-                                    android:textStyle="bold"
-                                    />
-
-                                <EditText
-                                    android:id="@+id/edt_hospital"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/edt_height"
-                                    android:layout_marginBottom="24dp"
-                                    android:background="@drawable/edittext_bg_normal"
-                                    android:hint="Nhập tên bệnh viện / phòng khám"
-                                    android:paddingHorizontal="@dimen/edt_padding"
-                                    android:textColor="@color/black"
-                                    android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize"
-                                    />
-
-                                <!-- Tên bác sĩ -->
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="Bác sĩ"
-                                    android:textColor="@color/black"
+                                    android:text="* "
+                                    android:textColor="@color/red"
                                     android:textSize="@dimen/lbl_textsize"
                                     android:textStyle="bold" />
 
-                                <EditText
-                                    android:id="@+id/edt_doctor"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/edt_height"
-                                    android:background="@drawable/edittext_bg_normal"
-                                    android:hint="Nhập tên bác sĩ"
-                                    android:paddingHorizontal="@dimen/edt_padding"
-                                    android:textColor="@color/black"
-                                    android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize" />
-
-                                <!-- Ngày khám -->
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="24dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="Ngày khám"
+                                    android:text="Tên đơn thuốc"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/lbl_textsize"
                                     android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/edt_consultation_date"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/edt_height"
-                                    android:background="@drawable/edittext_bg_normal"
-                                    android:clickable="true"
-                                    android:drawableEnd="@drawable/ic_calendar"
-                                    android:focusable="false"
-                                    android:hint="Chọn ngày khám"
-                                    android:inputType="none"
-                                    android:paddingHorizontal="@dimen/edt_padding"
-                                    android:textColor="@color/black"
-                                    android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize"
-                                    />
-
-                                <!-- Ngày tái khám -->
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="24dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="Ngày tái khám"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/lbl_textsize"
-                                    android:textStyle="bold" />
-
-                                <EditText
-                                    android:id="@+id/edt_follow_up_date"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="@dimen/edt_height"
-                                    android:background="@drawable/edittext_bg_normal"
-                                    android:clickable="true"
-                                    android:drawableEnd="@drawable/ic_calendar"
-                                    android:focusable="false"
-                                    android:hint="Chọn ngày tái khám"
-                                    android:inputType="none"
-                                    android:paddingHorizontal="@dimen/edt_padding"
-                                    android:textColor="@color/black"
-                                    android:textColorHint="#84888C"
-                                    android:textSize="@dimen/edt_textsize"
-                                    />
-
                             </LinearLayout>
-                        </FrameLayout>
+
+                            <EditText
+                                android:id="@+id/edt_prescription_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/edt_height"
+                                android:background="@drawable/edittext_bg_normal"
+                                android:hint="Nhập tên đơn thuốc"
+                                android:paddingHorizontal="@dimen/edt_padding"
+                                android:textColor="@color/black"
+                                android:textColorHint="#84888C"
+                                android:textSize="@dimen/edt_textsize" />
+
+                            <TextView
+                                android:id="@+id/txtErrorName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:drawableStart="@drawable/ic_attention"
+                                android:drawablePadding="6dp"
+                                android:text="@{viewModel.errorMessage}"
+                                android:textColor="@color/red"
+                                android:textSize="@dimen/error_textsize"
+                                android:textStyle="normal"
+                                android:visibility="gone"/>
+
+                            <!-- Danh sách thuốc -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="* "
+                                    android:textColor="@color/red"
+                                    android:textSize="@dimen/lbl_textsize"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Danh sách thuốc"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/lbl_textsize"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rcv_drug_info"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/search_drug"
+                                android:layout_alignParentBottom="true"
+                                android:clipToPadding="false"
+                                android:paddingBottom="8dp"
+                                android:scrollbars="vertical" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_add_drug"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@drawable/bg_add_btn"
+                                android:text="+ Thêm thuốc"
+                                android:textAllCaps="false"
+                                android:textColor="@color/blue"
+                                android:textSize="16sp"
+                                app:backgroundTint="@null" />
+                        </LinearLayout>
+
+                        <!-- Nhắc nhở uống thuốc -->
+                        <!--                <Switch-->
+                        <!--                    android:id="@+id/switch_nhac_nho"-->
+                        <!--                    android:layout_width="match_parent"-->
+                        <!--                    android:layout_height="wrap_content"-->
+                        <!--                    android:checked="true"-->
+                        <!--                    android:paddingTop="10dp"-->
+                        <!--                    android:text="Nhắc nhở uống thuốc"-->
+                        <!--                    android:textSize="16sp" />-->
+
+                        <!-- Layout ẩn/hiện theo switch nhắc nhở -->
+                        <!--                <LinearLayout-->
+                        <!--                    android:id="@+id/layout_nhac_nho"-->
+                        <!--                    android:layout_width="match_parent"-->
+                        <!--                    android:layout_height="wrap_content"-->
+                        <!--                    android:orientation="vertical"-->
+                        <!--                    >-->
+
+                        <!--                    &lt;!&ndash; Ngày bắt đầu uống &ndash;&gt;-->
+                        <!--                    <TextView-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        android:layout_marginTop="8dp"-->
+                        <!--                        android:text="Ngày bắt đầu uống"-->
+                        <!--                        android:textSize="16sp"-->
+                        <!--                        android:textStyle="bold" />-->
+
+                        <!--                    <com.google.android.material.textfield.TextInputLayout-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        app:boxBackgroundMode="outline">-->
+
+                        <!--                        <com.google.android.material.textfield.TextInputEditText-->
+                        <!--                            android:id="@+id/edt_ngay_bat_dau"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:clickable="true"-->
+                        <!--                            android:focusable="false"-->
+                        <!--                            android:hint="Chọn ngày bắt đầu"-->
+                        <!--                            android:textColor="@android:color/black" />-->
+                        <!--                    </com.google.android.material.textfield.TextInputLayout>-->
+
+                        <!--                    &lt;!&ndash; Số ngày uống &ndash;&gt;-->
+                        <!--                    <TextView-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        android:layout_marginTop="8dp"-->
+                        <!--                        android:text="Số ngày uống"-->
+                        <!--                        android:textSize="16sp"-->
+                        <!--                        android:textStyle="bold" />-->
+
+                        <!--                    <com.google.android.material.textfield.TextInputLayout-->
+                        <!--                        android:layout_width="match_parent"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        app:boxBackgroundMode="outline">-->
+
+                        <!--                        <com.google.android.material.textfield.TextInputEditText-->
+                        <!--                            android:id="@+id/edt_so_ngay"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:inputType="number"-->
+                        <!--                            android:textColor="@android:color/black" />-->
+                        <!--                    </com.google.android.material.textfield.TextInputLayout>-->
+                        <!--                </LinearLayout>-->
+
+
+                        <View
+                            android:id="@+id/line"
+                            android:layout_width="wrap_content"
+                            android:layout_height="8dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="24dp"
+                            android:layout_weight="1"
+                            android:background="@color/lineSelectColor"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txtTitle" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="48dp"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="@dimen/edt_padding">
+                            <!-- Thông tin khám bệnh -->
+                            <Switch
+                                android:id="@+id/switch_medical_info"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="Thông tin khám bệnh"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/lbl_textsize"
+                                android:textStyle="bold"
+                                android:thumb="@drawable/toggle_thumb"
+                                android:track="@drawable/toggle_track"
+                                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+                            <!-- CardView chứa thông tin khám bệnh -->
+
+                            <FrameLayout
+                                android:id="@+id/card_medical_info"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:visibility="gone">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <View
+                                        android:id="@+id/lineLeft"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="1dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="1"
+                                        android:background="@color/lineSelectColor"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@id/txtTitle" />
+
+                                    <!-- Bệnh viện / Phòng khám -->
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="16dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:text="Bệnh viện / Phòng khám"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/lbl_textsize"
+                                        android:textStyle="bold"
+                                        />
+
+                                    <EditText
+                                        android:id="@+id/edt_hospital"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/edt_height"
+                                        android:layout_marginBottom="24dp"
+                                        android:background="@drawable/edittext_bg_normal"
+                                        android:hint="Nhập tên bệnh viện / phòng khám"
+                                        android:paddingHorizontal="@dimen/edt_padding"
+                                        android:textColor="@color/black"
+                                        android:textColorHint="#84888C"
+                                        android:textSize="@dimen/edt_textsize"
+                                        />
+
+                                    <!-- Tên bác sĩ -->
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="8dp"
+                                        android:text="Bác sĩ"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/lbl_textsize"
+                                        android:textStyle="bold" />
+
+                                    <EditText
+                                        android:id="@+id/edt_doctor"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/edt_height"
+                                        android:background="@drawable/edittext_bg_normal"
+                                        android:hint="Nhập tên bác sĩ"
+                                        android:paddingHorizontal="@dimen/edt_padding"
+                                        android:textColor="@color/black"
+                                        android:textColorHint="#84888C"
+                                        android:textSize="@dimen/edt_textsize" />
+
+                                    <!-- Ngày khám -->
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="24dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:text="Ngày khám"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/lbl_textsize"
+                                        android:textStyle="bold" />
+
+                                    <EditText
+                                        android:id="@+id/edt_consultation_date"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/edt_height"
+                                        android:background="@drawable/edittext_bg_normal"
+                                        android:clickable="true"
+                                        android:drawableEnd="@drawable/ic_calendar"
+                                        android:focusable="false"
+                                        android:hint="Chọn ngày khám"
+                                        android:inputType="none"
+                                        android:paddingHorizontal="@dimen/edt_padding"
+                                        android:textColor="@color/black"
+                                        android:textColorHint="#84888C"
+                                        android:textSize="@dimen/edt_textsize"
+                                        />
+
+                                    <!-- Ngày tái khám -->
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="24dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:text="Ngày tái khám"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/lbl_textsize"
+                                        android:textStyle="bold" />
+
+                                    <EditText
+                                        android:id="@+id/edt_follow_up_date"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/edt_height"
+                                        android:background="@drawable/edittext_bg_normal"
+                                        android:clickable="true"
+                                        android:drawableEnd="@drawable/ic_calendar"
+                                        android:focusable="false"
+                                        android:hint="Chọn ngày tái khám"
+                                        android:inputType="none"
+                                        android:paddingHorizontal="@dimen/edt_padding"
+                                        android:textColor="@color/black"
+                                        android:textColorHint="#84888C"
+                                        android:textSize="@dimen/edt_textsize"
+                                        />
+
+                                </LinearLayout>
+                            </FrameLayout>
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </ScrollView>
+                </ScrollView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@drawable/shadow_top" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@drawable/shadow_top" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/btn_end_background"
-                android:padding="@dimen/edt_padding">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_save"
-                    style="@android:style/Widget.Button"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_bg"
-                    android:text="Lưu đơn thuốc"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </FrameLayout>
-        </LinearLayout>
+                    android:background="@color/btn_end_background"
+                    android:padding="@dimen/edt_padding">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_save"
+                        style="@android:style/Widget.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_bg"
+                        android:text="Lưu đơn thuốc"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </FrameLayout>
+            </LinearLayout>
     </FrameLayout>
 </layout>

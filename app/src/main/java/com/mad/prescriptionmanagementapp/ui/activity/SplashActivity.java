@@ -9,15 +9,21 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 public class SplashActivity extends AppCompatActivity {
+
+    private SharedPrefUtils sharedPrefUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         EdgeToEdge.enable(this);
+
+        this.sharedPrefUtils = new SharedPrefUtils(this);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+            Intent intent = new Intent(SplashActivity.this, this.sharedPrefUtils.getToken() != null ? HomeActivity.class : LoginActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();

@@ -102,10 +102,6 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void setCustomTitle(String title) {
-        this.binding.txtTitle.setText(title);
-    }
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {

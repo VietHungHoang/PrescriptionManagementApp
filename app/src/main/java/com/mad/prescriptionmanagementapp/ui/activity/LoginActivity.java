@@ -107,8 +107,14 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUIBasedOnStatus(AuthStatus status) {
         switch (status) {
             case IDLE:
+                break;
             case GOOGLE_SUCCESS:
+                break;
             case LOGIN_SUCCESS:
+                Intent intent = new Intent(this, HomeActivity.class);
+                this.startActivity(intent);
+                this.finish();
+                break;
             case REGISTRATION_SUCCESS:
             case GOOGLE_FAILED:
             case VERIFY_FAILED:

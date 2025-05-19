@@ -127,7 +127,6 @@ public class AddScheduleFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AddPrescriptionActivity) this.requireActivity()).setCustomTitle("Thêm lịch uống thuốc");
         this.setupUI();
         this.setOnClickView();
         this.setOnFocusView();
