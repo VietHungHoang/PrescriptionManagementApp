@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class TimeDosage {
     private int hour;
     private int minutes;
@@ -31,5 +33,11 @@ public class TimeDosage {
             }
         }
         return deepCopiedList;
+    }
+
+    public void copy(TimeDosage other) {
+        this.dosage = other.getDosage();
+        this.hour = other.getHour();
+        this.minutes = other.getMinutes();
     }
 }

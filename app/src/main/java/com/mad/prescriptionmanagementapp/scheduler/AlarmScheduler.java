@@ -24,19 +24,18 @@ public class AlarmScheduler {
         // Chạy trên background thread
         new Thread(() -> {
             List<ScheduleEntityDTO> pendingSchedules = db.scheduleDao()
+
                     .getPendingReminders(ReminderStatus.PENDING, System.currentTimeMillis());
 
             for (ScheduleEntityDTO schedule : pendingSchedules) {
                 scheduleAlarm(context, schedule);
             }
-            Log.d(TAG, "Scheduled " + pendingSchedules.size() + " alarms.");
         }).start();
     }
 
     public static void scheduleAlarm(Context context, ScheduleEntityDTO schedule) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
-            Log.e(TAG, "AlarmManager is null");
             return;
         }
 

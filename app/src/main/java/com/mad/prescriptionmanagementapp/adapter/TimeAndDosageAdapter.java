@@ -9,27 +9,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
+import com.mad.prescriptionmanagementapp.data.model.Unit;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderTimeanddosageBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.ui.viewmodel.AddScheduleViewModel;
 import com.mad.prescriptionmanagementapp.util.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-// 1. Kế thừa RecyclerView.Adapter và chỉ định ViewHolder
 public class TimeAndDosageAdapter extends RecyclerView.Adapter<TimeAndDosageAdapter.TimeDosageViewHolder> {
 
     private final OnTimeDosageClickListener listener;
+    private List<TimeDosage> timesList;
 
-    // 2. Biến để lưu trữ danh sách dữ liệu
-    private List<TimeDosage> timesList; // Khởi tạo để tránh NullPointerException
+    private AddScheduleViewModel viewModel;
 
-    private AddPrescriptionViewModel viewModel;
-    // --- Các phương thức bắt buộc của Adapter ---
-
-    public TimeAndDosageAdapter(List<TimeDosage> timeDosageList, AddPrescriptionViewModel viewModel,  OnTimeDosageClickListener listener) {
+    public TimeAndDosageAdapter(List<TimeDosage> timeDosageList, AddScheduleViewModel viewModel,  OnTimeDosageClickListener listener) {
 //        super(DIFF_CALLBACK);
         this.timesList = timeDosageList;
         this.listener = listener;
@@ -39,11 +37,6 @@ public class TimeAndDosageAdapter extends RecyclerView.Adapter<TimeAndDosageAdap
     @NonNull
     @Override
     public TimeDosageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // 5. Inflate layout của item và tạo ViewHolder
-//        View itemView = LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.viewholder_timeanddosage, parent, false); // Sử dụng layout item của bạn
-//        return new MyViewHolder(itemView);
-
         ViewholderTimeanddosageBinding binding = ViewholderTimeanddosageBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
         return new TimeAndDosageAdapter.TimeDosageViewHolder(binding, listener);
@@ -54,7 +47,7 @@ public class TimeAndDosageAdapter extends RecyclerView.Adapter<TimeAndDosageAdap
         // 6. Lấy dữ liệu tại vị trí 'position'
         TimeDosage currentItem = timesList.get(position);
         // 7. Gán dữ liệu vào các view trong ViewHolder
-        holder.bind(position, currentItem, this.viewModel.getDrugUnit().getValue());
+        holder.bind(position, currentItem, this.viewModel.getUnit().getValue());
     }
 
     @Override
@@ -91,10 +84,10 @@ public class TimeAndDosageAdapter extends RecyclerView.Adapter<TimeAndDosageAdap
         }
 
         // Phương thức tiện ích để gán dữ liệu (giúp onBindViewHolder gọn gàng hơn)
-        public void bind(int position, TimeDosage item, String unit) {
+        public void bind(int position, TimeDosage item, Unit unit) {
             String time = String.format(Locale.US, "%02d:%02d", item.getHour(), item.getMinutes());
             this.binding.time.setText(time);
-            this.binding.dosage.setText(String.format(Locale.US, "%s %s", formatNumber(item.getDosage()), unit));
+            this.binding.dosage.setText(String.format(Locale.US, "%s %s", formatNumber(item.getDosage()), unit.toString()));
             if (clickListener != null) {
                 this.binding.timeAndDosage.setOnClickListener(v -> {
                     clickListener.onItemClick(item);

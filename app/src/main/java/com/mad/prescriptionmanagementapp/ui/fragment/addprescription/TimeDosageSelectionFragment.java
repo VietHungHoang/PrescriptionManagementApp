@@ -93,14 +93,14 @@ public class TimeDosageSelectionFragment extends Fragment {
 
     }
 
-    private void setSchedule() {
-        Fragment newFragment = AddScheduleFragment.newInstance(drugId, false);
-        // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
-        this.getParentFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
-                  .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
-                .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
-                .commit();
-    }
+//    private void setSchedule() {
+//        Fragment newFragment = AddScheduleFragment.newInstance( false);
+//        // Sử dụng FragmentTransaction để thay thế fragment hiện tại bằng fragment mới
+//        this.getParentFragmentManager()
+//                .beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN)
+//                  .replace(R.id.fragment_container, newFragment)  // id container chứa fragment
+//                .addToBackStack(null)  // Thêm vào back stack (để khi bấm back sẽ quay lại fragment trước đó)
+//                .commit();
+//    }
 }

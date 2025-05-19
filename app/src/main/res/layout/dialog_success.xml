@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@drawable/success_message_background"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_margin="32dp"
+    >
+
+    <!-- Warning icon -->
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_success"
+        android:contentDescription="Warning icon"
+        app:tint="#13BA19" />
+
+    <!-- Error message text -->
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tạo đơn thuốc thành công"
+        android:textColor="#3B7A53"
+        android:textSize="14sp"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

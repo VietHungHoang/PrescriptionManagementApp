@@ -54,15 +54,15 @@ public class SelectedDrugAdapter extends RecyclerView.Adapter<SelectedDrugAdapte
 
         }
 
-        private void setAdapter(List<TimeDosage> timeDosageList) {
-            this.timeDosageWithDrugAdapter = new TimeDosageWithDrugAdapter(timeDosageList);
+        private void setAdapter(List<TimeDosage> timeDosageList, String unit) {
+            this.timeDosageWithDrugAdapter = new TimeDosageWithDrugAdapter(timeDosageList, unit);
             this.binding.rcvDrugTimeDosage.setLayoutManager( new LinearLayoutManager(this.binding.rcvDrugTimeDosage.getContext()));
             this.binding.rcvDrugTimeDosage.setAdapter(this.timeDosageWithDrugAdapter);
             // Thêm ItemDecoration nếu muốn có đường kẻ phân cách
         }
 
         public void bind(DrugInPres item) {
-            this.setAdapter(item.getTimeDosages());
+            this.setAdapter(item.getTimeDosages(), item.getUnit().getName());
             this.binding.drugName.setText(item.getSimpleDrug().getName());
             if (clickListener != null) {
                 this.binding.btnEdit.setOnClickListener(v -> {

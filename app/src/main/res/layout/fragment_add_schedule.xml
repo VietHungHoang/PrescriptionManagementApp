@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel" />
+            type="com.mad.prescriptionmanagementapp.ui.viewmodel.AddScheduleViewModel" />
     </data>
 
     <FrameLayout
@@ -76,7 +76,7 @@
                             android:focusable="false"
                             android:inputType="none"
                             android:paddingHorizontal="@dimen/edt_padding"
-                            android:text="@{viewModel.currentDrugName}"
+                            android:text="@{viewModel.drugName}"
                             android:textColor="@color/black"
                             android:textColorHint="#84888C"
                             android:textSize="@dimen/edt_textsize" />

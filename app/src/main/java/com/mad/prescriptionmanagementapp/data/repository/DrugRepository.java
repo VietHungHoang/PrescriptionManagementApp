@@ -76,68 +76,6 @@ public class DrugRepository {
 //        return this.unitList;
 //    }
 
-    public void refreshUnit() {
-        databaseExecutor.execute(() -> {
-            boolean needsFetch = drugDao.getDrugCount() == 0;
-            if (isFetchUnit) {
-                Log.d(TAG, "Fetch already in progress.");
-                return;
-            }
-
-            if (needsFetch) {
-                this.fetchUnitsFromApi();
-            }
-        });
-    }
-
-    private void fetchUnitsFromApi() {
-        this.isFetchUnit = true;
-        Call<ResponseObject<List<UnitResponse>>> call = this.drugService.getAllUnit();
-        call.enqueue(new Callback<ResponseObject<List<UnitResponse>>>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseObject<List<UnitResponse>>> call,
-                                   @NonNull Response<ResponseObject<List<UnitResponse>>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.d(TAG, "API call successful. Processing data...");
-                    List<UnitResponse> unitResponses = response.body().getData();
-
-                    if (unitResponses != null) {
-                        databaseExecutor.execute(() -> {
-                            Log.d(TAG, "Saving fetched data to Room cache...");
-                            List<Unit> units = unitResponses.stream()
-                                    .map(UnitMapper::responseToModel)
-                                    .collect(Collectors.toList());
-
-                            unitDao.deleteAll();
-//                            unitDao.insertAll(units);
-                            Log.d(TAG, "Room cache updated successfully.");
-
-                            isFetchUnit = false;
-                        });
-                    } else {
-                        Log.w(TAG, "API response data is null.");
-                        isFetchUnit = false;
-                    }
-                } else {
-                    String errorMsg = "Lỗi tải danh sách unit: ";
-                    if (response.body() != null && response.body().getMessage() != null) {
-                        errorMsg += response.body().getMessage();
-                    } else {
-                        errorMsg += response.code() + " " + response.message();
-                    }
-                    Log.e(TAG, errorMsg);
-//                    errorMessage.postValue(errorMsg);
-//                    isRefreshing.postValue(false);
-                    isFetchInProgress = false;
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<ResponseObject<List<UnitResponse>>> call, @NonNull Throwable t) {
-                Log.e(TAG, "API call failed: " + t.getMessage(), t);
-                isFetchInProgress = false;
-            }
-        });
-    }
 
     /**
      * Lấy LiveData báo trạng thái đang làm mới từ mạng.

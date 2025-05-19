@@ -113,9 +113,8 @@ public class SelectDrugFragment extends Fragment {
     }
 
     private void moveToNextFragment(SimpleDrug drug) {
-        Fragment newFragment = AddScheduleFragment.newInstance(drug.getId(), false);
-        this.shareViewModel.setCurrentDrug(new DrugInPres(drug));
-        Tools.changeFragment(this.requireActivity(), newFragment, FragmentName.SD_TO_AS);
+        Fragment newFragment = AddScheduleFragment.newInstance(new DrugInPres(drug), false);
+        Tools.replaceFragment(this.requireActivity(), newFragment, FragmentName.SD_TO_AS);
     }
 }
 

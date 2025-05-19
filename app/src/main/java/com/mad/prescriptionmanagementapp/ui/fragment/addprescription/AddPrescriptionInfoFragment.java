@@ -1,6 +1,5 @@
 package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,14 +13,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.adapter.DrugsAdapter;
 import com.mad.prescriptionmanagementapp.adapter.SelectedDrugAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
-import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionInfoViewModel;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
@@ -29,10 +26,7 @@ import com.mad.prescriptionmanagementapp.util.ErrorType;
 import com.mad.prescriptionmanagementapp.util.FragmentName;
 import com.mad.prescriptionmanagementapp.util.Tools;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 import lombok.NoArgsConstructor;
 
@@ -89,7 +83,7 @@ public class AddPrescriptionInfoFragment extends Fragment {
 
     private void setOnclickView() {
         this.binding.btnAddDrug.setOnClickListener(v -> {
-            Tools.changeFragment(this.requireActivity(), new SelectDrugFragment(), FragmentName.API_TO_SD);
+            Tools.replaceFragment(this.requireActivity(), new SelectDrugFragment(), FragmentName.API_TO_SD);
         });
 
         this.binding.btnSave.setOnClickListener(v -> {
@@ -98,14 +92,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
             }
 
         });
-
-        this.binding.edtConsultationDate.setOnClickListener(v -> {
-            Tools.showDatePickerDialog(requireContext(), this.binding.edtConsultationDate);
-        });
-
-        this.binding.edtFollowUpDate.setOnClickListener(v -> {
-            Tools.showDatePickerDialog(requireContext(), this.binding.edtFollowUpDate);
-        });
+        Tools.setupDatePickerDialog(requireContext(), this.binding.edtConsultationDate, false, null);
+        Tools.setupDatePickerDialog(requireContext(), this.binding.edtFollowUpDate, false, null);
 
         this.binding.switchMedicalInfo.setOnCheckedChangeListener((buttonView, isChecked) -> {
             this.viewModel.setSwitchState(isChecked);
@@ -159,9 +147,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
                 List<DrugInPres> drugs = AddPrescriptionInfoFragment.this.shareViewModel.getSelectedDrugs().getValue();
 
                 if (drugs != null) {
-                    AddPrescriptionInfoFragment.this.shareViewModel.setCurrentDrug(drugs.stream().filter(drug -> Objects.equals(drug.getDrug().getId(), drugInPres.getDrug().getId())).findFirst().orElse(null));
-                    Fragment newFragment = AddScheduleFragment.newInstance(drugInPres.getDrug().getId(), true);
-                    Tools.changeFragment(requireActivity(), newFragment, null);
+                    Fragment newFragment = AddScheduleFragment.newInstance(drugInPres, true);
+                    Tools.replaceFragment(requireActivity(), newFragment, null);
                 }
             }
         });

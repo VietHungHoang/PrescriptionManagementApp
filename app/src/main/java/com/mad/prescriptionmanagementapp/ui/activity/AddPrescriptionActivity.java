@@ -1,16 +1,22 @@
 package com.mad.prescriptionmanagementapp.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -24,6 +30,7 @@ import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddPrescrip
 import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddScheduleFragment;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.ui.viewmodel.AddScheduleViewModel;
 import com.mad.prescriptionmanagementapp.util.FragmentName;
 
 public class AddPrescriptionActivity extends AppCompatActivity {
@@ -36,50 +43,33 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.initParam();
         this.loadInitialFragment();
+//        new ViewModelProvider(this).get(AddScheduleViewModel.class);
 
-        this.binding.btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-// Đăng ký callback để xử lý back button
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-                if (currentFragment == null || isFirstFragment() || currentFragment instanceof AddPrescriptionInfoFragment) {
-                    if (currentFragment instanceof AddPrescriptionInfoFragment && viewModel.existedPres()) {
-                            ConfirmDialog.showCancelConfirmationDialog(AddPrescriptionActivity.this, new ConfirmDialog.ConfirmationDialogListener() {
-                                @Override
-                                public void onConfirm() {
-                                    finish();
-                                }
-                                @Override
-                                public void onCancel() {
-                                }
-                            }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
-                    }
-                    // Không còn fragment, gọi dispatcher để đóng Activity
-                    else {
-                        finish();
-                    }
-                } else {
-                    if(currentFragment instanceof AddScheduleFragment) {
-                        ConfirmDialog.showCancelConfirmationDialog(AddPrescriptionActivity.this, new ConfirmDialog.ConfirmationDialogListener() {
-                            @Override
-                            public void onConfirm() {
-                                getSupportFragmentManager().popBackStack();
-                            }
-                            @Override
-                            public void onCancel() {
-                            }
-                        }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
-                    }
-                    else {
-                        getSupportFragmentManager().popBackStack();
-                    }
-                }
-            }
-        });
-
-
+//        this.binding.btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+//// Đăng ký callback để xử lý back button
+//        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//
+//                if (currentFragment == null || isFirstFragment() || currentFragment instanceof AddPrescriptionInfoFragment) {
+//                    if (currentFragment instanceof AddPrescriptionInfoFragment && viewModel.existedPres()) {
+//                            ConfirmDialog.showCancelConfirmationDialog(AddPrescriptionActivity.this, new ConfirmDialog.ConfirmationDialogListener() {
+//                                @Override
+//                                public void onConfirm() {
+//                                    finish();
+//                                }
+//                            }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
+//                    }
+//                    // Không còn fragment, gọi dispatcher để đóng Activity
+//                    else {
+//                        finish();
+//                    }
+//                } else {
+//                        getSupportFragmentManager().popBackStack();
+//                }
+//            }
+//        });
 
     }
 
@@ -132,6 +122,4 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
-
-
 }

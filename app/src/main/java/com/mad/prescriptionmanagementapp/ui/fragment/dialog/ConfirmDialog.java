@@ -64,9 +64,6 @@ public class ConfirmDialog {
 
         binding.btnCancel.setOnClickListener(v -> {
             dialog.dismiss();
-            if (listener != null) {
-                listener.onCancel();
-            }
         });
 
         dialog.show();

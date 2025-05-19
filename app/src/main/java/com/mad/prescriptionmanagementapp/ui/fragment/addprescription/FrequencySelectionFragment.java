@@ -10,15 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 import com.mad.prescriptionmanagementapp.databinding.FragmentFrequencySelectionBinding;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
+import com.mad.prescriptionmanagementapp.ui.viewmodel.AddScheduleViewModel;
 import com.mad.prescriptionmanagementapp.util.Frequency;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,37 +24,29 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class FrequencySelectionFragment extends Fragment {
-    private static final String ARG_DRUG_ID = "drug_id";
-
-    private Long drugId;
-
     private FragmentFrequencySelectionBinding binding;
-    private AddPrescriptionViewModel viewModel;
+    private AddScheduleViewModel parentViewModel;
 
+    public static FrequencySelectionFragment newInstance(AddScheduleViewModel viewModel) {
+        FrequencySelectionFragment fragment = new FrequencySelectionFragment(viewModel);
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-
-    public static FrequencySelectionFragment newInstance(Long drugId) {
-       FrequencySelectionFragment fragment = new FrequencySelectionFragment();
-       Bundle args = new Bundle();
-       args.putLong(ARG_DRUG_ID, drugId);
-       fragment.setArguments(args);
-       return fragment;
-
+    public FrequencySelectionFragment(AddScheduleViewModel parentViewModel) {
+        this.parentViewModel = parentViewModel;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(this.getArguments() != null) {
-            this.drugId = this.getArguments().getLong(ARG_DRUG_ID);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentFrequencySelectionBinding.inflate(inflater, container, false);
-        this.initViewModel();
         return this.binding.getRoot();
     }
 
@@ -69,26 +59,14 @@ public class FrequencySelectionFragment extends Fragment {
         this.setupBtnSelect();
     }
 
-    private void initViewModel() {
-        this.viewModel = new ViewModelProvider(requireActivity()).get(AddPrescriptionViewModel.class);
-        // Gán ViewModel cho DataBinding
-//        this.binding.setViewModel(viewModel);
-//        this.binding.setLifecycleOwner(getViewLifecycleOwner());
-    }
-
     private void setupRadio() {
-            if(this.viewModel.getFrequency() != null) {
-                this.updateLayoutVisibility(this.viewModel.getFrequency());
-            }
-            else {
-                this.binding.radioGroupFrequency.check(this.binding.radioDaily.getId());
-            }
+        this.parentViewModel.getFrequency().observe(this.getViewLifecycleOwner(), frequency -> {
+            this.updateLayoutVisibility(frequency);
 
-
-
-        this.binding.radioGroupFrequency.setOnCheckedChangeListener((group, checkedId) -> {
-            binding.numberOfDaysLayout.setVisibility(checkedId == this.binding.radioEveryNDays.getId() ? View.VISIBLE : View.GONE);
-            binding.daysOfWeekLayout.setVisibility(checkedId == this.binding.radioSpecificDays.getId() ? View.VISIBLE : View.GONE);
+            this.binding.radioGroupFrequency.setOnCheckedChangeListener((group, checkedId) -> {
+                binding.numberOfDaysLayout.setVisibility(checkedId == this.binding.radioEveryNDays.getId() ? View.VISIBLE : View.GONE);
+                binding.daysOfWeekLayout.setVisibility(checkedId == this.binding.radioSpecificDays.getId() ? View.VISIBLE : View.GONE);
+            });
         });
     }
 
@@ -103,20 +81,20 @@ public class FrequencySelectionFragment extends Fragment {
             case EVERY_N_DAYS:
                 this.binding.radioGroupFrequency.check(this.binding.radioEveryNDays.getId());
                 this.binding.numberOfDaysLayout.setVisibility(View.VISIBLE);
-                this.binding.tvCount.setText(this.viewModel.getDayBetween());
+                this.binding.tvCount.setText(this.parentViewModel.getDayBetween().toString());
                 break;
             case SPECIFIC_DAYS:
                 this.binding.radioGroupFrequency.check(this.binding.radioSpecificDays.getId());
                 this.binding.daysOfWeekLayout.setVisibility(View.VISIBLE);
-                this.setSelectedDays(this.viewModel.getSpecificDays());
+                this.setSelectedDays(this.parentViewModel.getSpecificDays());
                 break;
         }
     }
 
     private void setupBtnIncrease() {
         this.binding.btnIncrease.setOnClickListener(v -> {
-                int currentValue = Integer.parseInt(binding.tvCount.getText().toString());
-                binding.tvCount.setText(String.valueOf(currentValue + 1));
+            int currentValue = Integer.parseInt(binding.tvCount.getText().toString());
+            binding.tvCount.setText(String.valueOf(currentValue + 1));
         });
     }
 
@@ -136,46 +114,15 @@ public class FrequencySelectionFragment extends Fragment {
             int checkedId = binding.radioGroupFrequency.getCheckedRadioButtonId();
 
             if (checkedId == binding.radioDaily.getId()) {
-                this.viewModel.setFrequencyDaily();
+                this.parentViewModel.setFrequencyDaily();
             } else if (checkedId == binding.radioEveryNDays.getId()) {
-                this.viewModel.setFrequencyEveryNDay(Integer.parseInt(this.binding.tvCount.getText().toString()));
+                this.parentViewModel.setFrequencyEveryNDay(Integer.parseInt(this.binding.tvCount.getText().toString()));
             } else {
-                this.viewModel.setFrequencySpecificDay(this.getSelectedDaysIndexes());
+                this.parentViewModel.setFrequencySpecificDay(this.getSelectedDaysIndexes());
             }
 
             this.setTimeDosageSelection();
         });
-    }
-
-    private List<ScheduleRequest> generateSchedules(int checkedId, LocalDate startDate) {
-        List<ScheduleRequest> schedules = new ArrayList<>();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        if (checkedId == binding.radioDaily.getId()) {
-            for (int i = 0; i < 30; i++) {
-                LocalDate date = startDate.plusDays(i);
-                schedules.add(new ScheduleRequest(date.format(dateFormatter), "Uống hằng ngày"));
-            }
-        } else if (checkedId == binding.radioEveryNDays.getId()) {
-            int gap = Integer.parseInt(binding.tvCount.getText().toString());
-            for (int i = 0; i < 30; i++) {
-                LocalDate date = startDate.plusDays(i * gap);
-                schedules.add(new ScheduleRequest(date.format(dateFormatter), "Uống cách " + gap + " ngày"));
-            }
-        } else {
-            List<Integer> selectedDays = getSelectedDaysIndexes(); // 1 = Monday, 7 = Sunday
-            LocalDate date = startDate;
-            int count = 0;
-            while (count < 30) {
-                if (selectedDays.contains(date.getDayOfWeek().getValue())) {
-                    schedules.add(new ScheduleRequest(date.format(dateFormatter), "Uống vào các ngày cụ thể"));
-                    count++;
-                }
-                date = date.plusDays(1);
-            }
-        }
-
-        return schedules;
     }
 
     private List<Integer> getSelectedDaysIndexes() {

@@ -41,7 +41,7 @@ public class AddPrescriptionInfoViewModel extends ViewModel {
 
 
     public boolean validateAddPrescriptionInfo(PrescriptionRequest pres, List<DrugInPres> drugInPresList) {
-        if (pres.getName().trim().isEmpty()) {
+        if (pres.getName() == null || pres.getName().trim().isEmpty()) {
             this.errorMessage.setValue(new Pair<>(ErrorType.NAME_EMPTY, "Tên đơn thuốc không được để trống"));
             return false;
 

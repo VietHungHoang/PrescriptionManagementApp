@@ -23,9 +23,11 @@ import java.util.Locale;
 public class TimeDosageWithDrugAdapter extends RecyclerView.Adapter<TimeDosageWithDrugAdapter.TimeDosageWithDrugViewHolder> {
 
     private List<TimeDosage> timeDosageList;
+    private String unit;
 
-    public TimeDosageWithDrugAdapter(List<TimeDosage> timeDosageList) {
+    public TimeDosageWithDrugAdapter(List<TimeDosage> timeDosageList, String unit) {
         this.timeDosageList = timeDosageList;
+        this.unit = unit;
     }
 
     @NonNull
@@ -39,7 +41,7 @@ public class TimeDosageWithDrugAdapter extends RecyclerView.Adapter<TimeDosageWi
     @Override
     public void onBindViewHolder(@NonNull TimeDosageWithDrugViewHolder holder, int position) {
         TimeDosage currentItem = timeDosageList.get(position);
-        holder.bind(currentItem);
+        holder.bind(currentItem, unit);
     }
 
     @Override
@@ -55,10 +57,10 @@ public class TimeDosageWithDrugAdapter extends RecyclerView.Adapter<TimeDosageWi
             this.binding = binding;
         }
 
-        public void bind(TimeDosage item) {
+        public void bind(TimeDosage item, String unit) {
             String time = String.format(Locale.US, "%02d:%02d", item.getHour(), item.getMinutes());
             this.binding.time.setText(time);
-            this.binding.dosage.setText(String.format(Locale.US, "%s %s", formatNumber(item.getDosage()), item.getDosage()));
+            this.binding.dosage.setText(String.format(Locale.US, "%s %s", formatNumber(item.getDosage()), unit));
             }
     }
 }

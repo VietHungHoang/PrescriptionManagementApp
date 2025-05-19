@@ -23,6 +23,7 @@ import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.ui.activity.HomeActivity;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
+import com.mad.prescriptionmanagementapp.util.Tools;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,13 +46,10 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @SuppressLint("MissingPermission")
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: Received alarm trigger");
         long reminderId = intent.getLongExtra(EXTRA_REMINDER_ID, -1);
         int alarmRequestCode = intent.getIntExtra(EXTRA_ALARM_REQUEST_CODE, -1); // Lấy request code
-        Log.d(TAG, "Received reminder ID: " + reminderId + ", AlarmRequestCode: " + alarmRequestCode);
 
         if (reminderId == -1) {
-            Log.e(TAG, "Invalid reminder ID received.");
             return;
         }
 
@@ -61,7 +59,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             ScheduleEntityDTO mainReminder = db.scheduleDao().getById(reminderId);
 
             if (mainReminder == null || !ReminderStatus.PENDING.equals(mainReminder.getScheduleEntity().getStatus())) {
-                Log.w(TAG, "Reminder not found or not in PENDING state for ID: " + reminderId);
                 // Có thể đã được xử lý (confirm, skip, snooze) hoặc xóa
                 return;
             }
@@ -74,14 +71,13 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                     .getRemindersAroundTime(timeWindowStart, timeWindowEnd, ReminderStatus.PENDING);
 
             if (remindersForThisTime.isEmpty()) {
-                Log.w(TAG, "No PENDING reminders found around this time for main reminder ID: " + reminderId);
                 return; // Không còn reminder PENDING nào tại thời điểm này
             }
 
             // Tạo Notification ID (có thể dùng alarmRequestCode của reminder chính)
             // hoặc một ID mới nếu bạn nhóm nhiều reminder vào 1 notif
             int notificationId = mainReminder.getScheduleEntity().getAlarmManagerRequestId(); // Dùng request code làm notification ID
-
+//            int notificationId = 152515512;
             // Tạo channel (chỉ cần làm 1 lần)
             createNotificationChannel(context);
 
@@ -106,8 +102,9 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                     .setDefaults(NotificationCompat.DEFAULT_ALL) // Âm thanh, rung, đèn LED mặc định
                     .setAutoCancel(false) // Không tự hủy khi chạm, chỉ hủy khi có action
                     .setOngoing(true) // Làm cho thông báo không thể vuốt đi (cân nhắc UX)
-                    .setContentIntent(contentPendingIntent);
-
+                    .setContentIntent(contentPendingIntent)
+                    .setGroup("cuatao");
+//                    .setGroupSummary(true);
 
             ArrayList<Long> reminderIdsInNotification = new ArrayList<>();
             for(ScheduleEntityDTO r : remindersForThisTime){
@@ -118,21 +115,15 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             if (remindersForThisTime.size() == 1) {
                 ScheduleEntityDTO singleReminder = remindersForThisTime.get(0);
                 builder.setContentText(String.format(Locale.getDefault(), "Uống: %s %s %s",
-                        singleReminder.getScheduleEntity().getLocalId(), singleReminder.getScheduleEntity().getLocalId(), singleReminder.getScheduleEntity().getLocalId()));
-//                if (!TextUtils.isEmpty(singleReminder.drugImage)) {
-//                    Bitmap largeIcon = getBitmapFromURL(singleReminder.drugImage);
-//                    if (largeIcon != null) {
-//                        builder.setLargeIcon(largeIcon);
-//                    }
-//                }
+                        singleReminder.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(singleReminder.getTimeDosage().getDosage()), singleReminder.getDrugInPresDTO().getUnitEntity().getName()));
             } else {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 inboxStyle.setBigContentTitle("Đến giờ uống thuốc!");
                 StringBuilder summaryText = new StringBuilder();
                 for (int i = 0; i < remindersForThisTime.size(); i++) {
                     ScheduleEntityDTO r = remindersForThisTime.get(i);
-                    String line = String.format(Locale.getDefault(), "• %s %s %s",
-                            r.getScheduleEntity().getLocalId(), r.getScheduleEntity().getLocalId(), r.getScheduleEntity().getLocalId());
+                    String line = String.format(Locale.getDefault(), "Uống: %s %s %s",
+                            r.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(r.getTimeDosage().getDosage()), r.getDrugInPresDTO().getUnitEntity().getName());
                     inboxStyle.addLine(line);
                     if (i < 2) { // Hiển thị 2 dòng đầu ở dạng thu gọn
                         summaryText.append(line).append(i == 0 && remindersForThisTime.size() > 1 ? " | " : "");
@@ -143,6 +134,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 }
                 builder.setContentText(summaryText.toString());
                 builder.setStyle(inboxStyle);
+
             }
 
 
