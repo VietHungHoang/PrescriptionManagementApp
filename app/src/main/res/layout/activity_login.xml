@@ -13,6 +13,22 @@
     android:background="@color/white"
     android:paddingHorizontal="24dp">
 
+    <TextView
+        android:id="@+id/nextBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:focusable="true"
+        android:clickable="true"
+        android:text="Bỏ qua"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="32dp"
+        android:padding="12dp"
+        android:layout_marginRight="-12dp"
+        />
+
     <ImageView
         android:id="@+id/logo"
         android:layout_width="match_parent"

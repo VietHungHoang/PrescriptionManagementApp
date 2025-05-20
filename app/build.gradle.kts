@@ -52,13 +52,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-<<<<<<< HEAD
-    implementation("androidx.credentials:credentials:1.5.0")
-=======
     implementation("org.threeten:threetenbp:1.6.8")
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("androidx.transition:transition:1.4.1")
->>>>>>> b959f5324f826e805a7b95ffffe1caedb6e32c57
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.7")
@@ -68,21 +64,15 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.3")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3")
     implementation("org.projectlombok:lombok:1.18.36")
-<<<<<<< HEAD
     annotationProcessor("org.projectlombok:lombok:1.18.36")
-=======
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     implementation("com.squareup.picasso:picasso:2.71828")
->>>>>>> b959f5324f826e805a7b95ffffe1caedb6e32c57
     implementation("com.squareup.retrofit2:converter-jackson:2.11.0")
     implementation("androidx.work:work-runtime:2.10.0")
 //    implementation 'androidx.core:core-ktx:1.12.0' // nếu dùng NotificationCompat
     implementation ("androidx.room:room-runtime:2.7.1")
     annotationProcessor ("androidx.room:room-compiler:2.7.1")
     implementation("org.modelmapper:modelmapper:3.2.2")
-<<<<<<< HEAD
     implementation ("com.google.code.gson:gson:2.13.1")
-=======
->>>>>>> b959f5324f826e805a7b95ffffe1caedb6e32c57
 }

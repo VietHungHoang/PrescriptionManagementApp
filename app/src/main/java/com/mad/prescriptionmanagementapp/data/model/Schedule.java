@@ -25,6 +25,4 @@ public class Schedule {
     @JsonProperty("schedule_date_time_millis")
     private long scheduledDateTimeMillis; // Thời gian UTC để nhắc nhở
     private ReminderStatus status; // Ví dụ: "PENDING", "NOTIFIED", "CONFIRMED", "SKIPPED", "SNOOZED"
-
-
 }

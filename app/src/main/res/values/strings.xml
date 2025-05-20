@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PrescriptionManagementApp</string>
+    <string name="app_name">MedPTIT</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -75,7 +75,6 @@
         <item>Ngày cụ thể trong tuần</item>
     </string-array>
 
-    <string name="app_name">MedPTIT</string>
     <string name="hello_text">Hi, Viet Hung Hoang</string>
     <string name="how_are_you_today">How are you today?</string>
     <string name="tra_cuu_thu">Tra cứu thuốc</string>

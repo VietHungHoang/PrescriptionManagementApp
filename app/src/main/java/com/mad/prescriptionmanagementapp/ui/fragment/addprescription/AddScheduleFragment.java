@@ -110,11 +110,12 @@ public class AddScheduleFragment extends Fragment {
         this.viewModel.getUnitList().observe(getViewLifecycleOwner(), unitList -> {
             ArrayAdapter<Unit> adapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown, unitList);
             this.binding.spinnerUnit.setAdapter(adapter);
-            this.binding.spinnerUnit.setSelection((this.currentDrug != null && this.currentDrug.getUnit() != null) ? this.currentDrug.getUnit().getId().intValue() : 5);
+            this.binding.spinnerUnit.setSelection((this.currentDrug != null && this.currentDrug.getUnit() != null) ? this.currentDrug.getUnit().getId().intValue() - 1 : 3);
             this.binding.spinnerUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    AddScheduleFragment.this.viewModel.setUnit((Unit) parent.getItemAtPosition(position));
+                    Unit tmo = (Unit) parent.getItemAtPosition(position);
+                    AddScheduleFragment.this.viewModel.setUnit(tmo);
                 }
 
                 @Override

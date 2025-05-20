@@ -47,6 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         this.viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         this.binding.setViewModel(this.viewModel);
         this.binding.setLifecycleOwner(this);
+
+        this.binding.nextBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        });
     }
 
 
@@ -76,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(Constants.TAG, "Navigating to UserInfoActivity...");
-                Intent intent = new Intent(LoginActivity.this, SelectActivity.class);
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 intent.putExtra("GOOGLE_ID_TOKEN", pendingToken); // *** Quan trọng: Truyền idToken ***
                 intent.putExtra("email", verifyResponse.getEmail());
                 intent.putExtra("fullName", verifyResponse.getName());

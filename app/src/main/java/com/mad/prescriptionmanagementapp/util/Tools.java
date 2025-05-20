@@ -7,13 +7,28 @@ import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
+import com.mad.prescriptionmanagementapp.data.model.Prescription;
+import com.mad.prescriptionmanagementapp.data.model.Schedule;
+import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class Tools {
 
@@ -31,6 +46,7 @@ public class Tools {
                         R.anim.fade_out,
                         R.anim.zoom_out,
                         R.anim.fade_out)
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment_container, newFragment)
                 .addToBackStack(transactionName)
                 .commit();
@@ -77,5 +93,73 @@ public class Tools {
             datePickerDialog.show();
         });
     }
+
+    public static PrescriptionRequest prescriptionToRequest(Prescription prescription, List<ScheduleEntityDTO> schedules) {
+//        Set<Long> drugIdSet = new HashSet<>();
+//        for(ScheduleEntityDTO scheduleEntityDTO : schedules) {
+//            drugIdSet.add(scheduleEntityDTO.drugInPresDTO.getDrugInPresEntity().getLocalId());
+//        }
+//        List<DrugInPresRequest> drugInPresRequestList = new ArrayList<>();
+//        for(Long drugId : drugIdSet) {
+//            DrugInPresRequest drug = null;
+//            List<ScheduleRequest> scheduleRequestList = new ArrayList<>();
+//            for(ScheduleEntityDTO scheduleEntityDTO : schedules) {
+//                if(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getLocalId() == drugId) {
+//                    if(drug == null) {
+//                        drug = DrugInPresRequest.builder()
+//                                .drugId(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getDrugId())
+//                                .unitId(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getUnitId())
+//                                .startDate(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getStartDate())
+//                                .note(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getNote())
+//                                .build();
+//                    }
+//                    scheduleRequestList.add(ScheduleRequest.builder()
+//                        .date(Instant.ofEpochMilli(scheduleEntityDTO.getScheduleEntity().getScheduledDateTimeMillis())
+//                                .atZone(ZoneId.systemDefault())
+//                                .toLocalDateTime())
+//                                .dosage(scheduleEntityDTO.timeDosage.dosage)
+//                        .build());
+//                }
+//            }
+//            drug.setSchedules(scheduleRequestList);
+//            drugInPresRequestList.add(drug);
+//        }
+//
+//        PrescriptionRequest prescriptionRequest = PrescriptionRequest.builder()
+//                .name(prescription.getName())
+//                .doctorName(prescription.getDoctorName())
+//                .drugs(drugInPresRequestList)
+//                .hospital(prescription.getHospital())
+//                .consultationDate(prescription.getConsultationDate())
+//                .followUpDate(prescription.getFollowUpDate())
+//                .build();
+//        return prescriptionRequest;
+
+        List<DrugInPresRequest> drugInPresRequestList = new ArrayList<>();
+        for(DrugInPres drugInPres : prescription.getDrugs()) {
+            List<ScheduleRequest> scheduleRequestList = ScheduleGenerationHelper.generateSchedulesForADrugRequest(drugInPres, LocalDate.now().plusDays(10));
+            DrugInPresRequest drug = DrugInPresRequest.builder()
+                    .drugId(drugInPres.getDrug().getId())
+                    .unitId(drugInPres.getUnit().getId())
+                    .startDate(drugInPres.getStartDate())
+                    .note(drugInPres.getNote())
+                    .schedules(scheduleRequestList)
+                    .build();
+
+            drugInPresRequestList.add(drug);
+        }
+
+        PrescriptionRequest prescriptionRequest = PrescriptionRequest.builder()
+                .name(prescription.getName())
+                .doctorName(prescription.getDoctorName())
+                .drugs(drugInPresRequestList)
+                .hospital(prescription.getHospital())
+                .consultationDate(prescription.getConsultationDate())
+                .followUpDate(prescription.getFollowUpDate())
+                .build();
+        return prescriptionRequest;
+
+    }
+
 
 }

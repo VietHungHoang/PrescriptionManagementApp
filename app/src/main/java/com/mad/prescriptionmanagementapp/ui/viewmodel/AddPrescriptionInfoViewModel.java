@@ -1,23 +1,16 @@
 package com.mad.prescriptionmanagementapp.ui.viewmodel;
 
-import android.app.Application;
-import android.content.Context;
 import android.util.Pair;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
-import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
+import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.util.ErrorType;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AddPrescriptionInfoViewModel extends ViewModel {
     private final MutableLiveData<Boolean> medicalInfoSwitchState = new MutableLiveData<>(false);
@@ -40,7 +33,7 @@ public class AddPrescriptionInfoViewModel extends ViewModel {
     }
 
 
-    public boolean validateAddPrescriptionInfo(PrescriptionRequest pres, List<DrugInPres> drugInPresList) {
+    public boolean validateAddPrescriptionInfo(Prescription pres, List<DrugInPres> drugInPresList) {
         if (pres.getName() == null || pres.getName().trim().isEmpty()) {
             this.errorMessage.setValue(new Pair<>(ErrorType.NAME_EMPTY, "Tên đơn thuốc không được để trống"));
             return false;

@@ -46,7 +46,7 @@ public class AddScheduleViewModel extends AndroidViewModel {
         this.unitRepository = new UnitRepository(application);
         this.unitList = this.unitRepository.getAllUnit();
         this.curDrug = new MutableLiveData<>(new DrugInPres());
-        this.curUnit = new MutableLiveData<>(new Unit(1L, "Viên"));
+        this.curUnit = new MutableLiveData<>();
         this.frequency = new MutableLiveData<>();
         this.listTime = new MutableLiveData<>(new ArrayList<>());
         this.specificDays = new ArrayList<>();

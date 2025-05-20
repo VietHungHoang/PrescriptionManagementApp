@@ -19,7 +19,7 @@ import retrofit2.http.Query;
 public interface DrugService {
 
     @GET("drugs/simple")
-    Call<ResponseObject<List<DrugResponse>>> getDrugsSimple();
+    Call<ResponseObject<List<SimpleDrug>>> getDrugsSimple();
 
     @GET("drugs/unit")
     Call<ResponseObject<List<UnitResponse>>> getAllUnit();

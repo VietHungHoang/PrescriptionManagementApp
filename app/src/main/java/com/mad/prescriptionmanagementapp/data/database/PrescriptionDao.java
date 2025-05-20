@@ -14,7 +14,7 @@ import com.mad.prescriptionmanagementapp.data.model.entity.PrescriptionEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.TimeDosageEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.UnitEntity;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
+import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
 
 import java.time.LocalDate;
@@ -51,7 +51,7 @@ public interface PrescriptionDao {
     PrescriptionEntity getById(Long id);
 
     @Transaction
-    default void insertPrescriptionAndComponent(PrescriptionRequest prescription) {
+    default void insertPrescriptionAndComponent(Prescription prescription) {
         PrescriptionEntity prescriptionEntity = new PrescriptionEntity(prescription.getName(), prescription.getHospital(), prescription.getDoctorName(), null, null);
         long presId = insertPrescription(prescriptionEntity);
 

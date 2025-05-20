@@ -18,4 +18,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/login"
         />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,7 +23,7 @@ public class RetrofitClient {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // Bỏ qua các trường không nhận diện
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.0.106:8080/api/v1/") // Sử dụng 10.0.2.2 cho emulator, thay đổi nếu cần
+                    .baseUrl("http://192.168.0.100:8080/api/v1/") // Sử dụng 10.0.2.2 cho emulator, thay đổi nếu cần
                     .client(client)
                     .addConverterFactory(JacksonConverterFactory.create(mapper))
                     .build();

@@ -1,24 +1,13 @@
 package com.mad.prescriptionmanagementapp.ui.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,18 +15,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.database.ScheduleDao;
-import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.model.Prescription;
-import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
-import com.mad.prescriptionmanagementapp.data.model.Unit;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
+import com.mad.prescriptionmanagementapp.data.model.User;
 import com.mad.prescriptionmanagementapp.databinding.ActivityHomeBinding;
-import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
+import com.mad.prescriptionmanagementapp.ui.activity.dang.MedicineSearchActivity;
+import com.mad.prescriptionmanagementapp.ui.activity.dang.ProfileActivity;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.HomeViewModel;
-import com.mad.prescriptionmanagementapp.util.Frequency;
-import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
 import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 import java.text.SimpleDateFormat;
@@ -242,6 +224,37 @@ public class HomeActivity extends AppCompatActivity {
         this.binding.fab.setOnClickListener(v -> showOptions());
         this.binding.tvGreeting.setText(this.sharedPrefUtils.getName() != null ? "Chào, " + this.sharedPrefUtils.getName() : "Chào, Guest");
         this.binding.tvDate.setText("Hôm nay, " + new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()));
+
+        User user = new User();
+        user.setId(10L); // ID phải khớp với database
+        user.setName("Nguyen Van A");
+        user.setDateOfBirth("26/05/2003");
+        user.setPhoneNumber("0123456789");
+        user.setGender("male");
+
+        // Chuyển đến MedicineSearchActivity
+        this.binding.cardMedicationInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MedicineSearchActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        });
+
+
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                Intent intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
+                return true;
+            } else if (id == R.id.nav_user) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("user", user);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
+
     }
 
     private void showOptions() {

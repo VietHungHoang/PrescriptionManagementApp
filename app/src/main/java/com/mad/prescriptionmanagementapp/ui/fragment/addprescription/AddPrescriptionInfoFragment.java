@@ -16,11 +16,11 @@ import android.widget.EditText;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.SelectedDrugAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
+import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
-import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
+import com.mad.prescriptionmanagementapp.ui.fragment.dialog.SuccessDialog;
 import com.mad.prescriptionmanagementapp.ui.listener.OnSelectedDrugClickListener;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionInfoViewModel;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
@@ -76,7 +76,7 @@ public class AddPrescriptionInfoFragment extends Fragment {
     }
 
     private void setupUI() {
-        PrescriptionRequest pres = this.shareViewModel.getPrescription().getValue();
+        Prescription pres = this.shareViewModel.getPrescription().getValue();
         this.binding.edtPrescriptionName.setText(pres.getName());
         this.binding.edtHospital.setText(pres.getHospital());
         this.binding.edtDoctor.setText(pres.getDoctorName());
@@ -92,6 +92,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
         this.binding.btnSave.setOnClickListener(v -> {
             if (this.viewModel.validateAddPrescriptionInfo(this.shareViewModel.getPrescription().getValue(), this.shareViewModel.getSelectedDrugs().getValue())) {
                 this.shareViewModel.handleBtnSavePres(this.requireContext());
+                new SuccessDialog(this, "Thêm đơn thuốc thành công", true).showDialog();
+
             }
 
         });
@@ -183,7 +185,6 @@ public class AddPrescriptionInfoFragment extends Fragment {
     }
 
     private void setBack() {
-//        this.binding.btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
         this.requireActivity().getOnBackPressedDispatcher().addCallback(
                 getViewLifecycleOwner(),
                 new OnBackPressedCallback(true) {
@@ -202,6 +203,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
                         }
                     }
                 });
+        this.binding.btnBack.setOnClickListener(v -> this.requireActivity().getOnBackPressedDispatcher().onBackPressed());
+
     }
 
     private boolean validateInput() {

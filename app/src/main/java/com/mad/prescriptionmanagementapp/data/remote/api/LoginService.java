@@ -8,6 +8,8 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface LoginService {
@@ -19,4 +21,9 @@ public interface LoginService {
     @POST("users/register/google")
     Call<ResponseObject<LoginResponse>> registerWithGoogle(
             @Body CustomerRegisterGoogleRequest request);
+
+    @GET("users/check-token")
+    Call<ResponseObject<Void>> checkTokenValid(
+            @Header("Authorization") String accessToken);
+
 }

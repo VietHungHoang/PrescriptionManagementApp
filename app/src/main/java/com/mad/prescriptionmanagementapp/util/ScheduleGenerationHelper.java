@@ -1,9 +1,9 @@
 package com.mad.prescriptionmanagementapp.util;
 
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
-import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -20,43 +20,61 @@ public class ScheduleGenerationHelper {
     // Dùng AtomicInteger để đảm bảo unique request code nếu tạo nhiều reminder cùng lúc
     private static final AtomicInteger alarmRequestCodeCounter = new AtomicInteger((int) System.currentTimeMillis());
 
-    public static List<ScheduleEntity> generateSchedules(Prescription prescription, LocalDate toDate) {
+//    public static List<ScheduleEntity> generateSchedules(Prescription prescription, LocalDate toDate) {
+//        List<ScheduleEntity> schedules = new ArrayList<>();
+//        if (prescription == null || prescription.getDrugs() == null) {
+//            return schedules;
+//        }
+//
+//        for (DrugInPres drugInPres : prescription.getDrugs()) {
+//            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
+//                continue;
+//            }
+//
+//            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate()); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
+//
+//            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
+//                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+//                    addTimeSchedule(schedules, drugInPres, currentDate);
+//                }
+//            }
+//        }
+//        return schedules;
+//    }
+
+    public static List<ScheduleEntity> generateSchedulesForADrug(DrugInPres drugInPres, LocalDate toDate) {
         List<ScheduleEntity> schedules = new ArrayList<>();
-        if (prescription == null || prescription.getDrugs() == null) {
+
+        if (!Validation.isValidList(drugInPres.getTimeDosages())) {
             return schedules;
         }
 
-        for (DrugInPres drugInPres : prescription.getDrugs()) {
-            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
-                continue;
-            }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
 
-            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate()); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
-
-            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
-                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
-                    addTimeSchedule(schedules, drugInPres, currentDate);
-                }
+        for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
+            if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                addTimeSchedule(schedules, drugInPres, currentDate);
             }
         }
         return schedules;
     }
 
-    public static List<ScheduleEntity> generateSchedulesForADrug(DrugInPres drugInPres, LocalDate toDate) {
-        List<ScheduleEntity> schedules = new ArrayList<>();
+    public static List<ScheduleRequest> generateSchedulesForADrugRequest(DrugInPres drugInPres, LocalDate toDate) {
+        List<ScheduleRequest> schedules = new ArrayList<>();
 
-            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
-               return schedules;
-            }
+        if (!Validation.isValidList(drugInPres.getTimeDosages())) {
+            return schedules;
+        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
+        LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
 
-            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
-                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
-                    addTimeSchedule(schedules, drugInPres, currentDate);
-                }
+        for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
+            if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                addTimeScheduleRequest(schedules, drugInPres, currentDate);
             }
+        }
         return schedules;
     }
 
@@ -100,6 +118,22 @@ public class ScheduleGenerationHelper {
                         scheduledMillisUTC,
                         ReminderStatus.PENDING,
                         alarmRequestCodeCounter.getAndIncrement()
+                ));
+            }
+        }
+    }
+
+    private static void addTimeScheduleRequest(List<ScheduleRequest> scheduleEntities, DrugInPres drugInPres, LocalDate currentDate) {
+        for (TimeDosage timeDosage : drugInPres.getTimeDosages()) {
+            LocalDateTime reminderDateTime = currentDate.atTime(timeDosage.getHour(), timeDosage.getMinutes());
+            long scheduledMillisUTC = reminderDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+            // Chỉ tạo reminder cho tương lai
+            if (scheduledMillisUTC > System.currentTimeMillis()) {
+                double dosage = timeDosage.getDosage();
+                scheduleEntities.add(new ScheduleRequest(
+                        reminderDateTime.toString(),
+                        dosage
                 ));
             }
         }

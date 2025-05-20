@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.ui.activity;
+package com.mad.prescriptionmanagementapp.ui.activity.dang;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mad.prescriptionmanagementapp.data.model.Drug;
 import com.mad.prescriptionmanagementapp.data.model.Section;
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.adapter.dang.SectionAdapter;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;

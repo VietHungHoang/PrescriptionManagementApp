@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.ui.activity;
+package com.mad.prescriptionmanagementapp.ui.activity.dang;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import com.mad.prescriptionmanagementapp.data.model.User;
 import com.mad.prescriptionmanagementapp.data.model.UserSetting;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.api.ApiService;
+import com.mad.prescriptionmanagementapp.ui.activity.ProfileSettingActivity;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,14 +94,14 @@ public class ProfileActivity extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("user");
         if (user == null) {
             user = new User();
-            user.setId(1L);
+            user.setId(10L);
             user.setName("Phạm Hải Đăng");
             user.setDateOfBirth("26/05/2003");
             user.setPhoneNumber("0398066323");
             user.setGender("male");
             Toast.makeText(this, "No user data from Intent, using default", Toast.LENGTH_SHORT).show();
         } else if (user.getId() == null) {
-            user.setId(1L);
+            user.setId(10L);
             Toast.makeText(this, "User ID is null, using default ID: 1", Toast.LENGTH_SHORT).show();
         }
 
@@ -129,7 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void loadUserData(Long userId) {
         if (userId == null) {
             Toast.makeText(this, "User ID is null, cannot load data", Toast.LENGTH_SHORT).show();
-            userSetting = new UserSetting(1L, user.getName(), user.getDateOfBirth(),
+            userSetting = new UserSetting(10L, user.getName(), user.getDateOfBirth(),
                     user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
             updateUI();
             return;
@@ -216,10 +218,10 @@ public class ProfileActivity extends AppCompatActivity {
             Log.d("ProfileActivity", "Received updated_user: " + user + ", ID: " + (user != null ? user.getId() : "null"));
             if (user == null) {
                 user = new User();
-                user.setId(1L);
+                user.setId(10L);
                 Toast.makeText(this, "No updated user data from Intent, using default", Toast.LENGTH_SHORT).show();
             } else if (user.getId() == null) {
-                user.setId(1L); // Gán ID mặc định nếu null
+                user.setId(10L); // Gán ID mặc định nếu null
                 Toast.makeText(this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
             }
             loadUserData(user.getId());

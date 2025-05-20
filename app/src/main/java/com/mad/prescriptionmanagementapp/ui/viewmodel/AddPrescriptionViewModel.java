@@ -8,12 +8,17 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
+import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
+import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
 import com.mad.prescriptionmanagementapp.data.repository.PrescriptionRepository;
 import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
+import com.mad.prescriptionmanagementapp.util.ReminderStatus;
+import com.mad.prescriptionmanagementapp.util.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +33,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     private final MutableLiveData<List<DrugInPres>> listSelectedDrug = new MutableLiveData<>();
 
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    private MutableLiveData<PrescriptionRequest> prescription = new MutableLiveData<>();
+    private MutableLiveData<Prescription> prescription = new MutableLiveData<>();
 
     private MutableLiveData<List<TimeDosage>> listTime = new MutableLiveData<>();
 
@@ -52,37 +57,37 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     private boolean nameEmpty;
 
 
-    public LiveData<PrescriptionRequest> getPrescription() {
+    public LiveData<Prescription> getPrescription() {
         return this.prescription;
     }
 
     public void addPresName(String name) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         pres.setName(name);
         this.prescription.setValue(pres);
     }
 
     public void addHospital(String name) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         pres.setHospital(name);
         this.prescription.setValue(pres);
     }
 
     public void addDoctor(String name) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         pres.setDoctorName(name);
         this.prescription.setValue(pres);
     }
 
 
     public void addConsultionDate(String name) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         pres.setConsultationDate(name);
         this.prescription.setValue(pres);
     }
 
     public void addFollowUpDate(String name) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         pres.setFollowUpDate(name);
         this.prescription.setValue(pres);
     }
@@ -90,7 +95,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     public boolean existedPres() {
         if (this.prescription != null) {
-            PrescriptionRequest pres = this.prescription.getValue();
+            Prescription pres = this.prescription.getValue();
             if ((pres.getName() != null
                     && pres.getName() != "")
                     || (pres.getDrugs() != null && !pres.getDrugs().isEmpty())
@@ -121,9 +126,9 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
     public void updatePrescription(String presName, boolean isOnMedicationInfo, String hospital, String doctor, String consultationDate, String followUpDate) {
-        PrescriptionRequest pres;
+        Prescription pres;
         this.onMedicalInfo.setValue(isOnMedicationInfo);
-        pres = new PrescriptionRequest(presName, hospital, doctor, consultationDate, followUpDate);
+        pres = new Prescription(presName, hospital, doctor, consultationDate, followUpDate);
         this.prescription.setValue(pres);
     }
 
@@ -165,7 +170,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 //                    .collect(Collectors.toList());
 //        });
 //        this.originalUnitList = this.drugRepository.getUnits();
-        this.prescription.setValue(new PrescriptionRequest());
+        this.prescription.setValue(new Prescription());
     }
 
     // Hàm để lấy danh sách thuốc
@@ -205,7 +210,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
     public void handleBtnSavePres(Context context) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         if (pres != null) {
             pres.setDrugs(this.listSelectedDrug.getValue());
             this.setupReminder(context);
@@ -213,10 +218,26 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
     private void setupReminder(Context context) {
-        PrescriptionRequest pres = this.prescription.getValue();
+        Prescription pres = this.prescription.getValue();
         executor.execute(() -> {
             this.prescriptionRepository.insert(pres);
             AlarmScheduler.scheduleAlarmsForPendingReminders(context);
+
+                AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
+                // Chạy trên background thread
+                new Thread(() -> {
+                    List<ScheduleEntityDTO> pendingSchedules = db.scheduleDao()
+
+                            .getPendingReminders(ReminderStatus.PENDING, System.currentTimeMillis());
+
+
+
+                    PrescriptionRequest prescriptionRequest = Tools.prescriptionToRequest(pres, pendingSchedules);
+                    this.prescriptionRepository.saveToServer(prescriptionRequest);
+                    for (ScheduleEntityDTO schedule : pendingSchedules) {
+                        AlarmScheduler.scheduleAlarm(context, schedule);
+                    }
+                }).start();
         });
     }
 

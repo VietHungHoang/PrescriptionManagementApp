@@ -25,6 +25,13 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
+    public User(String name, String dateOfBirth, String phoneNumber, String gender) {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
