@@ -27,14 +27,15 @@
 <!--            </intent-filter>-->
 <!--        </activity>-->
 
-        <activity android:name=".view.MedicineScheduleActivity"
+        <activity android:name=".ui.activity.kiet.MedicineScheduleActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ListPrescriptionActivity" />
+        <activity android:name=".ui.activity.kiet.ListPrescriptionActivity" />
+        <activity android:name=".ui.activity.kiet.HistoryMedicineActivity" />
 
 <!--                <activity android:name=".view.ListPrescriptionActivity"-->
 <!--            android:exported="true">-->

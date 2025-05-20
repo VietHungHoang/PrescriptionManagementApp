@@ -42,7 +42,19 @@ dependencies {
 
 // Converter Gson
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.7")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.18.3")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.3")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.3")
+    implementation("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
+    implementation("com.squareup.retrofit2:converter-jackson:2.11.0")
+    implementation("androidx.work:work-runtime:2.10.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

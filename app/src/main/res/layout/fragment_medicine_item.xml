@@ -89,12 +89,13 @@
 
             <LinearLayout
                 android:id="@+id/statusContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <LinearLayout
+
+            <LinearLayout
                     android:id="@+id/btnUsed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

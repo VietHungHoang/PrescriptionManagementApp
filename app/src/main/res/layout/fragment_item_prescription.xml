@@ -44,7 +44,7 @@
                     android:id="@+id/tvSchedule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="09:54 AM; 08:00 PM"
+                    android:text="09:54 ; 20:00 "
                     android:textSize="14sp"
                     android:textColor="#616161" />
 
@@ -57,18 +57,7 @@
                     android:textColor="@color/blue" />
             </LinearLayout>
 
-            <!-- Icon chỉnh sửa -->
-            <ImageView
-                android:id="@+id/ivEdit"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_edit"
 
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Chỉnh sửa"
-                android:padding="4dp"
-                android:clickable="true"
-                android:focusable="true" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
