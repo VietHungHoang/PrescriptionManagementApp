@@ -1,0 +1,29 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Trạng thái được chọn -->
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- Lớp nền trắng tạo viền bao quanh -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/white" />
+                    <corners android:radius="24dp" />
+                </shape>
+            </item>
+            <!-- Lớp màu xanh nhỏ hơn (padding 2dp) tạo hiệu ứng viền trắng -->
+            <item android:left="2dp" android:right="2dp" android:top="2dp" android:bottom="2dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/tab_selected_bg_color" /> <!-- Màu xanh bạn muốn -->
+                    <corners android:radius="22dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Trạng thái không được chọn -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" /> <!-- Nền trắng -->
+            <corners android:radius="24dp" />
+        </shape>
+    </item>
+</selector>

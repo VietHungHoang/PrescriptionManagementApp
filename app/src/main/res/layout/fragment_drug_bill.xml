@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Header của nhóm thuốc -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <!-- Tên nhóm -->
+        <TextView
+            android:id="@+id/tvGroupTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nhóm thuốc (3)"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <!-- Nút chỉnh sửa -->
+        <TextView
+            android:id="@+id/btnEditGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chỉnh sửa"
+            android:textColor="#2196F3"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <!-- Danh sách các thuốc trong nhóm -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMedicines"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false" />
+</LinearLayout>
