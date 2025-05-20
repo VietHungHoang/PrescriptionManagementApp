@@ -15,6 +15,7 @@
         <item name="android:drawableEnd">@drawable/ic_dropdown</item>
     </style>
 
+
     <style name="Theme.PrescriptionManagementApp" parent="Base.Theme.PrescriptionManagementApp" />
 
 </resources>

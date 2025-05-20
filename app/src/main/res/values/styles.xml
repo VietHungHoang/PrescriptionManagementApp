@@ -84,7 +84,11 @@
     <style name="BottomNavTextStyle" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">14sp</item> <!-- chỉnh cỡ chữ -->
         <item name="android:textStyle">bold</item> <!-- tuỳ chọn màu -->
-       />
     </style>
 
+    <style name="tra_cuu_thu">
+            <item name="android:textSize">30sp</item>
+            <item name="android:textColor">#2D87F3</item>
+        </style>
+    
 </resources>

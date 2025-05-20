@@ -12,4 +12,3 @@ public class ResponseObject<T> {
     private String status;
     private T data;
 }
-

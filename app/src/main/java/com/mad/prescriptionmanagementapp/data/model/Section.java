@@ -1,6 +1,7 @@
 package com.mad.prescriptionmanagementapp.data.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class Section {
     @JsonProperty("section_title")
     private String title;
     private String content;
+    @JsonBackReference
     private Drug drug;
 
 }
