@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.databinding.ActivityAddPrescriptionBinding;
 import com.mad.prescriptionmanagementapp.ui.fragment.FragmentType;
 import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddPrescriptionInfoFragment;
@@ -37,40 +38,20 @@ public class AddPrescriptionActivity extends AppCompatActivity {
     private ActivityAddPrescriptionBinding binding;
     private AddPrescriptionViewModel viewModel;
 
+    private Prescription intentPres;
+
     private final AddPrescriptionInfoFragment initialFragment = new AddPrescriptionInfoFragment();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.initParam();
         this.loadInitialFragment();
-//        new ViewModelProvider(this).get(AddScheduleViewModel.class);
-
-//        this.binding.btnBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
-//// Đăng ký callback để xử lý back button
-//        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-//            @Override
-//            public void handleOnBackPressed() {
-//                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//
-//                if (currentFragment == null || isFirstFragment() || currentFragment instanceof AddPrescriptionInfoFragment) {
-//                    if (currentFragment instanceof AddPrescriptionInfoFragment && viewModel.existedPres()) {
-//                            ConfirmDialog.showCancelConfirmationDialog(AddPrescriptionActivity.this, new ConfirmDialog.ConfirmationDialogListener() {
-//                                @Override
-//                                public void onConfirm() {
-//                                    finish();
-//                                }
-//                            }, "Huỷ", "Tất cả thông tin bạn đã nhập sẽ bị xoá, đồng ý huỷ", "Đồng ý");
-//                    }
-//                    // Không còn fragment, gọi dispatcher để đóng Activity
-//                    else {
-//                        finish();
-//                    }
-//                } else {
-//                        getSupportFragmentManager().popBackStack();
-//                }
-//            }
-//        });
-
+        intentPres =  this.getIntent().getParcelableExtra("edit");
+        if(intentPres != null) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isUpdate", true);
+            initialFragment.setArguments(bundle);
+        }
     }
 
     private boolean isFirstFragment() {
@@ -88,6 +69,8 @@ public class AddPrescriptionActivity extends AppCompatActivity {
         this.viewModel = new ViewModelProvider(this).get(AddPrescriptionViewModel.class);
         this.binding.setViewModel(this.viewModel);
         this.binding.setLifecycleOwner(this);
+
+        this.viewModel.setPresFromIntent(this.intentPres);
     }
 
     private void loadInitialFragment() {

@@ -38,6 +38,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
     private AddPrescriptionViewModel shareViewModel;
     private AddPrescriptionInfoViewModel viewModel;
 
+    private boolean isUpdate;
+
 
     public static AddPrescriptionInfoFragment newInstance() {
         return new AddPrescriptionInfoFragment();
@@ -47,6 +49,11 @@ public class AddPrescriptionInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            isUpdate = args.getBoolean("isUpdate");
+        }
     }
 
     @Override
