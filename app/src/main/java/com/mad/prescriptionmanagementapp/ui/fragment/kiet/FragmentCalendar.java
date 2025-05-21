@@ -122,6 +122,7 @@ public class FragmentCalendar extends Fragment {
             );
 
             weekDays.add(dayModel);
+
             tempCalendar.add(Calendar.DAY_OF_WEEK, 1);
         }
 

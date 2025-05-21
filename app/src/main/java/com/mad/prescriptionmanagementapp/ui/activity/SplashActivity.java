@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,49 +20,38 @@ import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private SharedPrefUtils sharedPrefUtils;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         EdgeToEdge.enable(this);
 
-        this.sharedPrefUtils = new SharedPrefUtils(this);
+        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
 
         LoginRepository loginRepository = new LoginRepository();
-        loginRepository.checkToken(this.sharedPrefUtils.getToken(), new Callback<ResponseObject<Void>>() {
+        loginRepository.checkToken(sharedPrefUtils.getToken(), new Callback<ResponseObject<String>>() {
             @Override
-            public void onResponse(Call<ResponseObject<Void>> call, Response<ResponseObject<Void>> response) {
-                if(response.isSuccessful()) {
-                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
+            public void onResponse(Call<ResponseObject<String>> call, Response<ResponseObject<String>> response) {
+                Intent intent;
+
+                if(response.isSuccessful() && response.body() != null) {
+                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    sharedPrefUtils.saveName(response.body().getData());
                 } else {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                    sharedPrefUtils.saveToken(null, null);
                 }
 
+                SplashActivity.this.startActivity(intent);
+                SplashActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                SplashActivity.this.finish();
             }
 
             @Override
-            public void onFailure(Call<ResponseObject<Void>> call, Throwable throwable) {
-                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            finish();
+            public void onFailure(Call<ResponseObject<String>> call, Throwable throwable) {
+                Toast.makeText(SplashActivity.this, "Cannot connect to server", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-//            Intent intent = new Intent(SplashActivity.this, this.sharedPrefUtils.getToken() != null ? HomeActivity.class : LoginActivity.class);
-//            startActivity(intent);
-//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//            finish();
-//        }, 2000);
     }
 }
 

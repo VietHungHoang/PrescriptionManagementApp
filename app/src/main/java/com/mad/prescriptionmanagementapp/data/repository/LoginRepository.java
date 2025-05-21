@@ -35,8 +35,8 @@ public class LoginRepository {
         call.enqueue(callback);
     }
 
-    public void checkToken(String accessToken, @NonNull Callback<ResponseObject<Void>> callback) {
-        Call<ResponseObject<Void>> call = loginService.checkTokenValid("Bearer " + accessToken);
+    public void checkToken(String accessToken, @NonNull Callback<ResponseObject<String>> callback) {
+        Call<ResponseObject<String>> call = loginService.checkTokenValid("Bearer " + accessToken);
         call.enqueue(callback);
     }
 }

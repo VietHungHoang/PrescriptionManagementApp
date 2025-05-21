@@ -19,6 +19,8 @@ import com.mad.prescriptionmanagementapp.data.model.User;
 import com.mad.prescriptionmanagementapp.databinding.ActivityHomeBinding;
 import com.mad.prescriptionmanagementapp.ui.activity.dang.MedicineSearchActivity;
 import com.mad.prescriptionmanagementapp.ui.activity.dang.ProfileActivity;
+import com.mad.prescriptionmanagementapp.ui.activity.kiet.ListPrescriptionActivity;
+import com.mad.prescriptionmanagementapp.ui.activity.kiet.MedicineScheduleActivity;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.HomeViewModel;
 import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
@@ -236,6 +238,16 @@ public class HomeActivity extends AppCompatActivity {
         this.binding.cardMedicationInfo.setOnClickListener(v -> {
             Intent intent = new Intent(this, MedicineSearchActivity.class);
             intent.putExtra("user", user);
+            startActivity(intent);
+        });
+
+        this.binding.cardMedicationReminder.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MedicineScheduleActivity.class);
+            startActivity(intent);
+        });
+
+        this.binding.cardStatistics.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ListPrescriptionActivity.class);
             startActivity(intent);
         });
 

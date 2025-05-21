@@ -9,7 +9,7 @@ public class RetrofitClient {
     public static Retrofit getInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:8080/")  // URL backend localhost khi chạy trên emulator
+                    .baseUrl("http://172.11.78.222:8080/")  // URL backend localhost khi chạy trên emulator
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

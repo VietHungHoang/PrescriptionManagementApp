@@ -41,10 +41,10 @@ public class ListPrescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_prescription);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setSelectedItemId(R.id.nav_invoice);
+//        bottomNav.setSelectedItemId(R.id.nav_invoice);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/") // Địa chỉ localhost trên emulator
+                .baseUrl("http://172.11.78.222:8080/") // Địa chỉ localhost trên emulator
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -135,7 +135,7 @@ public class ListPrescriptionActivity extends AppCompatActivity {
     }
 
     public interface PrescriptionApi {
-        @retrofit2.http.GET("api/v1/prescription/getByStatus")
+        @retrofit2.http.GET("api/v1/prescriptions/getByStatus")
         retrofit2.Call<List<PrescriptionResponse>> getPrescriptionsByStatus(@retrofit2.http.Query("status") int status);
     }
 }

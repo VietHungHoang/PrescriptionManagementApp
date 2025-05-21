@@ -71,27 +71,27 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Quan sát sự kiện chuyển sang màn hình UserInfo
-        this.viewModel.navigateToUserInfo.observe(this, event -> {
-            GoogleAuthRespone verifyResponse = event.getContentIfNotHandled();
-            if (verifyResponse != null) {
-                String pendingToken = this.viewModel.getPendingIdToken(); // Lấy token đã lưu tạm
-                if (pendingToken == null) {
-                    Log.e(Constants.TAG, "Cannot navigate to UserInfo, pending token is missing!");
-                    Toast.makeText(this, "Lỗi nội bộ, không thể tiếp tục đăng ký.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Log.i(Constants.TAG, "Navigating to UserInfoActivity...");
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                intent.putExtra("GOOGLE_ID_TOKEN", pendingToken); // *** Quan trọng: Truyền idToken ***
-                intent.putExtra("email", verifyResponse.getEmail());
-                intent.putExtra("fullName", verifyResponse.getName());
-                intent.putExtra("googleAccountId", verifyResponse.getGoogleAccountId());
-                intent.putExtra(SelectActivity.EXTRA_FRAGMENT_TYPE, FragmentType.SELECT_USER_TYPE.name());
-//                Lưu ý: Truyền enum.name() (là một String) vì Intent không trực tiếp hỗ trợ truyền enum một cách đơn giản và an toàn trên mọi phiên bản Android (mặc dù có thể serialize nhưng phức tạp hơn).
-                startActivity(intent);
-                // Không finish() LoginActivity ở đây, để người dùng có thể quay lại nếu cần
-            }
-        });
+//        this.viewModel.navigateToUserInfo.observe(this, event -> {
+//            GoogleAuthRespone verifyResponse = event.getContentIfNotHandled();
+//            if (verifyResponse != null) {
+//                String pendingToken = this.viewModel.getPendingIdToken(); // Lấy token đã lưu tạm
+//                if (pendingToken == null) {
+//                    Log.e(Constants.TAG, "Cannot navigate to UserInfo, pending token is missing!");
+//                    Toast.makeText(this, "Lỗi nội bộ, không thể tiếp tục đăng ký.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                Log.i(Constants.TAG, "Navigating to UserInfoActivity...");
+//                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                intent.putExtra("GOOGLE_ID_TOKEN", pendingToken); // *** Quan trọng: Truyền idToken ***
+//                intent.putExtra("email", verifyResponse.getEmail());
+//                intent.putExtra("fullName", verifyResponse.getName());
+//                intent.putExtra("googleAccountId", verifyResponse.getGoogleAccountId());
+//                intent.putExtra(SelectActivity.EXTRA_FRAGMENT_TYPE, FragmentType.SELECT_USER_TYPE.name());
+////                Lưu ý: Truyền enum.name() (là một String) vì Intent không trực tiếp hỗ trợ truyền enum một cách đơn giản và an toàn trên mọi phiên bản Android (mặc dù có thể serialize nhưng phức tạp hơn).
+//                startActivity(intent);
+//                // Không finish() LoginActivity ở đây, để người dùng có thể quay lại nếu cần
+//            }
+//        });
 
         // Quan sát sự kiện chuyển sang màn hình chính
         this.viewModel.navigateToMain.observe(this, event -> {
@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 // startActivity(intent);
                 // finish(); // Đóng LoginActivity
 
-                Toast.makeText(this, "Đăng nhập/Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                 // THAY BẰNG CODE CHUYỂN SANG MAIN ACTIVITY CỦA BẠN
             }
         });

@@ -11,16 +11,28 @@ import androidx.core.app.NotificationManagerCompat;
 // import com.yourapp.network.BackendApiService; // Nếu gọi API trực tiếp
 // import com.yourapp.worker.UpdateReminderStatusWorker; // Nếu dùng WorkManager
 
+import com.mad.prescriptionmanagementapp.api.MedicineApi;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.kiet.StatusUpdateRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.StatusUpdateResponse;
 import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
 
@@ -72,6 +84,9 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                         // BackendApiService.getInstance().confirmReminder(reminderId);
                         // Hoặc WorkManager.enqueue(UpdateReminderStatusWorker.forConfirm(reminderId));
                         Log.i(TAG, "Reminder ID " + reminderId + " Confirmed.");
+                        sendStatusToBackend(Instant.ofEpochMilli(reminder.getScheduleEntity().getScheduledDateTimeMillis())
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDateTime().toString(), 2, LocalDateTime.now().toString(), true);
                         break;
 
                     case Constants.ACTION_SNOOZE:
@@ -94,8 +109,47 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                         // TODO: Gửi lên backend (dùng WorkManager)
                         // BackendApiService.getInstance().skipReminder(reminderId);
                         Log.i(TAG, "Reminder ID " + reminderId + " Skipped.");
+                        sendStatusToBackend(Instant.ofEpochMilli(reminder.getScheduleEntity().getScheduledDateTimeMillis())
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDateTime().toString(), 1, LocalDateTime.now().toString(), true);
                         break;
                 }
+            }
+        });
+    }
+
+    private void sendStatusToBackend(String defaultTimeString, int status, String selectedTimeString, boolean editted) {
+        if (defaultTimeString == null || selectedTimeString == null) {
+            Log.e("STATUS", "Thời gian không hợp lệ");
+            return;
+        }
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://172.11.78.222:8080/")  // Đảm bảo URL là chính xác (nếu dùng Emulator)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Khởi tạo api chỉ khi chưa khởi tạo
+        MedicineApi medicineApi = retrofit.create(MedicineApi.class);
+
+        // Tạo request với chuỗi thời gian
+        StatusUpdateRequest request = new StatusUpdateRequest(defaultTimeString, status, selectedTimeString,editted);
+
+        // Gửi yêu cầu đến backend
+        medicineApi.updateStatus(request).enqueue(new Callback<StatusUpdateResponse>() {
+            @Override
+            public void onResponse(Call<StatusUpdateResponse> call, Response<StatusUpdateResponse> response) {
+                if (response.isSuccessful()) {
+                    StatusUpdateResponse statusUpdateResponse = response.body();
+                    Log.d("STATUS", "Cập nhật thành công: " + statusUpdateResponse.getMessage());
+                } else {
+                    Log.e("STATUS", "Cập nhật thất bại: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StatusUpdateResponse> call, Throwable t) {
+                Log.e("STATUS", "Lỗi gửi trạng thái: " + t.getMessage(), t);
             }
         });
     }

@@ -42,7 +42,8 @@ public class MedicineDetailDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_medicine_detail, container, false);
+//        return inflater.inflate(R.layout.dialog_medicine_detail, container, false);
+        return null;
     }
 
     @Override
@@ -52,13 +53,13 @@ public class MedicineDetailDialogFragment extends DialogFragment {
         // Ánh xạ các thành phần giao diện
         TextView tvTime = view.findViewById(R.id.tvTime);
         TextView tvDate = view.findViewById(R.id.tvDate);
-        RecyclerView rvMedicineList = view.findViewById(R.id.rvMedicineList);
+//        RecyclerView rvMedicineList = view.findViewById(R.id.rvMedicineList);
         Button btnClose = view.findViewById(R.id.btnClose);
 
         // Kiểm tra View có tồn tại không
-        if (tvDate == null || rvMedicineList == null) {
-            throw new RuntimeException("Không tìm thấy tvDate hoặc rvMedicineList trong layout!");
-        }
+//        if (tvDate == null || rvMedicineList == null) {
+//            throw new RuntimeException("Không tìm thấy tvDate hoặc rvMedicineList trong layout!");
+//        }
 
         // Thiết lập dữ liệu
         if (medicineItem != null) {
@@ -77,8 +78,8 @@ public class MedicineDetailDialogFragment extends DialogFragment {
 
             // Gán Adapter dạng bảng cho RecyclerView
             MedicineTableAdapter adapter = new MedicineTableAdapter(medicineTableList);
-            rvMedicineList.setLayoutManager(new LinearLayoutManager(getContext()));
-            rvMedicineList.setAdapter(adapter);
+//            rvMedicineList.setLayoutManager(new LinearLayoutManager(getContext()));
+//            rvMedicineList.setAdapter(adapter);
         }
 
         // Đóng dialog khi nhấn nút

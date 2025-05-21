@@ -45,18 +45,18 @@ public class ScheduleGenerationHelper {
     public static List<ScheduleEntity> generateSchedulesForADrug(DrugInPres drugInPres, LocalDate toDate) {
         List<ScheduleEntity> schedules = new ArrayList<>();
 
-        if (!Validation.isValidList(drugInPres.getTimeDosages())) {
-            return schedules;
-        }
+            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
+               return schedules;
+            }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
+            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
 
-        for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
-            if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
-                addTimeSchedule(schedules, drugInPres, currentDate);
+            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
+                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                    addTimeSchedule(schedules, drugInPres, currentDate);
+                }
             }
-        }
         return schedules;
     }
 
@@ -130,6 +130,7 @@ public class ScheduleGenerationHelper {
 
             // Chỉ tạo reminder cho tương lai
             if (scheduledMillisUTC > System.currentTimeMillis()) {
+                Long simpleDrugId = (drugInPres.getSimpleDrug() != null && drugInPres.getSimpleDrug().getId() != null) ? drugInPres.getSimpleDrug().getId() : -1L;
                 double dosage = timeDosage.getDosage();
                 scheduleEntities.add(new ScheduleRequest(
                         reminderDateTime.toString(),

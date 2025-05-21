@@ -1,5 +1,6 @@
 package com.mad.prescriptionmanagementapp.ui.fragment.addprescription;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -18,6 +19,7 @@ import com.mad.prescriptionmanagementapp.adapter.SelectedDrugAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
+import com.mad.prescriptionmanagementapp.ui.activity.kiet.ListPrescriptionActivity;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.SuccessDialog;
@@ -100,7 +102,8 @@ public class AddPrescriptionInfoFragment extends Fragment {
             if (this.viewModel.validateAddPrescriptionInfo(this.shareViewModel.getPrescription().getValue(), this.shareViewModel.getSelectedDrugs().getValue())) {
                 this.shareViewModel.handleBtnSavePres(this.requireContext());
                 new SuccessDialog(this, "Thêm đơn thuốc thành công", true).showDialog();
-
+                Intent intent = new Intent(requireActivity(), ListPrescriptionActivity.class);
+                requireActivity().startActivity(intent);
             }
 
         });

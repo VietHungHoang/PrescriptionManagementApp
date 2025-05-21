@@ -22,8 +22,8 @@ public interface LoginService {
     Call<ResponseObject<LoginResponse>> registerWithGoogle(
             @Body CustomerRegisterGoogleRequest request);
 
-    @GET("users/check-token")
-    Call<ResponseObject<Void>> checkTokenValid(
+    @GET("users/me")
+    Call<ResponseObject<String>> checkTokenValid(
             @Header("Authorization") String accessToken);
 
 }

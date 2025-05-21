@@ -11,6 +11,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface PrescriptionApi {
-    @GET("api/v1/prescription/{status}")
+    @GET("api/v1/prescriptions/{status}")
     Call<List<PrescriptionResponse>> getPrescriptionsByStatus(@Path("status") int status);
 }

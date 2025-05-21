@@ -16,6 +16,7 @@ import com.mad.prescriptionmanagementapp.data.model.Schedule;
 import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
+import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleAddRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 
 import java.text.DecimalFormat;

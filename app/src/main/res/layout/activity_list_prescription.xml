@@ -130,7 +130,7 @@
             app:labelVisibilityMode="labeled"
             app:itemIconTint="@color/nav_icon_selector"
             app:itemTextColor="@color/nav_text_selector"
-            app:menu="@menu/bottom_nav_menu"
+            app:menu="@menu/bottom_nav_menu_kiet"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

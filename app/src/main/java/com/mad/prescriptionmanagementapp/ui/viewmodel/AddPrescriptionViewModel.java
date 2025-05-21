@@ -54,8 +54,11 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
     public void setPresFromIntent(Prescription pres) {
-        this.prescription.setValue(pres);
-        this.listSelectedDrug.setValue(pres.getDrugs());
+        if(pres != null) {
+            this.prescription.setValue(pres);
+            this.listSelectedDrug.setValue(pres.getDrugs());
+        }
+
     }
 
     @Getter
