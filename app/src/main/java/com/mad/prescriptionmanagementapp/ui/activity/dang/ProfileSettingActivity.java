@@ -2,27 +2,27 @@ package com.mad.prescriptionmanagementapp.ui.activity.dang;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import com.mad.prescriptionmanagementapp.R;
+import com.mad.prescriptionmanagementapp.data.RetrofitClient;
 import com.mad.prescriptionmanagementapp.data.model.User;
+import com.mad.prescriptionmanagementapp.data.model.UserResponse;
 import com.mad.prescriptionmanagementapp.data.model.UserSetting;
-import com.mad.prescriptionmanagementapp.data.RetrofitClient; // Thay ApiClient bằng RetrofitClient
 import com.mad.prescriptionmanagementapp.data.remote.api.ApiService;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.DateTimeParseException;
 
 public class ProfileSettingActivity extends AppCompatActivity {
     private EditText etUsername, etBirthDate, etPhoneNumber, etWeight, etHeight;
@@ -32,16 +32,15 @@ public class ProfileSettingActivity extends AppCompatActivity {
     private UserSetting userSetting;
     private ApiService apiService;
 
-    // Định dạng ngày tháng
     private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE; // Backend trả về ISO format (yyyy-MM-dd)
+    private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_setting);
 
-        apiService = RetrofitClient.getApiService(); // Thay đổi này
+        apiService = RetrofitClient.getApiService();
 
         etUsername = findViewById(R.id.editText);
         etBirthDate = findViewById(R.id.editText2);
@@ -54,51 +53,69 @@ public class ProfileSettingActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btn_back);
 
         user = (User) getIntent().getSerializableExtra("user");
+        userSetting = (UserSetting) getIntent().getSerializableExtra("userSetting");
 
-        loadUserSetting(user.getId());
-
-        // Hiển thị dữ liệu từ user
-        etUsername.setText(user.getName());
-        if (user.getDateOfBirth() != null) {
-            try {
-                LocalDate date = LocalDate.parse(user.getDateOfBirth(), ISO_FORMATTER);
-                etBirthDate.setText(date.format(DISPLAY_FORMATTER));
-            } catch (DateTimeParseException e) {
-                etBirthDate.setText(user.getDateOfBirth());
-            }
+        if (user == null || user.getId() == null) {
+            user = new User();
+            user.setId(1L);
+            Toast.makeText(this, "Không có dữ liệu người dùng, sử dụng mặc định", Toast.LENGTH_SHORT).show();
         }
-        etPhoneNumber.setText(user.getPhoneNumber());
-        if (user.getGender() != null && user.getGender().equalsIgnoreCase("male")) {
-            rbMale.setChecked(true);
+
+        if (userSetting == null) {
+            loadUserSetting(user.getId());
         } else {
-            rbFemale.setChecked(true);
+            displayUserData();
         }
 
         btnUpdate.setOnClickListener(v -> updateUser());
         btnBack.setOnClickListener(v -> finish());
     }
 
+    private void displayUserData() {
+        etUsername.setText(user.getName() != null ? user.getName() : "");
+        if (user.getDateOfBirth() != null) {
+            try {
+                LocalDate date = LocalDate.parse(user.getDateOfBirth(), user.getDateOfBirth().contains("/") ? DISPLAY_FORMATTER : ISO_FORMATTER);
+                etBirthDate.setText(date.format(DISPLAY_FORMATTER));
+            } catch (DateTimeParseException e) {
+                etBirthDate.setText(user.getDateOfBirth());
+                Log.e("ProfileSetting", "Lỗi parse ngày sinh: " + e.getMessage());
+            }
+        }
+        etPhoneNumber.setText(user.getPhoneNumber() != null ? user.getPhoneNumber() : "");
+        etWeight.setText(userSetting.getWeight() != null ? String.valueOf(userSetting.getWeight()) : "");
+        etHeight.setText(userSetting.getHeight() != null ? String.valueOf(userSetting.getHeight()) : "");
+        if (user.getGender() != null && user.getGender().equalsIgnoreCase("male")) {
+            rbMale.setChecked(true);
+        } else {
+            rbFemale.setChecked(true);
+        }
+    }
+
     private void loadUserSetting(Long userId) {
+        if (userId == null) {
+            userSetting = new UserSetting(user.getId(), user.getName(), user.getDateOfBirth(),
+                    user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
+            displayUserData();
+            Toast.makeText(this, "Lỗi: ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Call<ResponseObject<UserSetting>> call = apiService.getUserSetting(userId);
         call.enqueue(new Callback<ResponseObject<UserSetting>>() {
             @Override
             public void onResponse(Call<ResponseObject<UserSetting>> call, Response<ResponseObject<UserSetting>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     userSetting = response.body().getData();
-                    if (userSetting.getDateOfBirth() != null) {
-                        try {
-                            LocalDate date = LocalDate.parse(userSetting.getDateOfBirth(), ISO_FORMATTER);
-                            userSetting.setDateOfBirth(date.format(DISPLAY_FORMATTER));
-                        } catch (DateTimeParseException e) {
-                            // Giữ nguyên nếu không parse được
-                        }
+                    if (userSetting.getUserId() == null) {
+                        userSetting.setUserId(userId);
                     }
-                    etWeight.setText(userSetting.getWeight() != null ? String.valueOf(userSetting.getWeight()) : "");
-                    etHeight.setText(userSetting.getHeight() != null ? String.valueOf(userSetting.getHeight()) : "");
+                    displayUserData();
                 } else {
                     userSetting = new UserSetting(userId, user.getName(), user.getDateOfBirth(),
                             user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
-                    Toast.makeText(ProfileSettingActivity.this, "No user setting data from server, response code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    displayUserData();
+                    Toast.makeText(ProfileSettingActivity.this, "Không có dữ liệu cài đặt từ server, mã lỗi: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -106,6 +123,7 @@ public class ProfileSettingActivity extends AppCompatActivity {
             public void onFailure(Call<ResponseObject<UserSetting>> call, Throwable t) {
                 userSetting = new UserSetting(userId, user.getName(), user.getDateOfBirth(),
                         user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
+                displayUserData();
                 Toast.makeText(ProfileSettingActivity.this, "Lỗi khi tải cài đặt: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -143,9 +161,13 @@ public class ProfileSettingActivity extends AppCompatActivity {
         try {
             double weight = Double.parseDouble(weightStr);
             double height = Double.parseDouble(heightStr);
-
             LocalDate birthDate = LocalDate.parse(birthDateStr, DISPLAY_FORMATTER);
             String birthDateIso = birthDate.format(ISO_FORMATTER);
+
+            if (user.getId() == null) {
+                Toast.makeText(this, "Lỗi: ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             user.setName(username);
             user.setDateOfBirth(birthDateIso);
@@ -153,22 +175,19 @@ public class ProfileSettingActivity extends AppCompatActivity {
             user.setGender(gender);
 
             if (userSetting == null) {
-                userSetting = new UserSetting(user.getId(), username, birthDateIso, phoneNumber, gender, weight, height);
-            } else {
-                userSetting.setName(username);
-                userSetting.setDateOfBirth(birthDateIso);
-                userSetting.setPhoneNumber(phoneNumber);
-                userSetting.setGender(gender);
-                userSetting.setWeight(weight);
-                userSetting.setHeight(height);
+                userSetting = new UserSetting();
+                userSetting.setUserId(user.getId());
+            } else if (userSetting.getUserId() == null) {
+                userSetting.setUserId(user.getId());
             }
+            userSetting.setName(username);
+            userSetting.setDateOfBirth(birthDateIso);
+            userSetting.setPhoneNumber(phoneNumber);
+            userSetting.setGender(gender);
+            userSetting.setWeight(weight);
+            userSetting.setHeight(height);
 
-            updateUserToBackend(user);
-            updateUserSettingToBackend(userSetting);
-
-            user.updateCalculations();
-
-            showSuccessFragment();
+            updateUserToBackend(user, userSetting);
 
         } catch (NumberFormatException e) {
             if (!weightStr.matches("\\d+(\\.\\d+)?")) {
@@ -182,67 +201,79 @@ public class ProfileSettingActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUserToBackend(User user) {
-        Call<User> call = apiService.updateUser(user.getId(), user);
-        call.enqueue(new Callback<User>() {
+    private void updateUserToBackend(User user, UserSetting userSetting) {
+        Call<ResponseObject<UserResponse>> callUser = apiService.updateUser(user.getId(), user);
+        callUser.enqueue(new Callback<ResponseObject<UserResponse>>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    User updatedUser = response.body();
-                    if (updatedUser.getDateOfBirth() != null) {
-                        try {
-                            LocalDate date = LocalDate.parse(updatedUser.getDateOfBirth(), ISO_FORMATTER);
-                            updatedUser.setDateOfBirth(date.format(DISPLAY_FORMATTER));
-                        } catch (DateTimeParseException e) {
-                            // Giữ nguyên nếu không parse được
+            public void onResponse(Call<ResponseObject<UserResponse>> call, Response<ResponseObject<UserResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    UserResponse userResponse = response.body().getData();
+                    ProfileSettingActivity.this.user = userResponse.toUser();
+                    try {
+                        if (userResponse.getDateOfBirth() != null) {
+                            LocalDate date = LocalDate.parse(userResponse.getDateOfBirth(), ISO_FORMATTER);
+                            ProfileSettingActivity.this.user.setDateOfBirth(date.format(DISPLAY_FORMATTER));
                         }
+                    } catch (DateTimeParseException e) {
+                        Log.e("ProfileSetting", "Lỗi parse ngày sinh từ phản hồi: " + e.getMessage());
                     }
-                    ProfileSettingActivity.this.user = updatedUser;
+                    updateUserSettingToBackend(userSetting);
                 } else {
-                    Log.e("ProfileSetting", "Update user failed: " + response.code());
-                    Toast.makeText(ProfileSettingActivity.this, "Lỗi khi cập nhật người dùng", Toast.LENGTH_SHORT).show();
+                    String errorMsg = response.body() != null ? response.body().getMessage() : "Không có dữ liệu phản hồi";
+                    Log.e("ProfileSetting", "Cập nhật user thất bại: " + response.code() + ", " + errorMsg);
+                    Toast.makeText(ProfileSettingActivity.this, "Lỗi khi cập nhật người dùng: " + errorMsg, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e("ProfileSetting", "Lỗi khi gọi updateUser API", t);
-                Toast.makeText(ProfileSettingActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ResponseObject<UserResponse>> call, Throwable t) {
+                Log.e("ProfileSetting", "Lỗi khi gọi updateUser API: " + t.getMessage());
+                Toast.makeText(ProfileSettingActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void updateUserSettingToBackend(UserSetting userSetting) {
-        Call<UserSetting> call = apiService.updateUserSetting(userSetting.getUserId(), userSetting);
-        call.enqueue(new Callback<UserSetting>() {
+        if (userSetting.getUserId() == null) {
+            Log.e("ProfileSetting", "Lỗi: userSetting.getUserId() là null");
+            Toast.makeText(ProfileSettingActivity.this, "Lỗi: ID người dùng không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Call<ResponseObject<UserSetting>> callSetting = apiService.updateUserSetting(userSetting.getUserId(), userSetting);
+        callSetting.enqueue(new Callback<ResponseObject<UserSetting>>() {
             @Override
-            public void onResponse(Call<UserSetting> call, Response<UserSetting> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    UserSetting updatedSetting = response.body();
-                    if (updatedSetting.getDateOfBirth() != null) {
-                        try {
-                            LocalDate date = LocalDate.parse(updatedSetting.getDateOfBirth(), ISO_FORMATTER);
-                            updatedSetting.setDateOfBirth(date.format(DISPLAY_FORMATTER));
-                        } catch (DateTimeParseException e) {
-                            // Giữ nguyên nếu không parse được
+            public void onResponse(Call<ResponseObject<UserSetting>> call, Response<ResponseObject<UserSetting>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    ProfileSettingActivity.this.userSetting = response.body().getData();
+                    try {
+                        if (userSetting.getDateOfBirth() != null) {
+                            LocalDate date = LocalDate.parse(userSetting.getDateOfBirth(), ISO_FORMATTER);
+                            ProfileSettingActivity.this.userSetting.setDateOfBirth(date.format(DISPLAY_FORMATTER));
                         }
+                    } catch (DateTimeParseException e) {
+                        Log.e("ProfileSetting", "Lỗi parse ngày sinh từ phản hồi: " + e.getMessage());
                     }
-                    ProfileSettingActivity.this.userSetting = updatedSetting;
+                    showSuccessFragment();
                 } else {
-                    Log.e("ProfileSetting", "Update userSetting failed: " + response.code());
-                    Toast.makeText(ProfileSettingActivity.this, "Lỗi khi cập nhật cài đặt", Toast.LENGTH_SHORT).show();
+                    String errorMsg = response.body() != null ? response.body().getMessage() : "Không có dữ liệu phản hồi";
+                    Log.e("ProfileSetting", "Cập nhật userSetting thất bại: " + response.code() + ", " + errorMsg);
+                    Toast.makeText(ProfileSettingActivity.this, "Lỗi khi cập nhật cài đặt: " + errorMsg, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserSetting> call, Throwable t) {
-                Log.e("ProfileSetting", "Lỗi khi gọi updateUserSetting API", t);
-                Toast.makeText(ProfileSettingActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ResponseObject<UserSetting>> call, Throwable t) {
+                Log.e("ProfileSetting", "Lỗi khi gọi updateUserSetting API: " + t.getMessage());
+                Toast.makeText(ProfileSettingActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void showSuccessFragment() {
+        // Hiển thị Toast thông báo cập nhật thành công
+        Toast.makeText(ProfileSettingActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+
         SuccessFragment successFragment = new SuccessFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.profile_setting, successFragment);
@@ -251,8 +282,8 @@ public class ProfileSettingActivity extends AppCompatActivity {
 
         new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
             Intent resultIntent = new Intent();
-            Log.d("ProfileSettingActivity", "Sending updated_user: " + user + ", ID: " + (user != null ? user.getId() : "null"));
             resultIntent.putExtra("updated_user", user);
+            resultIntent.putExtra("updated_user_setting", userSetting);
             setResult(RESULT_OK, resultIntent);
             finish();
         }, 2000);

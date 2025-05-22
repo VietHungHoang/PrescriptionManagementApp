@@ -18,13 +18,6 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(String name, String dateOfBirth, String phoneNumber, String gender, Double weight, Double height) {
-        this.name = name;
-        this.dateOfBirth = dateOfBirth;
-        this.phoneNumber = phoneNumber;
-        this.gender = gender;
-    }
-
     public User(String name, String dateOfBirth, String phoneNumber, String gender) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -37,9 +30,9 @@ public class User implements Serializable {
     public void setId(Long id) { this.id = id; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public String getName() { return name; } // Thay getUsername() bằng getName()
+    public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-    public String getDateOfBirth() { return dateOfBirth; } // Thay getBirthDate() bằng getDateOfBirth()
+    public String getDateOfBirth() { return dateOfBirth; }
     public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
     public String getFacebookAccountId() { return facebookAccountId; }
     public void setFacebookAccountId(String facebookAccountId) { this.facebookAccountId = facebookAccountId; }
@@ -58,7 +51,6 @@ public class User implements Serializable {
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
 
-    // Xóa getWeight(), getHeight(), getBmi(), getBmr() vì chúng được lấy từ UserSetting
     public void updateCalculations() {
         // Nếu cần thêm logic
     }

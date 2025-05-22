@@ -2,37 +2,37 @@ package com.mad.prescriptionmanagementapp.ui.activity.dang;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.RetrofitClient;
 import com.mad.prescriptionmanagementapp.data.model.User;
 import com.mad.prescriptionmanagementapp.data.model.UserSetting;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.api.ApiService;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.DateTimeParseException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.DateTimeParseException;
-import android.util.Log;
+
 public class ProfileActivity extends AppCompatActivity {
     private TextView tvUsername, tvGenderAge, tvHeight, tvWeight, tvBmi, tvBmr;
     private ImageButton btnUpdate, btnBack;
-    private LinearLayout layoutTermsOfService, layoutNotificationSettings,layoutLogout;
+    private LinearLayout layoutTermsOfService, layoutNotificationSettings, layoutLogout;
     private User user;
     private UserSetting userSetting;
     private ApiService apiService;
 
-    // Định dạng ngày tháng
     private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
@@ -41,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
 
-        // Khởi tạo ApiService
         apiService = RetrofitClient.getApiService();
 
         // Ánh xạ các view
@@ -54,29 +53,17 @@ public class ProfileActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btn_update);
         layoutTermsOfService = findViewById(R.id.layout_terms_of_service);
         layoutNotificationSettings = findViewById(R.id.layout_notification_settings);
-        LinearLayout layoutTdee = findViewById(R.id.layout_tdee);
-        // Ánh xạ nút Back
+        layoutLogout = findViewById(R.id.layout_logout);
         btnBack = findViewById(R.id.btn_back);
 
         // Sự kiện nút Back
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); // Đóng ProfileActivity
-            }
-        });
-        // Đảm bảo layoutLogout đã được ánh xạ
-        layoutLogout = findViewById(R.id.layout_logout);
+        btnBack.setOnClickListener(v -> finish());
 
         // Sự kiện nút Đăng Xuất
-        layoutLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLogoutConfirmationDialog();
-            }
-        });
+        layoutLogout.setOnClickListener(v -> showLogoutConfirmationDialog());
 
-//       Sự kiện tính chỉ số TDEE
+        // Sự kiện tính chỉ số TDEE
+        LinearLayout layoutTdee = findViewById(R.id.layout_tdee);
         layoutTdee.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, TDEEActivity.class);
             try {
@@ -84,24 +71,22 @@ public class ProfileActivity extends AppCompatActivity {
                 double bmrValue = Double.parseDouble(bmrText);
                 intent.putExtra("bmr", bmrValue);
             } catch (NumberFormatException e) {
-                Toast.makeText(ProfileActivity.this, "Lỗi: Không thể lấy giá trị BMR", Toast.LENGTH_SHORT).show();
-                intent.putExtra("bmr", 1402.0); // Giá trị mặc định
+                Toast.makeText(this, "Lỗi: Không thể lấy giá trị BMR", Toast.LENGTH_SHORT).show();
+                intent.putExtra("bmr", 1402.0);
             }
             startActivity(intent);
         });
+
         // Lấy dữ liệu user từ Intent
         user = (User) getIntent().getSerializableExtra("user");
-        if (user == null) {
+        if (user == null || user.getId() == null) {
             user = new User();
-            user.setId(10L);
+            user.setId(1L);
             user.setName("Phạm Hải Đăng");
-            user.setDateOfBirth("26/05/2003");
+            user.setDateOfBirth("2003-05-26"); // Sử dụng định dạng ISO
             user.setPhoneNumber("0398066323");
             user.setGender("male");
-            Toast.makeText(this, "No user data from Intent, using default", Toast.LENGTH_SHORT).show();
-        } else if (user.getId() == null) {
-            user.setId(10L);
-            Toast.makeText(this, "User ID is null, using default ID: 1", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không có dữ liệu người dùng từ Intent, sử dụng mặc định", Toast.LENGTH_SHORT).show();
         }
 
         // Tải dữ liệu từ backend
@@ -111,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ProfileSettingActivity.class);
             intent.putExtra("user", user);
+            intent.putExtra("userSetting", userSetting);
             startActivityForResult(intent, 1);
         });
 
@@ -128,56 +114,49 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserData(Long userId) {
-        if (userId == null) {
-            Toast.makeText(this, "User ID is null, cannot load data", Toast.LENGTH_SHORT).show();
-            userSetting = new UserSetting(10L, user.getName(), user.getDateOfBirth(),
-                    user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
-            updateUI();
-            return;
-        }
         Call<ResponseObject<UserSetting>> call = apiService.getUserSetting(userId);
         call.enqueue(new Callback<ResponseObject<UserSetting>>() {
             @Override
             public void onResponse(Call<ResponseObject<UserSetting>> call, Response<ResponseObject<UserSetting>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     userSetting = response.body().getData();
-                    Toast.makeText(ProfileActivity.this, "Tải dữ liệu người dùng thành công", Toast.LENGTH_SHORT).show();
-                    if (userSetting.getDateOfBirth() != null) {
-                        try {
-                            LocalDate date = LocalDate.parse(userSetting.getDateOfBirth(), ISO_FORMATTER);
-                            userSetting.setDateOfBirth(date.format(DISPLAY_FORMATTER));
-                            user.setDateOfBirth(date.format(DISPLAY_FORMATTER));
-                        } catch (DateTimeParseException e) {
-                            Toast.makeText(ProfileActivity.this, "Error parsing date: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                    // Đồng bộ dữ liệu với User
                     user.setName(userSetting.getName());
                     user.setGender(userSetting.getGender());
                     user.setPhoneNumber(userSetting.getPhoneNumber());
+                    if (userSetting.getDateOfBirth() != null) {
+                        try {
+                            LocalDate date = LocalDate.parse(userSetting.getDateOfBirth(), ISO_FORMATTER);
+                            user.setDateOfBirth(date.format(DISPLAY_FORMATTER));
+                            userSetting.setDateOfBirth(date.format(DISPLAY_FORMATTER));
+                        } catch (DateTimeParseException e) {
+                            Log.e("ProfileActivity", "Lỗi parse ngày sinh: " + e.getMessage());
+                        }
+                    }
+                    Toast.makeText(ProfileActivity.this, "Tải dữ liệu người dùng thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     userSetting = new UserSetting(userId, user.getName(), user.getDateOfBirth(),
                             user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
-                    Toast.makeText(ProfileActivity.this, "No data from server, response code: " + response.code(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileActivity.this, "Không có dữ liệu cài đặt từ server, mã lỗi: " + response.code(), Toast.LENGTH_LONG).show();
                 }
                 updateUI();
             }
 
             @Override
             public void onFailure(Call<ResponseObject<UserSetting>> call, Throwable t) {
-                Log.e("ProfileActivity", "Failed to load data: " + t.getMessage(), t);
+                Log.e("ProfileActivity", "Lỗi khi tải dữ liệu: " + t.getMessage(), t);
                 userSetting = new UserSetting(userId, user.getName(), user.getDateOfBirth(),
                         user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
                 updateUI();
-                Toast.makeText(ProfileActivity.this, "Failed to load data: " + t.getMessage(), Toast.LENGTH_LONG).show();
-
+                Toast.makeText(ProfileActivity.this, "Lỗi khi tải dữ liệu: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void updateUI() {
         tvUsername.setText(user.getName() != null ? user.getName() : "N/A");
-        tvGenderAge.setText((user.getGender() != null && user.getGender().equalsIgnoreCase("male") ? "Nam" : "Nữ") + "\n" +
-                calculateAge(user.getDateOfBirth()) + " tuổi");
+        String genderText = (user.getGender() != null && user.getGender().equalsIgnoreCase("male")) ? "Nam" : "Nữ";
+        tvGenderAge.setText(genderText + "\n" + calculateAge(user.getDateOfBirth()) + " tuổi");
 
         Double weight = userSetting.getWeight() != null ? userSetting.getWeight() : 0.0;
         Double height = userSetting.getHeight() != null ? userSetting.getHeight() : 0.0;
@@ -188,7 +167,6 @@ public class ProfileActivity extends AppCompatActivity {
         double heightInMeters = height / 100.0;
         double bmi = (heightInMeters > 0) ? weight / (heightInMeters * heightInMeters) : 0.0;
         double bmr;
-//        Đây là công thức Mifflin-St Jeor, được sử dụng để tính BMR (Basal Metabolic Rate),
         if (user.getGender() != null && user.getGender().equalsIgnoreCase("male")) {
             bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * calculateAge(user.getDateOfBirth()));
         } else {
@@ -201,10 +179,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     private int calculateAge(String birthDate) {
         try {
-            LocalDate date = LocalDate.parse(birthDate, DISPLAY_FORMATTER);
-            LocalDate currentDate = LocalDate.now();
-            return currentDate.getYear() - date.getYear();
+            LocalDate date = LocalDate.parse(birthDate, birthDate.contains("/") ? DISPLAY_FORMATTER : ISO_FORMATTER);
+            return LocalDate.now().getYear() - date.getYear();
         } catch (Exception e) {
+            Log.e("ProfileActivity", "Lỗi tính tuổi: " + e.getMessage());
             return 22;
         }
     }
@@ -214,53 +192,41 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             user = (User) data.getSerializableExtra("updated_user");
-            Log.d("ProfileActivity", "Received updated_user: " + user + ", ID: " + (user != null ? user.getId() : "null"));
-            if (user == null) {
+            userSetting = (UserSetting) data.getSerializableExtra("updated_user_setting");
+            if (user == null || user.getId() == null) {
                 user = new User();
-                user.setId(10L);
-                Toast.makeText(this, "No updated user data from Intent, using default", Toast.LENGTH_SHORT).show();
-            } else if (user.getId() == null) {
-                user.setId(10L); // Gán ID mặc định nếu null
-                Toast.makeText(this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                user.setId(1L);
+                Toast.makeText(this, "Không có dữ liệu người dùng cập nhật, sử dụng mặc định", Toast.LENGTH_SHORT).show();
             }
-            loadUserData(user.getId());
+            if (userSetting == null) {
+                userSetting = new UserSetting(user.getId(), user.getName(), user.getDateOfBirth(),
+                        user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
+            }
+            updateUI();
         }
     }
+
     private void showLogoutConfirmationDialog() {
-        // Inflate layout XML
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_logout_confirmation, null);
-
-        // Tìm các thành phần trong dialog
         TextView tvConfirm = dialogView.findViewById(R.id.tv_confirm);
         TextView tvCancel = dialogView.findViewById(R.id.tv_cancel);
 
-        // Tạo AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
-
-        // Tạo dialog
         final AlertDialog dialog = builder.create();
 
-        // Xử lý nút Xác nhận
-        tvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ProfileActivity.this, "Đã xác nhận đăng xuất", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
+        tvConfirm.setOnClickListener(v -> {
+            Toast.makeText(ProfileActivity.this, "Đã xác nhận đăng xuất", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+            // Thêm logic đăng xuất nếu cần
         });
 
-        // Xử lý nút Hủy
-        tvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ProfileActivity.this, "Đã hủy đăng xuất", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
+        tvCancel.setOnClickListener(v -> {
+            Toast.makeText(ProfileActivity.this, "Đã hủy đăng xuất", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
         });
 
-        // Hiển thị dialog
         dialog.show();
     }
 }

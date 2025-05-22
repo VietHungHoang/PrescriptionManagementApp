@@ -6,13 +6,12 @@ public class UserSetting implements Serializable {
     private Long id;
     private Long userId;
     private String name;
-    private String dateOfBirth; // Là String để hiển thị và nhập dạng dd/MM/yyyy
+    private String dateOfBirth;
     private String phoneNumber;
     private String gender;
     private Double weight;
     private Double height;
 
-    // Constructor
     public UserSetting() {}
 
     public UserSetting(Long userId, String name, String dateOfBirth, String phoneNumber, String gender, Double weight, Double height) {
