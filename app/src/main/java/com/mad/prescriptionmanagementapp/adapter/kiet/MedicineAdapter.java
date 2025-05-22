@@ -30,7 +30,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_medicine_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_medicine_item_kiet, parent, false);
         return new ViewHolder(view);
     }
 
@@ -59,36 +59,49 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
             // Hiển thị icon và chữ dùng muộn, ẩn nút bỏ qua
             holder.btnUsed.setVisibility(View.VISIBLE);
             holder.btnSkip.setVisibility(GONE);
-            holder.imgUsed.setImageResource(R.drawable.ic_use_late); // icon dùng muộn màu xám
+            holder.imgUsed.setImageResource(R.drawable.ic_use_late_kiet); // icon dùng muộn màu xám
             holder.tvUsed.setText("Dùng muộn");
             holder.tvUsed.setTextColor(Color.GRAY);
+            // Disable nút để không thể click
+            holder.btnUsed.setClickable(false);
+            holder.btnUsed.setEnabled(false);
+            holder.btnSkip.setClickable(false);
+            holder.btnSkip.setEnabled(false);
 
             ((LinearLayout) holder.btnUsed.getParent()).setGravity(Gravity.CENTER_HORIZONTAL);
         } else if (item.isUsed()) {
             holder.btnUsed.setVisibility(View.VISIBLE);
             holder.btnSkip.setVisibility(GONE);
-            holder.imgUsed.setImageResource(R.drawable.check_selector);
+            holder.imgUsed.setImageResource(R.drawable.check_selector_kiet);
             holder.tvUsed.setText(" Đã dùng ");
             holder.tvUsed.setTextColor(Color.parseColor("#2196F3"));
-
+            // Disable nút để không thể click
+            holder.btnUsed.setClickable(false);
+            holder.btnUsed.setEnabled(false);
+            holder.btnSkip.setClickable(false);
+            holder.btnSkip.setEnabled(false);
             ((LinearLayout) holder.btnUsed.getParent()).setGravity(Gravity.CENTER_HORIZONTAL);
         } else if (item.isSkipped()) {
             holder.btnUsed.setVisibility(GONE);
             holder.btnSkip.setVisibility(View.VISIBLE);
-            holder.imgSkip.setImageResource(R.drawable.skip_selector);
+            holder.imgSkip.setImageResource(R.drawable.skip_selector_kiet);
             holder.tvSkip.setText(" Bỏ qua ");
             holder.tvSkip.setTextColor(Color.RED);
-
+            // Disable nút để không thể click
+            holder.btnUsed.setClickable(false);
+            holder.btnUsed.setEnabled(false);
+            holder.btnSkip.setClickable(false);
+            holder.btnSkip.setEnabled(false);
             ((LinearLayout) holder.btnSkip.getParent()).setGravity(Gravity.CENTER_HORIZONTAL);
         } else {
             // Trạng thái ban đầu
             holder.btnUsed.setVisibility(View.VISIBLE);
             holder.btnSkip.setVisibility(View.VISIBLE);
-            holder.imgUsed.setImageResource(R.drawable.check___off);
+            holder.imgUsed.setImageResource(R.drawable.check___off_kiet);
             holder.tvUsed.setText("Dùng");
             holder.tvUsed.setTextColor(Color.parseColor("#2196F3"));
 
-            holder.imgSkip.setImageResource(R.drawable.skip___off);
+            holder.imgSkip.setImageResource(R.drawable.skip___off_kiet);
             holder.tvSkip.setText("Bỏ qua");
             holder.tvSkip.setTextColor(Color.BLACK);
 

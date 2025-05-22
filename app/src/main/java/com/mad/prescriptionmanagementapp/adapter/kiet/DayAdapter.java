@@ -38,7 +38,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
     @NonNull
     @Override
     public DayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_day, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_day_kiet, parent, false);
         return new DayViewHolder(view);
     }
 
@@ -74,7 +74,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
             // Chỉ bôi nếu cả ngày và tháng đều trùng
             boolean isSelected = (day.getDayNumber() == selectedDay && day.getMonth() == selectedMonth);
 
-            itemView.setBackgroundResource(isSelected ? R.drawable.bg_selected_day : android.R.color.transparent);
+            itemView.setBackgroundResource(isSelected ? R.drawable.bg_selected_day_kiet : android.R.color.transparent);
             int textColor = ContextCompat.getColor(context, isSelected ? android.R.color.white : android.R.color.black);
             tvDayOfWeek.setTextColor(textColor);
             tvDayNumber.setTextColor(textColor);

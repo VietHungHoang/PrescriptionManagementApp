@@ -23,7 +23,7 @@ public class MedicineScheduleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_medicine_schedule);
+        setContentView(R.layout.activity_medicine_schedule_kiet);
         // Thêm sự kiện nút back
         ImageView btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {

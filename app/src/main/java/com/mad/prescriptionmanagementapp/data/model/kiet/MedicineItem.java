@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class MedicineItem implements Serializable {
     private String time;
     private String date;
+    private Long id;
     private String medicineList;  // đổi thành String, không phải StringBuilder bên ngoài
     private boolean isUsed;
     private boolean isSkipped;
@@ -19,6 +20,14 @@ public class MedicineItem implements Serializable {
     }
 
     // constructor, getter, setter...
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public MedicineItem() {
         medicineList = new StringBuilder().toString(); // hoặc khởi tạo null và set lại sau
