@@ -18,6 +18,7 @@ import com.mad.prescriptionmanagementapp.data.remote.NetworkClient;
 import com.mad.prescriptionmanagementapp.data.remote.api.UnitService;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.UnitResponse;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -36,6 +37,7 @@ public class UnitRepository {
 
     private volatile boolean isFetchInProgress = false;
     private volatile boolean isFetchingUnit = false;
+    private final SharedPrefUtils sharedPrefUtils;
 
     public UnitRepository(Application application) {
         AppDatabase database = AppDatabase.getDatabase(application);
@@ -49,6 +51,7 @@ public class UnitRepository {
         });
         this.databaseExecutor = AppDatabase.databaseWriteExecutor; // Lấy Executor từ AppDatabase
 //        this.unitList = unitDao.getAllUnits();
+        sharedPrefUtils = new SharedPrefUtils(application);
     }
 
     public LiveData<List<Unit>> getAllUnit() {
@@ -64,7 +67,7 @@ public class UnitRepository {
 
     private void fetchUnitsFromApi() {
         this.isFetchingUnit = true;
-        Call<ResponseObject<List<UnitResponse>>> call = this.unitService.getAllUnit();
+        Call<ResponseObject<List<UnitResponse>>> call = this.unitService.getAllUnit("Bearer " + sharedPrefUtils.getToken());
         call.enqueue(new Callback<ResponseObject<List<UnitResponse>>>() {
             @Override
             public void onResponse(@NonNull Call<ResponseObject<List<UnitResponse>>> call,

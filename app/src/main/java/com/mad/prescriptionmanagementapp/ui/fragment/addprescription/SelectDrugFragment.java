@@ -63,7 +63,7 @@ public class SelectDrugFragment extends Fragment {
     }
 
     private void setAdapter() {
-        this.drugsAdapter = new DrugsAdapter(new ArrayList<>(), new OnDrugClickListener() {
+        this.drugsAdapter = new DrugsAdapter(this.shareViewModel, new ArrayList<>(), new OnDrugClickListener() {
             @Override
             public void onItemClick(SimpleDrug drug) {
                 if (SelectDrugFragment.this.shareViewModel.existedDrug(drug.getId())) {
@@ -96,6 +96,10 @@ public class SelectDrugFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 drugsAdapter.filter(s.toString());
             }
+        });
+
+        this.binding.btnAddDrug.setOnClickListener(v -> {
+
         });
     }
 

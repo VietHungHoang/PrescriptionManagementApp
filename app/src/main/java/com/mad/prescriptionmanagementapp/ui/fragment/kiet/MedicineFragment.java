@@ -57,7 +57,7 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
         // Khởi tạo Retrofit và MedicineApi chỉ khi chưa khởi tạo
         if (medicineApi == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://172.11.78.222:8080/")  // Đảm bảo URL là chính xác (nếu dùng Emulator)
+                    .baseUrl("http://172.20.10.2:8080/")  // Đảm bảo URL là chính xác (nếu dùng Emulator)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

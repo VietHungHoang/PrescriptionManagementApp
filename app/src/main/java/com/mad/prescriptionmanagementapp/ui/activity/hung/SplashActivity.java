@@ -25,9 +25,9 @@ public class SplashActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
-
         LoginRepository loginRepository = new LoginRepository();
-        loginRepository.checkToken(sharedPrefUtils.getToken(), new Callback<ResponseObject<String>>() {
+        String token = sharedPrefUtils.getToken();
+        loginRepository.checkToken(token, new Callback<ResponseObject<String>>() {
             @Override
             public void onResponse(Call<ResponseObject<String>> call, Response<ResponseObject<String>> response) {
                 Intent intent;
@@ -40,14 +40,16 @@ public class SplashActivity extends AppCompatActivity {
                     sharedPrefUtils.saveToken(null, null);
                 }
 
-                SplashActivity.this.startActivity(intent);
-                SplashActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                SplashActivity.this.finish();
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
             }
 
             @Override
             public void onFailure(Call<ResponseObject<String>> call, Throwable throwable) {
                 Toast.makeText(SplashActivity.this, "Cannot connect to server", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                finish();
             }
         });
     }

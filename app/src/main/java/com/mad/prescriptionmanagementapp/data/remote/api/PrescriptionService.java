@@ -4,10 +4,13 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionReq
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface PrescriptionService {
 
     @POST("prescriptions")
-    Call<ResponseObject<Void>> saveToServer(@Body PrescriptionRequest prescriptionRequest);
+    Call<ResponseObject<Void>> saveToServer(
+            @Header("Authorization") String authHeader,
+            @Body PrescriptionRequest prescriptionRequest);
 }

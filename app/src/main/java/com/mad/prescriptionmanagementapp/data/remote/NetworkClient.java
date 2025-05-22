@@ -9,6 +9,7 @@ import com.mad.prescriptionmanagementapp.data.remote.api.UnitService;
 import com.mad.prescriptionmanagementapp.data.remote.api.UserService;
 import com.mad.prescriptionmanagementapp.util.Constants;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -22,7 +23,6 @@ public class NetworkClient {
     private static UnitService unitService = null;
 
     private static PrescriptionService prescriptionService = null;
-
     private static Retrofit getClient() {
         if (retrofit == null) {
             ObjectMapper objectMapper = new ObjectMapper()

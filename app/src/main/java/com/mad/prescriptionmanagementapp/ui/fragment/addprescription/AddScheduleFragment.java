@@ -269,7 +269,6 @@ public class AddScheduleFragment extends Fragment {
                         else {
                             AddScheduleFragment.this.requireActivity().getSupportFragmentManager().popBackStack();
                         }
-                        requireActivity().getSupportFragmentManager().popBackStack();
                     }
                 });
     }

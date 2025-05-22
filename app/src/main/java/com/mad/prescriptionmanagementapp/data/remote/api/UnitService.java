@@ -8,8 +8,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 
 public interface UnitService {
     @GET("units/all")
-    Call<ResponseObject<List<UnitResponse>>> getAllUnit();
+    Call<ResponseObject<List<UnitResponse>>> getAllUnit(@Header("Authorization") String authHeader);
 }

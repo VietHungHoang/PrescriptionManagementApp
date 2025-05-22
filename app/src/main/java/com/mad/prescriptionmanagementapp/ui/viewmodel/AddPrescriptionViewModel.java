@@ -253,14 +253,12 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
                             scheduleEntity.setAlarmManagerRequestId(requestId);
                         }
                         db.scheduleDao().updateSchedules(list);
-                        AlarmScheduler.scheduleAlarmByTime(context, list.get(0));
+                        AlarmScheduler.scheduleAlarmByTime(context, list.get(0), 0);
                     }
 
                 }
-
-
-//                PrescriptionRequest prescriptionRequest = Tools.prescriptionToRequest(pres, pendingSchedules);
-//                this.prescriptionRepository.saveToServer(prescriptionRequest);
+                PrescriptionRequest prescriptionRequest = Tools.prescriptionToRequest(pres, pendingSchedules);
+                this.prescriptionRepository.saveToServer(prescriptionRequest);
 //                for (ScheduleEntityDTO schedule : pendingSchedules) {
 //                    AlarmScheduler.scheduleAlarm(context, schedule);
 //                }

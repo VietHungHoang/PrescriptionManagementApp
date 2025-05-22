@@ -22,8 +22,10 @@ import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 import com.mad.prescriptionmanagementapp.util.Tools;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,7 +58,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             }
 
             List<ScheduleEntityDTO> remindersForThisTime = db.scheduleDao()
-                    .getByRequestId(ReminderStatus.PENDING, mainReminder.getScheduleEntity().getAlarmManagerRequestId());
+                    .getSnozeeByRequestIdAndStatus(mainReminder.getScheduleEntity().getAlarmManagerRequestId(), ReminderStatus.PENDING, ReminderStatus.NOTIFIED);
 
             if (remindersForThisTime.isEmpty()) {
                 return;
@@ -97,24 +99,48 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             // Nội dung thông báo
             if (remindersForThisTime.size() == 1) {
                 ScheduleEntityDTO singleReminder = remindersForThisTime.get(0);
-                builder.setContentText(String.format(Locale.getDefault(), "Uống: %s %s %s",
-                        singleReminder.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(singleReminder.getDosage().getDosage()), singleReminder.getDrugInPresDTO().getUnitEntity().getName()));
+                builder.setContentText(String.format(Locale.getDefault(), "Đơn thuốc: %s\n%s %s %s",
+                        singleReminder.getDrugInPresDTO().getPrescriptionEntity().getName(), singleReminder.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(singleReminder.getDosage().getDosage()), singleReminder.getDrugInPresDTO().getUnitEntity().getName()));
             } else {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-                inboxStyle.setBigContentTitle("Đến giờ uống thuốc!");
+                inboxStyle.setBigContentTitle("Đã đến giờ uống thuốc!");
+                Map<String, List<ScheduleEntityDTO>> grouped = new LinkedHashMap<>();
+
+// Nhóm theo tên đơn thuốc
+                for (ScheduleEntityDTO r : remindersForThisTime) {
+                    String presName = r.getDrugInPresDTO().getPrescriptionEntity().getName();
+                    grouped.putIfAbsent(presName, new ArrayList<>());
+                    grouped.get(presName).add(r);
+                }
+
                 StringBuilder summaryText = new StringBuilder();
-                for (int i = 0; i < remindersForThisTime.size(); i++) {
-                    ScheduleEntityDTO r = remindersForThisTime.get(i);
-                    String line = String.format(Locale.getDefault(), "Uống: %s %s %s",
-                            r.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(r.getDosage().getDosage()), r.getDrugInPresDTO().getUnitEntity().getName());
-                    inboxStyle.addLine(line);
-                    if (i < 2) { // Hiển thị 2 dòng đầu ở dạng thu gọn
-                        summaryText.append(line).append(i == 0 && remindersForThisTime.size() > 1 ? " | " : "");
+
+                for (Map.Entry<String, List<ScheduleEntityDTO>> entry : grouped.entrySet()) {
+                    String presName = entry.getKey();
+                    List<ScheduleEntityDTO> list = entry.getValue();
+
+                    inboxStyle.addLine("[" + presName + "]");
+                    for (ScheduleEntityDTO r : list) {
+                        String line = String.format(Locale.getDefault(), "- Uống: %s %s %s",
+                                r.getDrugInPresDTO().getDrugEntity().getName(),
+                                Tools.formatNumber(r.getDosage().getDosage()),
+                                r.getDrugInPresDTO().getUnitEntity().getName());
+                        inboxStyle.addLine(line);
+                    }
+
+                    // Tạo summaryText gọn gọn
+                    if (summaryText.length() == 0 && !list.isEmpty()) {
+                        ScheduleEntityDTO first = list.get(0);
+                        summaryText.append(String.format(Locale.getDefault(), "Uống: %s %s %s",
+                                first.getDrugInPresDTO().getDrugEntity().getName(),
+                                Tools.formatNumber(first.getDosage().getDosage()),
+                                first.getDrugInPresDTO().getUnitEntity().getName()));
+                        if (remindersForThisTime.size() > 1) {
+                            summaryText.append("... và các thuốc khác");
+                        }
                     }
                 }
-                if (remindersForThisTime.size() > 2) {
-                    summaryText.append("... và các thuốc khác");
-                }
+
                 builder.setContentText(summaryText.toString());
                 builder.setStyle(inboxStyle);
 
@@ -133,7 +159,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
             builder.addAction(R.drawable.check_selector, "Đã uống", confirmPendingIntent);
- 
+
             // Action: Snooze
             Intent snoozeIntent = new Intent(context, ActionHandlerBroadcastReceiver.class);
             snoozeIntent.setAction(Constants.ACTION_SNOOZE);

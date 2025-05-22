@@ -31,7 +31,10 @@ public interface ScheduleDao {
     ScheduleEntityDTO getById(long id);
 
     @Query("SELECT * FROM schedules WHERE alarm_manager_request_id = :requestId")
-    ScheduleEntity getByAlarmManagerRequestId(int requestId);
+    List<ScheduleEntityDTO> getByAlarmManagerRequestId(int requestId);
+
+    @Query("SELECT * FROM schedules WHERE alarm_manager_request_id = :requestId AND (status = :status1 OR status = :status2 )")
+    List<ScheduleEntityDTO> getSnozeeByRequestIdAndStatus(int requestId, ReminderStatus status1, ReminderStatus status2);
 
     @Query("SELECT * FROM schedules WHERE status = :status AND date_time >= :currentDateTime ORDER BY date_time ASC")
     List<ScheduleEntityDTO> getPendingReminders(ReminderStatus status, LocalDateTime currentDateTime);

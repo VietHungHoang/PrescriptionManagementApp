@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,15 +97,19 @@ public class AddPrescriptionInfoFragment extends Fragment {
 
     private void setOnclickView() {
         this.binding.btnAddDrug.setOnClickListener(v -> {
-            Tools.replaceFragment(this.requireActivity(), new SelectDrugFragment(), FragmentName.API_TO_SD);
+                Tools.replaceFragment(this.requireActivity(), new SelectDrugFragment(), FragmentName.API_TO_SD);
         });
 
         this.binding.btnSave.setOnClickListener(v -> {
             if (this.viewModel.validateAddPrescriptionInfo(this.shareViewModel.getPrescription().getValue(), this.shareViewModel.getSelectedDrugs().getValue())) {
                 this.shareViewModel.handleBtnSavePres(this.requireContext(), binding.edtConsultationDate.getText().toString(), binding.edtFollowUpDate.getText().toString());
                 new SuccessDialog(this, "Thêm đơn thuốc thành công", true).showDialog();
-                Intent intent = new Intent(requireActivity(), ListPrescriptionActivity.class);
-                requireActivity().startActivity(intent);
+                new Handler().postDelayed(() -> {
+                    Intent intent = new Intent(requireActivity(), ListPrescriptionActivity.class);
+                    requireActivity().startActivity(intent);
+                    requireActivity().finish();
+                }, 1000); // 1000ms = 1s
+
             }
 
         });

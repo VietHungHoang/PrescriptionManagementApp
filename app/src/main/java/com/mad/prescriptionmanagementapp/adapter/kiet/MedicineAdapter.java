@@ -62,11 +62,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
             holder.imgUsed.setImageResource(R.drawable.ic_use_late_kiet); // icon dùng muộn màu xám
             holder.tvUsed.setText("Dùng muộn");
             holder.tvUsed.setTextColor(Color.GRAY);
-            // Disable nút để không thể click
-            holder.btnUsed.setClickable(false);
-            holder.btnUsed.setEnabled(false);
-            holder.btnSkip.setClickable(false);
-            holder.btnSkip.setEnabled(false);
+
 
             ((LinearLayout) holder.btnUsed.getParent()).setGravity(Gravity.CENTER_HORIZONTAL);
         } else if (item.isUsed()) {
@@ -75,11 +71,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.ViewHo
             holder.imgUsed.setImageResource(R.drawable.check_selector_kiet);
             holder.tvUsed.setText(" Đã dùng ");
             holder.tvUsed.setTextColor(Color.parseColor("#2196F3"));
-            // Disable nút để không thể click
-            holder.btnUsed.setClickable(false);
-            holder.btnUsed.setEnabled(false);
-            holder.btnSkip.setClickable(false);
-            holder.btnSkip.setEnabled(false);
+
             ((LinearLayout) holder.btnUsed.getParent()).setGravity(Gravity.CENTER_HORIZONTAL);
         } else if (item.isSkipped()) {
             holder.btnUsed.setVisibility(GONE);

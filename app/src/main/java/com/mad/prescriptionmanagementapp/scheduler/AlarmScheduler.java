@@ -80,7 +80,7 @@ public class AlarmScheduler {
 //        }
     }
 
-    public static void scheduleAlarmByTime(Context context, ScheduleEntity schedule) {
+    public static void scheduleAlarmByTime(Context context, ScheduleEntity schedule, int plusTime) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
             return;
@@ -105,10 +105,8 @@ public class AlarmScheduler {
             }
         }
 
-
-
         try {
-            long millis = schedule.getDateTime()
+            long millis = schedule.getDateTime().plusMinutes(plusTime)
                     .atZone(ZoneId.systemDefault())
                     .toInstant()
                     .toEpochMilli();

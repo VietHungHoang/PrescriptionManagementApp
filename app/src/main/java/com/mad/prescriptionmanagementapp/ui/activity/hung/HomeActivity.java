@@ -43,12 +43,6 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
-
         this.binding = ActivityHomeBinding.inflate(this.getLayoutInflater());
         this.setContentView(this.binding.getRoot());
 
@@ -62,7 +56,14 @@ public class HomeActivity extends AppCompatActivity {
     }
     private void setupUI() {
         String name = this.sharedPrefUtils.getName();
-        String nameView = "Chào, " + name != null ? name : "Guest";
+        String nameView;
+        if(name != null && !name.isEmpty()) {
+            nameView = "Chào, " + name;
+        }
+        else {
+            nameView = "Chào, Guest";
+        }
+
         this.binding.tvGreeting.setText(nameView);
 
         this.binding.tvDate.setText("Hôm nay, " + new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date()));

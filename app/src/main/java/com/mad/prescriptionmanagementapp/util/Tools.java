@@ -57,7 +57,6 @@ public class Tools {
                         R.anim.fade_out,
                         R.anim.zoom_out,
                         R.anim.fade_out)
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment_container, newFragment)
                 .addToBackStack(transactionName)
                 .commit();

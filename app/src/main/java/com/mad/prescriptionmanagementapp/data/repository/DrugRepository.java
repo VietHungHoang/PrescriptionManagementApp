@@ -18,6 +18,7 @@ import com.mad.prescriptionmanagementapp.data.remote.api.DrugService;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.UnitResponse;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -49,6 +50,7 @@ public class DrugRepository {
     private volatile boolean isFetchUnit = false;
     // Constructor nhận Application context để lấy DAO và Executor
     // (Trong thực tế, các thành phần này nên được inject bởi Hilt/Dagger)
+    private final SharedPrefUtils sharedPrefUtils;
     public DrugRepository(Application application) {
         this.drugService = NetworkClient.getDrugService();
         AppDatabase database = AppDatabase.getDatabase(application);
@@ -59,6 +61,7 @@ public class DrugRepository {
 //        this.unitList = unitDao.getAllUnits();
         Integer t = drugDao.getDrugCount1().getValue(); // Lấy LiveData từ DAO
         List<DrugEntity> test = this.cachedDrugs.getValue();
+        sharedPrefUtils = new SharedPrefUtils(application);
     }
 
     /**
@@ -141,7 +144,7 @@ public class DrugRepository {
 //        errorMessage.postValue(null); // Xóa lỗi cũ
         Log.d(TAG, "Fetching drugs from API...");
 
-        Call<ResponseObject<List<SimpleDrug>>> call = this.drugService.getDrugsSimple();
+        Call<ResponseObject<List<SimpleDrug>>> call = this.drugService.getDrugsSimple("Bearer " + sharedPrefUtils.getToken());
         call.enqueue(new Callback<ResponseObject<List<SimpleDrug>>>() {
             @Override
             public void onResponse(@NonNull Call<ResponseObject<List<SimpleDrug>>> call,
@@ -200,7 +203,7 @@ public class DrugRepository {
     }
 
     public void getAllDrugsSimple(@NonNull Callback<ResponseObject<List<SimpleDrug>>> callback) {
-        Call<ResponseObject<List<SimpleDrug>>> call = this.drugService.getDrugsSimple();
+        Call<ResponseObject<List<SimpleDrug>>> call = this.drugService.getDrugsSimple("Bearer " + sharedPrefUtils.getToken());
         call.enqueue(callback);
     }
 }

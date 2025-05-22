@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.kiet.PrescriptionGroupAdapter;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.PrescriptionResponse;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Header;
 
 public class ListPrescriptionActivity extends AppCompatActivity {
 
@@ -33,6 +35,8 @@ public class ListPrescriptionActivity extends AppCompatActivity {
     private PrescriptionGroupAdapter adapter;
     private PrescriptionApi api;
     private ImageView btnBack;
+
+    private SharedPrefUtils sharedPrefUtils;
 
 
     @Override
@@ -44,7 +48,7 @@ public class ListPrescriptionActivity extends AppCompatActivity {
 //        bottomNav.setSelectedItemId(R.id.nav_invoice);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.11.78.222:8080/") // Địa chỉ localhost trên emulator
+                .baseUrl("http://192.168.0.100:8080/") // Địa chỉ localhost trên emulator
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -59,14 +63,15 @@ public class ListPrescriptionActivity extends AppCompatActivity {
         btnDone = findViewById(R.id.btn_done);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        sharedPrefUtils = new SharedPrefUtils(this);
         MaterialButtonToggleGroup toggleGroup = findViewById(R.id.tabGroup);
         loadPrescriptions(0);
         toggleGroup.check(R.id.btn_remind);
         updateTabState(btnRemind, true);
         updateTabState(btnDone, false);
 
-        toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+
+                toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 updateTabState(btnRemind, checkedId == R.id.btn_remind);
                 updateTabState(btnDone, checkedId == R.id.btn_done);
@@ -93,7 +98,7 @@ public class ListPrescriptionActivity extends AppCompatActivity {
     }
 
     private void loadPrescriptions(int status) {
-        api.getPrescriptionsByStatus(status).enqueue(new Callback<List<PrescriptionResponse>>() {
+        api.getPrescriptionsByStatus("Bearer " + sharedPrefUtils.getToken(), status).enqueue(new Callback<List<PrescriptionResponse>>() {
             @Override
             public void onResponse(Call<List<PrescriptionResponse>> call, Response<List<PrescriptionResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -136,6 +141,6 @@ public class ListPrescriptionActivity extends AppCompatActivity {
 
     public interface PrescriptionApi {
         @retrofit2.http.GET("api/v1/prescriptions/getByStatus")
-        retrofit2.Call<List<PrescriptionResponse>> getPrescriptionsByStatus(@retrofit2.http.Query("status") int status);
+        retrofit2.Call<List<PrescriptionResponse>> getPrescriptionsByStatus(@Header("Authorization") String authHeader, @retrofit2.http.Query("status") int status);
     }
 }

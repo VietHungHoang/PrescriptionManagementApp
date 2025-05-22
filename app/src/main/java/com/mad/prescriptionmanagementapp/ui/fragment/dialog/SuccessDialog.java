@@ -92,6 +92,6 @@ public class SuccessDialog {
 
             // Đóng dialog sau khi animation hoàn tất
             new Handler().postDelayed(alertDialog::dismiss, 500); // Đợi cho animation hoàn tất
-        }, 2000); // 3 giây hiển thị trước khi đóng
+        }, 1000); // 3 giây hiển thị trước khi đóng
     }
 }

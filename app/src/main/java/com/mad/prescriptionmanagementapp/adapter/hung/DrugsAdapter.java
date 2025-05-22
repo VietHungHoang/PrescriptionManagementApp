@@ -1,13 +1,16 @@
 package com.mad.prescriptionmanagementapp.adapter.hung;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderDrugBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnDrugClickListener;
+import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +21,14 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
     private List<SimpleDrug> drugs;
     private List<SimpleDrug> filteredList;
 
-    public DrugsAdapter(List<SimpleDrug> drugs, OnDrugClickListener listener) {
+    private AddPrescriptionViewModel viewModel;
+
+    public DrugsAdapter(AddPrescriptionViewModel shareViewModel, List<SimpleDrug> drugs, OnDrugClickListener listener) {
 //        super(DIFF_CALLBACK);
         this.drugs = drugs;
         this.filteredList = drugs;
         this.listener = listener;
+        viewModel = shareViewModel;
     }
 
     @NonNull
@@ -35,7 +41,7 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DrugViewHolder holder, int position) {
-        holder.bind(filteredList.get(position));
+        holder.bind(filteredList.get(position), viewModel.getSelectedDrugs().getValue());
     }
 
     @Override
@@ -73,8 +79,15 @@ public class DrugsAdapter extends RecyclerView.Adapter<DrugsAdapter.DrugViewHold
             this.clickListener = clickListener;
         }
 
-        public void bind(SimpleDrug drug) {
+        public void bind(SimpleDrug drug, List<DrugInPres> drugInPresList) {
             this.binding.drugName.setText(drug.getName());
+            for(DrugInPres x : drugInPresList) {
+                if(drug.getId() == x.getDrug().getId()) {
+                    this.binding.drugName.setTextColor(Color.GRAY);
+                    this.binding.drugName.setEnabled(false);
+                    return;
+                }
+            }
             this.binding.getRoot().setOnClickListener(v -> {
                 if (clickListener != null) {
                     clickListener.onItemClick(drug);

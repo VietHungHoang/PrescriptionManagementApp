@@ -13,13 +13,14 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.response.UnitResponse;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface DrugService {
 
     @GET("drugs/simple")
-    Call<ResponseObject<List<SimpleDrug>>> getDrugsSimple();
+    Call<ResponseObject<List<SimpleDrug>>> getDrugsSimple(@Header("Authorization") String authHeader);
 
     @GET("drugs/unit")
     Call<ResponseObject<List<UnitResponse>>> getAllUnit();
