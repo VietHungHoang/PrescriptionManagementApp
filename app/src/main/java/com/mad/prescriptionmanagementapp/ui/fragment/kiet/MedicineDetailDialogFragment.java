@@ -42,8 +42,7 @@ public class MedicineDetailDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.dialog_medicine_detail, container, false);
-        return null;
+        return inflater.inflate(R.layout.dialog_medicine_detail_kiet, container, false);
     }
 
     @Override

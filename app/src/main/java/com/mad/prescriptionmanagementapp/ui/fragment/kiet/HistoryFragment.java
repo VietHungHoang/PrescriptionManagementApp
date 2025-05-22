@@ -39,7 +39,7 @@ public class HistoryFragment extends Fragment implements OnMedicineActionListene
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_history_item, container, false);
+        return inflater.inflate(R.layout.fragment_history_item_kiet, container, false);
     }
 
     @Override

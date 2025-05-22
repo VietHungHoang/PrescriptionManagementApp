@@ -28,10 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +47,7 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_medicine_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_medicine_list_kiet, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -85,73 +83,58 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
                     filteredMedicineList.clear();
                     String date = response.body().getDate();
 
-                    Map<String, StringBuilder> timeGroupedMedicines = new HashMap<>();
-                    Map<String, MedicineItem> timeStatusMap = new HashMap<>();
-
+                    // Tạo list MedicineItem mới, mỗi thuốc + mỗi giờ uống là một item riêng
                     for (MedicineResponse.TimeDosage dosage : response.body().getTimeDosages()) {
                         String time = dosage.getTime();
-                        StringBuilder medicineList = timeGroupedMedicines.getOrDefault(time, new StringBuilder());
 
                         for (MedicineResponse.Drug drug : dosage.getDrugs()) {
-                            medicineList.append(drug.getName())
-                                    .append(" - ")
-                                    .append(drug.getDosage())
-                                    .append(drug.getUnit())
-                                    .append("\n");
-                        }
-                        timeGroupedMedicines.put(time, medicineList);
+                            String medicineStr = drug.getName() + " - " + drug.getDosage() + drug.getUnit();
 
-                        MedicineItem item = timeStatusMap.getOrDefault(time, new MedicineItem());
-                        item.setTime(time);
-                        item.setDate(date);
+                            MedicineItem item = new MedicineItem();
+                            item.setTime(time);
+                            item.setDate(date);
+                            item.setMedicineList(medicineStr);
+                            item.setId(dosage.getId());
 
-                        if (dosage.isEditted()) {
-                            if (dosage.getStatus() == 2) {
-                                item.setUsedLate(true);
-                                item.setUsed(false);
-                                item.setSkipped(false);
-                            } else if (dosage.getStatus() == 1) {
-                                item.setUsed(true);
-                                item.setSkipped(false);
-                                item.setUsedLate(false);
-                            } else if (dosage.getStatus() == 0) {
-                                item.setUsed(false);
-                                item.setSkipped(true);
-                                item.setUsedLate(false);
+                            if (dosage.isEditted()) {
+                                if (dosage.getStatus() == 2) {
+                                    item.setUsedLate(false);
+                                    item.setUsed(true);
+                                    item.setSkipped(false);
+                                } else if (dosage.getStatus() == 1) {
+                                    item.setUsed(false);
+                                    item.setSkipped(false);
+                                    item.setUsedLate(true);
+                                } else if (dosage.getStatus() == 0) {
+                                    item.setUsed(false);
+                                    item.setSkipped(true);
+                                    item.setUsedLate(false);
+                                } else {
+                                    item.setUsed(false);
+                                    item.setSkipped(false);
+                                    item.setUsedLate(false);
+                                }
                             } else {
                                 item.setUsed(false);
                                 item.setSkipped(false);
                                 item.setUsedLate(false);
                             }
-                        } else {
-                            item.setUsed(false);
-                            item.setSkipped(false);
-                            item.setUsedLate(false);
-                        }
-                        timeStatusMap.put(time, item);
-                    }
 
-                    // Sắp xếp danh sách thời gian tăng dần
-                    List<String> sortedTimes = new ArrayList<>(timeGroupedMedicines.keySet());
-                    sortedTimes.sort((t1, t2) -> {
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                            Date d1 = sdf.parse(t1);
-                            Date d2 = sdf.parse(t2);
-                            return d1.compareTo(d2);
-                        } catch (Exception e) {
-                            return t1.compareTo(t2);
-                        }
-                    });
-
-                    filteredMedicineList.clear();
-                    for (String time : sortedTimes) {
-                        MedicineItem item = timeStatusMap.get(time);
-                        if (item != null) {
-                            item.setMedicineList(timeGroupedMedicines.get(time).toString().trim());
                             filteredMedicineList.add(item);
                         }
                     }
+
+                    // Sắp xếp theo giờ uống tăng dần (HH:mm)
+                    filteredMedicineList.sort((item1, item2) -> {
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                            Date d1 = sdf.parse(item1.getTime());
+                            Date d2 = sdf.parse(item2.getTime());
+                            return d1.compareTo(d2);
+                        } catch (Exception e) {
+                            return item1.getTime().compareTo(item2.getTime());
+                        }
+                    });
 
                     adapter.updateList(filteredMedicineList);
 
@@ -194,8 +177,8 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
     @Override
     public void onUsedClicked(int position) {
         MedicineItem item = filteredMedicineList.get(position);
-
-        String date = item.getDate();
+        Long id = item.getId();
+        String date = item.getTime();
         String time = item.getTime();
         String defaultTimeString = date + "T" + time + ":00";
 
@@ -208,7 +191,7 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn đã dùng thuốc lúc " + time + "?")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    sendStatusToBackend(defaultTimeString, 2, selectedTimeString, true);
+                    sendStatusToBackend(id, 2, selectedTimeString, true);
                     item.setUsed(true);
                     Toast.makeText(getContext(), "Đã dùng thuốc lúc " + time, Toast.LENGTH_SHORT).show();
 
@@ -227,7 +210,7 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
         String date = item.getDate();
         String time = item.getTime();
         String defaultTimeString = date + "T" + time + ":00";
-
+        Long id = item.getId();
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
         String selectedTimeString = dateFormat.format(calendar.getTime());
@@ -237,7 +220,7 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
                 .setTitle("Xác nhận")
                 .setMessage("Bạn có chắc chắn muốn bỏ qua thuốc lúc " + time + "?")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    sendStatusToBackend(defaultTimeString, 0, selectedTimeString, true);
+                    sendStatusToBackend(id, 0, selectedTimeString, true);
                     item.setSkipped(true);
                     Toast.makeText(getContext(), "Đã bỏ qua thuốc lúc " + time, Toast.LENGTH_SHORT).show();
 
@@ -251,14 +234,11 @@ public class MedicineFragment extends Fragment implements OnMedicineActionListen
 
 
 
-    private void sendStatusToBackend(String defaultTimeString, int status, String selectedTimeString, boolean editted) {
-        if (defaultTimeString == null || selectedTimeString == null) {
-            Log.e("STATUS", "Thời gian không hợp lệ");
-            return;
-        }
+    private void sendStatusToBackend(Long id, int status, String selectedTimeString, boolean editted) {
+
 
         // Tạo request với chuỗi thời gian
-        StatusUpdateRequest request = new StatusUpdateRequest(defaultTimeString, status, selectedTimeString,editted);
+        StatusUpdateRequest request = new StatusUpdateRequest(id, status, selectedTimeString,editted);
 
         // Gửi yêu cầu đến backend
         medicineApi.updateStatus(request).enqueue(new Callback<StatusUpdateResponse>() {

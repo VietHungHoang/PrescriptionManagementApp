@@ -13,7 +13,6 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.DrugRespo
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.ScheduleResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DrugInPrescriptionAdapter extends RecyclerView.Adapter<DrugInPrescriptionAdapter.DrugViewHolder> {
 
@@ -31,7 +30,7 @@ public class DrugInPrescriptionAdapter extends RecyclerView.Adapter<DrugInPrescr
     @NonNull
     @Override
     public DrugViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_prescription, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_prescription_kiet, parent, false);
         return new DrugViewHolder(view);
     }
 
@@ -59,21 +58,27 @@ public class DrugInPrescriptionAdapter extends RecyclerView.Adapter<DrugInPrescr
         public void bind(DrugResponse drug) {
             tvMedicineName.setText(drug.getDrugName());
 
-            String scheduleStr = "";
+            String scheduleStr = "Chưa có giờ uống";
             List<ScheduleResponse> schedules = drug.getSchedules();
             if (schedules != null && !schedules.isEmpty()) {
-                scheduleStr = schedules.stream()
-                        .map(sch -> formatDateTimeString(sch.getDate()))
-                        .collect(Collectors.joining(" ; "));
-            } else {
-                scheduleStr = "Chưa có giờ uống";
+                // Tìm giờ uống sớm nhất
+                String earliestTime = schedules.stream()
+                        .map(ScheduleResponse::getDate)
+                        .filter(dateStr -> dateStr != null && !dateStr.isEmpty())
+                        .min(String::compareTo)  // So sánh theo chuỗi ISO, giờ nhỏ nhất sẽ đứng đầu
+                        .orElse("");
+
+                if (!earliestTime.isEmpty()) {
+                    String formattedTime = formatDateTimeString(earliestTime);
+                    scheduleStr = "Giờ uống gần nhất: " + formattedTime;
+                }
             }
+
             tvSchedule.setText(scheduleStr);
 
             tvViewInfo.setText("Xem thông tin chi tiết thuốc");
 
-            // Nếu muốn xử lý click Xem thông tin chi tiết thuốc:
-            // tvViewInfo.setOnClickListener(v -> { ... });
+            // Xử lý click xem chi tiết nếu cần
         }
 
         private String formatDateTimeString(String isoDateTime) {

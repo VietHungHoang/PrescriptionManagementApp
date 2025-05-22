@@ -40,7 +40,7 @@ public class FragmentCalendar extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_calendar_kiet, container, false);
 
         tvMonthYear = view.findViewById(R.id.tvMonthYear);
         recyclerViewDays = view.findViewById(R.id.recyclerViewDays);
@@ -153,8 +153,9 @@ public class FragmentCalendar extends Fragment {
                     Calendar selectedCalendar = Calendar.getInstance();
                     selectedCalendar.set(selectedYear, selectedMonth, selectedDayOfMonth);
 
-                    String selectedDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    String selectedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                             .format(selectedCalendar.getTime());
+
 
                     if (dateSelectedListener != null) {
                         dateSelectedListener.onDateSelected(selectedDate);

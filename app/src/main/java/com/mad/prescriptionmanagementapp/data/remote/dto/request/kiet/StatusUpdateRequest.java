@@ -1,17 +1,25 @@
 package com.mad.prescriptionmanagementapp.data.remote.dto.request.kiet;
 
 public class StatusUpdateRequest {
-    private String defaultTime;  // Thời gian uống thuốc mặc định (giờ uống thuốc)
+    private Long  id;  // Thời gian uống thuốc mặc định (giờ uống thuốc)
     private int status;          // 0 = Bỏ qua, 1 = Dùng muộn, 2 = Dùng đúng giờ
     private String selectedTime; // Thời gian người dùng chọn (thời gian hiện tại)
     private boolean editted;
 
-    public StatusUpdateRequest(String defaultTime, int status, String selectedTime, boolean editted) {
-        this.defaultTime = defaultTime;
+    public StatusUpdateRequest(Long id, int status, String selectedTime, boolean editted) {
+        this.id = id;
         this.status = status;
         this.selectedTime = selectedTime;
         this.editted = editted;
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean isEditted() {
@@ -22,13 +30,6 @@ public class StatusUpdateRequest {
         this.editted = editted;
     }
 
-    public String getDefaultTime() {
-        return defaultTime;
-    }
-
-    public void setDefaultTime(String defaultTime) {
-        this.defaultTime = defaultTime;
-    }
 
     public int getStatus() {
         return status;

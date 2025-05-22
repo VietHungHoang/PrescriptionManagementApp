@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activity.kiet.MedicineScheduleActivity">
+    tools:context=".ui.activity.kiet.HistoryMedicineActivity">
 
     <!-- Layout chính -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Quay lại"
-                android:src="@drawable/back_btn"
+                android:src="@drawable/back_btn_kiet"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +39,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phiên Uống Thuốc"
+                android:text="Lịch Sử Uống Thuốc"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -50,55 +50,26 @@
                 android:gravity="center"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Container lịch -->
-        <FrameLayout
-            android:id="@+id/calendarContainer"
+        <!-- Thay RecyclerView bằng FragmentContainerView để load HistoryFragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerHistory"
+            android:name="com.mad.prescriptionmanagementapp.ui.fragment.kiet.HistoryFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/headerContainer"
+            app:layout_constraintBottom_toTopOf="@id/bottomNav"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Nội dung chính -->
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/calendarContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/bottomNav"
-            android:name="com.mad.prescriptionmanagementapp.ui.fragment.kiet.MedicineFragment"/>
-
-        <!-- Thanh điều hướng dưới cùng -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        <!-- Nếu có BottomNavigationView, giữ lại hoặc thêm tương tự -->
+        <!-- <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:itemIconSize="24dp"
-            app:itemHorizontalTranslationEnabled="false"
-            app:labelVisibilityMode="labeled"
-            app:itemIconTint="@color/nav_icon_selector"
-            app:itemTextColor="@color/nav_text_selector"
-            app:menu="@menu/bottom_nav_menu_kiet"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            ... /> -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Nút thêm mới -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white"
-        android:contentDescription="Thêm mới"
-        app:backgroundTint="#2196F3"
-        app:layout_anchor="@id/bottomNav"
-        app:layout_anchorGravity="top|center"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

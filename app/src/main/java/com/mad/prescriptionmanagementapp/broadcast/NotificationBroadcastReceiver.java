@@ -133,7 +133,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
             builder.addAction(R.drawable.check_selector, "Đã uống", confirmPendingIntent);
-
+ 
             // Action: Snooze
             Intent snoozeIntent = new Intent(context, ActionHandlerBroadcastReceiver.class);
             snoozeIntent.setAction(Constants.ACTION_SNOOZE);

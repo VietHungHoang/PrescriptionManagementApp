@@ -38,7 +38,7 @@ public class ListPrescriptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_prescription);
+        setContentView(R.layout.activity_list_prescription_kiet);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 //        bottomNav.setSelectedItemId(R.id.nav_invoice);

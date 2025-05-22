@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+<<<<<<< HEAD
         android:id="@+id/nav_calendar"
         android:icon="@drawable/ic_calendar_blue"
+=======
+<<<<<<<< HEAD:app/src/main/res/menu/bottom_nav_menu.xml
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home_clinic"
+========
+        android:id="@+id/nav_calendar"
+        android:icon="@drawable/ic_calendar_blue_kiet"
+>>>>>>>> c401a0a3eff497882105fbd1a8c6d133992b4b43:app/src/main/res/menu/bottom_nav_menu_kiet.xml
+>>>>>>> c401a0a3eff497882105fbd1a8c6d133992b4b43
         android:title="Lịch Nhắc"
         android:orderInCategory="1"/>
 
     <item
+<<<<<<< HEAD
         android:id="@+id/nav_invoice"
         android:icon="@drawable/ic_invoice_black"
         android:title="Hóa Đơn"
         android:orderInCategory="2"/>
 </menu>
+=======
+<<<<<<<< HEAD:app/src/main/res/menu/bottom_nav_menu.xml
+        android:id="@+id/nav_user"
+        android:icon="@drawable/ic_user_outline"
+        android:title="Người dùng"
+========
+        android:id="@+id/nav_invoice"
+        android:icon="@drawable/ic_invoice_black_kiet"
+        android:title="Hóa Đơn"
+>>>>>>>> c401a0a3eff497882105fbd1a8c6d133992b4b43:app/src/main/res/menu/bottom_nav_menu_kiet.xml
+        android:orderInCategory="2"/>
+</menu>
+>>>>>>> c401a0a3eff497882105fbd1a8c6d133992b4b43

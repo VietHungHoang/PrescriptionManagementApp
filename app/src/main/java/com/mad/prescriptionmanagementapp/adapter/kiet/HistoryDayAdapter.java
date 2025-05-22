@@ -15,9 +15,7 @@ import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.MedicineR
 import com.mad.prescriptionmanagementapp.ui.listener.kiet.OnMedicineActionListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HistoryDayAdapter extends RecyclerView.Adapter<HistoryDayAdapter.DayViewHolder> {
 
@@ -47,7 +45,7 @@ public class HistoryDayAdapter extends RecyclerView.Adapter<HistoryDayAdapter.Da
     @NonNull
     @Override
     public DayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_history_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_history_item_kiet, parent, false);
         return new DayViewHolder(view);
     }
 
@@ -92,57 +90,54 @@ public class HistoryDayAdapter extends RecyclerView.Adapter<HistoryDayAdapter.Da
     }
 
     private List<MedicineItem> convertToMedicineItems(List<MedicineResponse.TimeDosage> timeDosages, String date) {
-        Map<String, MedicineItem> groupedByTime = new LinkedHashMap<>();
+        List<MedicineItem> medicineItems = new ArrayList<>();
 
         for (MedicineResponse.TimeDosage dosage : timeDosages) {
-            String time = dosage.getTime();
-            MedicineItem item = groupedByTime.get(time);
+            // Tạo MedicineItem mới cho mỗi TimeDosage
+            MedicineItem item = new MedicineItem();
+            item.setTime(dosage.getTime());
+            item.setDate(date);
 
-            // Nếu chưa có time này, tạo mới
-            if (item == null) {
-                item = new MedicineItem();
-                item.setTime(time);
-                item.setDate(date);
-                item.setMedicineList("");
-                item.setUsed(false);
-                item.setSkipped(false);
-                groupedByTime.put(time, item);
-            }
-
-            // Thêm thuốc vào danh sách, cách nhau xuống dòng
-            String existingList = item.getMedicineList();
-            StringBuilder sb = new StringBuilder(existingList.isEmpty() ? "" : existingList + "\n");
+            // Tạo danh sách thuốc dạng chuỗi, mỗi thuốc trên 1 dòng
+            StringBuilder medicineListBuilder = new StringBuilder();
             for (MedicineResponse.Drug drug : dosage.getDrugs()) {
-                sb.append(drug.getName())
+                medicineListBuilder.append(drug.getName())
                         .append(" - ")
                         .append(drug.getDosage())
-                        .append(drug.getUnit());
+                        .append(drug.getUnit())
+                        .append("\n");
             }
-            item.setMedicineList(sb.toString());
+            item.setMedicineList(medicineListBuilder.toString().trim());
 
+            // Cài đặt trạng thái dùng thuốc
             if (dosage.isEditted()) {
                 if (dosage.getStatus() == 2) { // Dùng muộn
-                    item.setUsedLate(true);
-                    item.setUsed(false);
-                    item.setSkipped(false);
-                } else if (dosage.getStatus() == 1) { // Đã dùng bình thường
+                    item.setUsedLate(false);
                     item.setUsed(true);
                     item.setSkipped(false);
-                    item.setUsedLate(false);
+                } else if (dosage.getStatus() == 1) { // Đã dùng bình thường
+                    item.setUsed(false);
+                    item.setSkipped(false);
+                    item.setUsedLate(true);
                 } else if (dosage.getStatus() == 0) { // Bỏ qua
                     item.setUsed(false);
                     item.setSkipped(true);
                     item.setUsedLate(false);
                 } else {
-                    // Các trạng thái khác hoặc mặc định
                     item.setUsed(false);
                     item.setSkipped(false);
                     item.setUsedLate(false);
                 }
+            } else {
+                item.setUsed(false);
+                item.setSkipped(false);
+                item.setUsedLate(false);
             }
 
+            medicineItems.add(item);
         }
-        return new ArrayList<>(groupedByTime.values());
+
+        return medicineItems;
     }
 
 }

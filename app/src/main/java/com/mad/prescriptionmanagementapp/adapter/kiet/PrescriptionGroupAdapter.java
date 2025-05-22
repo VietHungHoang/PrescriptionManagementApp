@@ -27,7 +27,7 @@ public class PrescriptionGroupAdapter extends RecyclerView.Adapter<PrescriptionG
     @NonNull
     @Override
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_drug_bill, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_drug_bill_kiet, parent, false);
         return new GroupViewHolder(view);
     }
 

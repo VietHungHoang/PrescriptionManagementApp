@@ -77,7 +77,6 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
 
                 switch (action) {
                     case Constants.ACTION_CONFIRM:
-                        Log.d(TAG, "Processing CONFIRM for reminder ID: " + reminderId);
                         db.scheduleDao().updateStatus(reminderId, ReminderStatus.CONFIRMED);
                         // TODO: Gửi lên backend (dùng WorkManager là tốt nhất)
                         // BackendApiService.getInstance().confirmReminder(reminderId);

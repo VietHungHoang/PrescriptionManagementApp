@@ -12,7 +12,7 @@ public class HistoryMedicineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule_history);
+        setContentView(R.layout.activity_schedule_history_kiet);
 
         // Load fragment
         getSupportFragmentManager()
