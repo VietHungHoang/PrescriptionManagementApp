@@ -7,13 +7,14 @@ import com.mad.prescriptionmanagementapp.util.Frequency;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
 public class Converters {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final DateTimeFormatter localDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final DateTimeFormatter localDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @TypeConverter
     public static ReminderStatus toReminderStatus(String name) {
@@ -84,11 +85,21 @@ public class Converters {
 
     @TypeConverter
     public static LocalDate toLocalDate(String value) {
-        return value == null ? null : LocalDate.parse(value, localDateFormatter);
+        return value == null ? null : LocalDate.parse(value);
     }
 
     @TypeConverter
     public static String fromLocalDate(LocalDate date) {
-        return date == null ? null : date.format(localDateFormatter);
+        return date == null ? null : date.toString();
+    }
+
+    @TypeConverter
+    public static LocalDateTime toLocalDateTime(String value) {
+        return value == null ? null : LocalDateTime.parse(value);
+    }
+
+    @TypeConverter
+    public static String fromLocalDateTime(LocalDateTime date) {
+        return date == null ? null : date.toString();
     }
 }

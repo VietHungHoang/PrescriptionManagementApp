@@ -13,6 +13,7 @@ import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.model.Schedule;
+import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.DrugInPresRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
@@ -24,6 +25,7 @@ import java.text.DecimalFormatSymbols;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -37,6 +39,14 @@ public class Tools {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
         DecimalFormat df = new DecimalFormat("0.##", symbols); // tối đa 2 số sau dấu phẩy
         return df.format(value);
+    }
+
+    public static LocalDate stringToLocalDate(String date) {
+        if(date != null && !date.trim().isEmpty()) {
+            return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } else {
+            return null;
+        }
     }
 
     public static void replaceFragment(FragmentActivity activity, Fragment newFragment, String transactionName) {
@@ -95,47 +105,7 @@ public class Tools {
         });
     }
 
-    public static PrescriptionRequest prescriptionToRequest(Prescription prescription, List<ScheduleEntityDTO> schedules) {
-//        Set<Long> drugIdSet = new HashSet<>();
-//        for(ScheduleEntityDTO scheduleEntityDTO : schedules) {
-//            drugIdSet.add(scheduleEntityDTO.drugInPresDTO.getDrugInPresEntity().getLocalId());
-//        }
-//        List<DrugInPresRequest> drugInPresRequestList = new ArrayList<>();
-//        for(Long drugId : drugIdSet) {
-//            DrugInPresRequest drug = null;
-//            List<ScheduleRequest> scheduleRequestList = new ArrayList<>();
-//            for(ScheduleEntityDTO scheduleEntityDTO : schedules) {
-//                if(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getLocalId() == drugId) {
-//                    if(drug == null) {
-//                        drug = DrugInPresRequest.builder()
-//                                .drugId(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getDrugId())
-//                                .unitId(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getUnitId())
-//                                .startDate(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getStartDate())
-//                                .note(scheduleEntityDTO.getDrugInPresDTO().getDrugInPresEntity().getNote())
-//                                .build();
-//                    }
-//                    scheduleRequestList.add(ScheduleRequest.builder()
-//                        .date(Instant.ofEpochMilli(scheduleEntityDTO.getScheduleEntity().getScheduledDateTimeMillis())
-//                                .atZone(ZoneId.systemDefault())
-//                                .toLocalDateTime())
-//                                .dosage(scheduleEntityDTO.timeDosage.dosage)
-//                        .build());
-//                }
-//            }
-//            drug.setSchedules(scheduleRequestList);
-//            drugInPresRequestList.add(drug);
-//        }
-//
-//        PrescriptionRequest prescriptionRequest = PrescriptionRequest.builder()
-//                .name(prescription.getName())
-//                .doctorName(prescription.getDoctorName())
-//                .drugs(drugInPresRequestList)
-//                .hospital(prescription.getHospital())
-//                .consultationDate(prescription.getConsultationDate())
-//                .followUpDate(prescription.getFollowUpDate())
-//                .build();
-//        return prescriptionRequest;
-
+    public static PrescriptionRequest prescriptionToRequest(Prescription prescription, List<ScheduleEntity> schedules) {
         List<DrugInPresRequest> drugInPresRequestList = new ArrayList<>();
         for(DrugInPres drugInPres : prescription.getDrugs()) {
             List<ScheduleRequest> scheduleRequestList = ScheduleGenerationHelper.generateSchedulesForADrugRequest(drugInPres, LocalDate.now().plusDays(10));

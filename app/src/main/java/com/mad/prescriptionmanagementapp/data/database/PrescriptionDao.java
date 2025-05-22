@@ -9,10 +9,10 @@ import androidx.room.Transaction;
 import com.mad.prescriptionmanagementapp.data.mapper.TimeDosageMapper;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
+import com.mad.prescriptionmanagementapp.data.model.entity.DosageEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.PrescriptionEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.model.entity.TimeDosageEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.UnitEntity;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.util.ScheduleGenerationHelper;
@@ -30,13 +30,13 @@ public interface PrescriptionDao {
     long insertDrugInPres(DrugInPresEntity drugInPresEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertTimeDosage(TimeDosageEntity timeDosageEntity);
+    long insertDosage(DosageEntity dosageEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertListDrugInPres(List<DrugInPresEntity> drugInPresEntities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long[] insertListTimeDosages(List<TimeDosageEntity> timeDosageEntities);
+    long[] insertListTimeDosages(List<DosageEntity> timeDosageEntities);
 
     @Insert()
     long[] insertListSchedules(List<ScheduleEntity> scheduleEntities);
@@ -52,47 +52,19 @@ public interface PrescriptionDao {
 
     @Transaction
     default void insertPrescriptionAndComponent(Prescription prescription) {
-        PrescriptionEntity prescriptionEntity = new PrescriptionEntity(prescription.getName(), prescription.getHospital(), prescription.getDoctorName(), null, null);
+        PrescriptionEntity prescriptionEntity = prescription.toEntity();
         long presId = insertPrescription(prescriptionEntity);
 
-        for(int i = 0; i < prescription.getDrugs().size(); i++) {
-            DrugInPres drugInPres = prescription.getDrugs().get(i);
-            DrugInPresEntity drugInPresEntity = DrugInPresEntity.modelToEntity(drugInPres);
+        for(DrugInPres drugInPres : prescription.getDrugs()) {
+            DrugInPresEntity drugInPresEntity = drugInPres.toEntity();
             drugInPresEntity.setPrescriptionId(presId);
             long drugInPresId = insertDrugInPres(drugInPresEntity);
-            List<TimeDosageEntity> timeDosageEntities = new ArrayList<>();
             for (TimeDosage timeDosage : drugInPres.getTimeDosages()) {
-                TimeDosageEntity entity = TimeDosageMapper.modelToEntity(timeDosage);
-                entity.setDrugInPresId(drugInPresId);
-                timeDosageEntities.add(entity);
-            };
-            long timeDosageId = insertTimeDosage(timeDosageEntities.get(0));
-
-            List<ScheduleEntity> scheduleEntities = ScheduleGenerationHelper.generateSchedulesForADrug(drugInPres, LocalDate.now().plusDays(10));
-            for(ScheduleEntity x : scheduleEntities) {
-                x.setTimeDosageId(timeDosageId);
-                x.setDrugInPresId(drugInPresId);
+                DosageEntity dosageEntity = timeDosage.toEntity();
+                long dosageId = insertDosage(dosageEntity);
+                List<ScheduleEntity> scheduleEntities = ScheduleGenerationHelper.generateSchedulesForATime(drugInPres, drugInPresId, timeDosage, dosageId);
+                insertListSchedules(scheduleEntities);
             }
-            insertListSchedules(scheduleEntities);
         }
-
     }
-
-//    @Query("SELECT * FROM prescriptions WHERE local_id = :id")
-//    LiveData<PrescriptionEntity> getPrescriptionById(Long id);
-//
-//    @Query("SELECT * FROM prescriptions ORDER BY consultation_date DESC")
-//    LiveData<List<PrescriptionEntity>> getAllPrescriptions();
-//
-//    // Lấy đơn thuốc và tất cả các chi tiết thuốc trong đơn đó
-////    @Transaction
-////    @Query("SELECT * FROM prescriptions WHERE id = :prescriptionId")
-////    LiveData<PrescriptionWithDrugDetails> getPrescriptionWithDetailsById(Long prescriptionId);
-////
-////    @Transaction
-////    @Query("SELECT * FROM prescriptions ORDER BY consultationDate DESC")
-////    LiveData<List<PrescriptionWithDrugDetails>> getAllPrescriptionsWithDetails();
-//
-//    @Query("DELETE FROM prescriptions WHERE local_id = :prescriptionId")
-//    void deletePrescriptionById(long prescriptionId); // Xóa đơn thuốc (sẽ cascade xóa DrugInPres, TimeDosage, ReminderInstance)
 };

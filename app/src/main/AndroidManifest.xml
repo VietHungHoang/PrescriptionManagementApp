@@ -32,7 +32,7 @@
             android:name=".ui.activity.SelectActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.SplashActivity"
+            android:name=".ui.activity.hung.SplashActivity"
             android:exported="true"
         >
             <intent-filter>
@@ -56,16 +56,16 @@
 
         </activity>
         <activity
-            android:name=".ui.activity.AddPrescriptionActivity"
+            android:name=".ui.activity.hung.AddPrescriptionActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize">
         </activity>
          <activity
-         android:name=".ui.activity.HomeActivity"
+         android:name=".ui.activity.hung.HomeActivity"
          android:exported="true">
          </activity>
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name=".ui.activity.hung.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity android:name=".ui.activity.kiet.ListPrescriptionActivity" />
@@ -114,7 +114,7 @@
         </activity>
         <!-- ProfileSettingActivity -->
         <activity
-            android:name=".ui.activity.ProfileSettingActivity"
+            android:name=".ui.activity.dang.ProfileSettingActivity"
             android:exported="false" />
         <!-- TermsOfServiceActivity -->
         <activity

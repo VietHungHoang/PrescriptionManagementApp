@@ -1,6 +1,5 @@
 package com.mad.prescriptionmanagementapp.data.mapper;
 
-import com.mad.prescriptionmanagementapp.data.cache.DrugCache;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugEntity;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 

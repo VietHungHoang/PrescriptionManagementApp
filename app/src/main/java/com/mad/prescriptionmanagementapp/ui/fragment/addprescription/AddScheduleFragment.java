@@ -18,12 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.adapter.TimeAndDosageAdapter;
+import com.mad.prescriptionmanagementapp.adapter.hung.TimeAndDosageAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddScheduleBinding;
-import com.mad.prescriptionmanagementapp.ui.activity.AddPrescriptionActivity;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ErrorDialog;
 import com.mad.prescriptionmanagementapp.ui.fragment.dialog.SelectTimeAndDosageDialog;

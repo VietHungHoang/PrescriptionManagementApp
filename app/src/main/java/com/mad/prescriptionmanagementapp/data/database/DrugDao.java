@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.mad.prescriptionmanagementapp.data.cache.DrugCache;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugEntity;
 
 import java.util.List;

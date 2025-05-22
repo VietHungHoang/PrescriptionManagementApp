@@ -5,21 +5,24 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 import androidx.room.Index;
-import androidx.room.Relation;
+import androidx.room.TypeConverters;
 
+import com.mad.prescriptionmanagementapp.data.database.Converters;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity(tableName = "schedules",
         foreignKeys = {@ForeignKey(entity = DrugInPresEntity.class, parentColumns = "local_id", childColumns = "drug_in_pres_id", onDelete = ForeignKey.CASCADE),
-        @ForeignKey(entity = TimeDosageEntity.class, parentColumns = "local_id", childColumns = "time_dosage_id", onDelete = ForeignKey.CASCADE)},
+        @ForeignKey(entity = DosageEntity.class, parentColumns = "local_id", childColumns = "dosage_id", onDelete = ForeignKey.CASCADE)},
         indices = {
-                @Index(value = {"schedule_date_time_millis"})
+                @Index(value = {"date_time"})
         }
 )
+@TypeConverters(Converters.class)
 @NoArgsConstructor
 @Data
 public class ScheduleEntity {
@@ -30,23 +33,26 @@ public class ScheduleEntity {
     @ColumnInfo(name = "drug_in_pres_id")
     private Long drugInPresId;
 
-    @ColumnInfo(name = "time_dosage_id")
-    private Long timeDosageId;
+    @ColumnInfo(name = "dosage_id")
+    private Long dosageId;
 
-    @ColumnInfo(name = "schedule_date_time_millis")
-    private long scheduledDateTimeMillis;
+    @ColumnInfo(name = "date_time")
+    private LocalDateTime dateTime;
     private ReminderStatus status;
 
     @ColumnInfo(name = "alarm_manager_request_id")
     private int alarmManagerRequestId;
 
+    @ColumnInfo(name = "server_id")
+    private Long serverId;
+
     @ColumnInfo(name = "is_synced")
     private Boolean isSynced;
 
-    public ScheduleEntity(Long drugInPresId, Long timeDosageId, long scheduledDateTimeMillis, ReminderStatus status, int alarmManagerRequestId) {
+    public ScheduleEntity(Long drugInPresId, Long dosageId, LocalDateTime dateTime, ReminderStatus status, int alarmManagerRequestId) {
         this.drugInPresId = drugInPresId;
-        this.timeDosageId = timeDosageId;
-        this.scheduledDateTimeMillis = scheduledDateTimeMillis;
+        this.dosageId = dosageId;
+        this.dateTime = dateTime;
         this.status = status;
         this.alarmManagerRequestId = alarmManagerRequestId;
     }

@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.api;
+package com.mad.prescriptionmanagementapp.data.remote.api.kiet;
 
 import retrofit2.Call;
 

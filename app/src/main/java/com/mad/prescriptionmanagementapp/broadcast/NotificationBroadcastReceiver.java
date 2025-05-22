@@ -7,10 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -18,17 +15,12 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
-import com.mad.prescriptionmanagementapp.ui.activity.HomeActivity;
+import com.mad.prescriptionmanagementapp.ui.activity.hung.HomeActivity;
 import com.mad.prescriptionmanagementapp.util.Constants;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 import com.mad.prescriptionmanagementapp.util.Tools;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -63,45 +55,36 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 return;
             }
 
-            // Nhóm các thuốc có cùng thời gian (ví dụ trong 1 phút)
-            long timeWindowStart = mainReminder.getScheduleEntity().getScheduledDateTimeMillis() - (30 * 1000); // 30 giây trước
-            long timeWindowEnd = mainReminder.getScheduleEntity().getScheduledDateTimeMillis() + (30 * 1000);   // 30 giây sau
-
             List<ScheduleEntityDTO> remindersForThisTime = db.scheduleDao()
-                    .getRemindersAroundTime(timeWindowStart, timeWindowEnd, ReminderStatus.PENDING);
+                    .getByRequestId(ReminderStatus.PENDING, mainReminder.getScheduleEntity().getAlarmManagerRequestId());
 
             if (remindersForThisTime.isEmpty()) {
-                return; // Không còn reminder PENDING nào tại thời điểm này
+                return;
             }
 
-            // Tạo Notification ID (có thể dùng alarmRequestCode của reminder chính)
-            // hoặc một ID mới nếu bạn nhóm nhiều reminder vào 1 notif
-            int notificationId = mainReminder.getScheduleEntity().getAlarmManagerRequestId(); // Dùng request code làm notification ID
-//            int notificationId = 152515512;
+            int notificationId = mainReminder.getScheduleEntity().getAlarmManagerRequestId();
             // Tạo channel (chỉ cần làm 1 lần)
             createNotificationChannel(context);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID_REMINDERS);
 
-            // Intent khi nhấn vào thông báo (mở app)
-            Intent tapIntent = new Intent(context, HomeActivity.class); // Thay bằng Activity bạn muốn mở
+            Intent tapIntent = new Intent(context, HomeActivity.class);
             tapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             // Bạn có thể đính kèm thông tin để Activity biết cần hiển thị gì
             // tapIntent.putExtra("deep_link_target", "reminder_details");
             // tapIntent.putExtra("reminder_id", reminderId);
             PendingIntent contentPendingIntent = PendingIntent.getActivity(
                     context,
-                    notificationId, // request code cho content intent
+                    notificationId,
                     tapIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
 
-            builder.setSmallIcon(R.drawable.ic_notification_icon) // Thay bằng icon của bạn
+            builder.setSmallIcon(R.drawable.logo)
                     .setContentTitle("Đến giờ uống thuốc!")
-                    .setPriority(NotificationCompat.PRIORITY_MAX) // Ưu tiên cao cho nhắc nhở quan trọng
-                    .setDefaults(NotificationCompat.DEFAULT_ALL) // Âm thanh, rung, đèn LED mặc định
-                    .setAutoCancel(false) // Không tự hủy khi chạm, chỉ hủy khi có action
-                    .setOngoing(true) // Làm cho thông báo không thể vuốt đi (cân nhắc UX)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setAutoCancel(true)
                     .setContentIntent(contentPendingIntent)
                     .setGroup("cuatao");
 //                    .setGroupSummary(true);
@@ -115,7 +98,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             if (remindersForThisTime.size() == 1) {
                 ScheduleEntityDTO singleReminder = remindersForThisTime.get(0);
                 builder.setContentText(String.format(Locale.getDefault(), "Uống: %s %s %s",
-                        singleReminder.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(singleReminder.getTimeDosage().getDosage()), singleReminder.getDrugInPresDTO().getUnitEntity().getName()));
+                        singleReminder.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(singleReminder.getDosage().getDosage()), singleReminder.getDrugInPresDTO().getUnitEntity().getName()));
             } else {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 inboxStyle.setBigContentTitle("Đến giờ uống thuốc!");
@@ -123,7 +106,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 for (int i = 0; i < remindersForThisTime.size(); i++) {
                     ScheduleEntityDTO r = remindersForThisTime.get(i);
                     String line = String.format(Locale.getDefault(), "Uống: %s %s %s",
-                            r.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(r.getTimeDosage().getDosage()), r.getDrugInPresDTO().getUnitEntity().getName());
+                            r.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(r.getDosage().getDosage()), r.getDrugInPresDTO().getUnitEntity().getName());
                     inboxStyle.addLine(line);
                     if (i < 2) { // Hiển thị 2 dòng đầu ở dạng thu gọn
                         summaryText.append(line).append(i == 0 && remindersForThisTime.size() > 1 ? " | " : "");

@@ -1,26 +1,18 @@
-package com.mad.prescriptionmanagementapp.ui.activity;
+package com.mad.prescriptionmanagementapp.ui.activity.hung;
 
 import android.content.Intent;
-import android.os.*;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.data.remote.dto.response.GoogleAuthRespone;
 import com.mad.prescriptionmanagementapp.databinding.ActivityLoginBinding;
-import com.mad.prescriptionmanagementapp.ui.fragment.FragmentType;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.LoginViewModel;
 import com.mad.prescriptionmanagementapp.util.AuthStatus;
 import com.mad.prescriptionmanagementapp.util.Constants;

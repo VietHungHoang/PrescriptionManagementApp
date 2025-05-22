@@ -1,22 +1,15 @@
-package com.mad.prescriptionmanagementapp.ui.activity;
+package com.mad.prescriptionmanagementapp.ui.activity.hung;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -26,13 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.databinding.ActivityAddPrescriptionBinding;
-import com.mad.prescriptionmanagementapp.ui.fragment.FragmentType;
 import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddPrescriptionInfoFragment;
-import com.mad.prescriptionmanagementapp.ui.fragment.addprescription.AddScheduleFragment;
-import com.mad.prescriptionmanagementapp.ui.fragment.dialog.ConfirmDialog;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
-import com.mad.prescriptionmanagementapp.ui.viewmodel.AddScheduleViewModel;
-import com.mad.prescriptionmanagementapp.util.FragmentName;
 
 public class AddPrescriptionActivity extends AppCompatActivity {
     private ActivityAddPrescriptionBinding binding;

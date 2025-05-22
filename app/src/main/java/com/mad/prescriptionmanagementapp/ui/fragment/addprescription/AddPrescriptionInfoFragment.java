@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.adapter.SelectedDrugAdapter;
+import com.mad.prescriptionmanagementapp.adapter.hung.SelectedDrugAdapter;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.databinding.FragmentAddPrescriptionInfoBinding;
@@ -100,7 +100,7 @@ public class AddPrescriptionInfoFragment extends Fragment {
 
         this.binding.btnSave.setOnClickListener(v -> {
             if (this.viewModel.validateAddPrescriptionInfo(this.shareViewModel.getPrescription().getValue(), this.shareViewModel.getSelectedDrugs().getValue())) {
-                this.shareViewModel.handleBtnSavePres(this.requireContext());
+                this.shareViewModel.handleBtnSavePres(this.requireContext(), binding.edtConsultationDate.getText().toString(), binding.edtFollowUpDate.getText().toString());
                 new SuccessDialog(this, "Thêm đơn thuốc thành công", true).showDialog();
                 Intent intent = new Intent(requireActivity(), ListPrescriptionActivity.class);
                 requireActivity().startActivity(intent);
@@ -137,20 +137,6 @@ public class AddPrescriptionInfoFragment extends Fragment {
             if (!hasFocus) {
                 String text = ((EditText) v).getText().toString();
                 this.shareViewModel.addDoctor(text);
-            }
-        });
-
-        this.binding.edtConsultationDate.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                String text = ((EditText) v).getText().toString();
-                this.shareViewModel.addConsultionDate(text);
-            }
-        });
-
-        this.binding.edtFollowUpDate.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                String text = ((EditText) v).getText().toString();
-                this.shareViewModel.addFollowUpDate(text);
             }
         });
     }
@@ -234,15 +220,9 @@ public class AddPrescriptionInfoFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void updatePres() {
-        if (this.shareViewModel.getPrescription().getValue() != null) {
-            this.shareViewModel.updatePrescription(this.binding.edtPrescriptionName.getText().toString()
-                    , this.binding.switchMedicalInfo.isChecked()
-                    , this.binding.edtHospital.getText().toString()
-                    , this.binding.edtDoctor.getText().toString()
-                    , this.binding.edtConsultationDate.getText().toString()
-                    , this.binding.edtFollowUpDate.getText().toString()
-            );
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
+
 }

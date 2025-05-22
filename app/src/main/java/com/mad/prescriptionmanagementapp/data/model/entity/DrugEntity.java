@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity(tableName = "drugs")
-// @TypeConverters(Converters.class) // Bỏ comment nếu dùng TypeConverter cho sectionsJson
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

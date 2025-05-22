@@ -19,13 +19,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity(tableName = "drug_in_prescriptions",
         foreignKeys = {
                 @ForeignKey(entity = PrescriptionEntity.class, parentColumns = "local_id", childColumns = "prescription_id", onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = DrugEntity.class, parentColumns = "id", childColumns = "drug_id", onDelete = ForeignKey.CASCADE), // Không cho xóa thuốc nếu đang dùng
+                @ForeignKey(entity = DrugEntity.class, parentColumns = "id", childColumns = "drug_id", onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = UnitEntity.class, parentColumns = "id", childColumns = "unit_id", onDelete = ForeignKey.CASCADE)
         },
         indices = {
@@ -38,6 +39,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DrugInPresEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "local_id")
@@ -52,33 +54,11 @@ public class DrugInPresEntity {
     @ColumnInfo(name = "unit_id")
     private Long unitId;
 
-    @ColumnInfo(name = "start_date")
-    private LocalDate startDate;
-
-    private Frequency frequency;
-
-    @ColumnInfo(name = "every_n_days")
-    private int everyNDays;
-
-    @ColumnInfo(name = "specific_days")
-    private List<Integer> specificDays;
-
     private String note;
+
+    @ColumnInfo(name = "server_id")
+    private Long serverId;
 
     @ColumnInfo(name = "is_synced")
     private Boolean isSynced;
-
-    public DrugInPresEntity(Long prescriptionId, Long drugId, Long unitId, LocalDate startDate, Frequency frequency, int everyNDays, List<Integer> specificDays) {
-        this.prescriptionId = prescriptionId;
-        this.drugId = drugId;
-        this.unitId = unitId;
-        this.startDate = startDate;
-        this.frequency = frequency;
-        this.everyNDays = everyNDays;
-        this.specificDays = specificDays;
-    }
-
-    public static DrugInPresEntity modelToEntity(DrugInPres drugInPres) {
-        return new DrugInPresEntity(null, drugInPres.getDrug().getId(),1L, null, drugInPres.getFrequency(), drugInPres.getEveryNDays(), drugInPres.getSpecificDays());
-    }
 }

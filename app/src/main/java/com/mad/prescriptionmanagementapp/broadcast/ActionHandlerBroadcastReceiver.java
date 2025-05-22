@@ -11,9 +11,8 @@ import androidx.core.app.NotificationManagerCompat;
 // import com.yourapp.network.BackendApiService; // Nếu gọi API trực tiếp
 // import com.yourapp.worker.UpdateReminderStatusWorker; // Nếu dùng WorkManager
 
-import com.mad.prescriptionmanagementapp.api.MedicineApi;
+import com.mad.prescriptionmanagementapp.data.remote.api.kiet.MedicineApi;
 import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
-import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.kiet.StatusUpdateRequest;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.StatusUpdateResponse;
@@ -84,15 +83,15 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                         // BackendApiService.getInstance().confirmReminder(reminderId);
                         // Hoặc WorkManager.enqueue(UpdateReminderStatusWorker.forConfirm(reminderId));
                         Log.i(TAG, "Reminder ID " + reminderId + " Confirmed.");
-                        sendStatusToBackend(Instant.ofEpochMilli(reminder.getScheduleEntity().getScheduledDateTimeMillis())
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime().toString(), 2, LocalDateTime.now().toString(), true);
+//                        sendStatusToBackend(Instant.ofEpochMilli(reminder.getScheduleEntity().getScheduledDateTimeMillis())
+//                                .atZone(ZoneId.systemDefault())
+//                                .toLocalDateTime().toString(), 2, LocalDateTime.now().toString(), true);
                         break;
 
                     case Constants.ACTION_SNOOZE:
                         Log.d(TAG, "Processing SNOOZE for reminder ID: " + reminderId);
                         long snoozeUntilMillis = System.currentTimeMillis() + (long) Constants.SNOOZE_DURATION_MINUTES * 60 * 1000;
-                        reminder.getScheduleEntity().setScheduledDateTimeMillis(snoozeUntilMillis);
+//                        reminder.getScheduleEntity().setScheduledDateTimeMillis(snoozeUntilMillis);
                         reminder.getScheduleEntity().setStatus(ReminderStatus.PENDING); // Đặt lại PENDING để AlarmScheduler xử lý
                         // Hoặc bạn có thể có status SNOOZED riêng và AlarmScheduler cũng query status này
 //                        db.scheduleDao().update(reminder); // Cập nhật thời gian và status
@@ -109,9 +108,9 @@ public class ActionHandlerBroadcastReceiver extends BroadcastReceiver {
                         // TODO: Gửi lên backend (dùng WorkManager)
                         // BackendApiService.getInstance().skipReminder(reminderId);
                         Log.i(TAG, "Reminder ID " + reminderId + " Skipped.");
-                        sendStatusToBackend(Instant.ofEpochMilli(reminder.getScheduleEntity().getScheduledDateTimeMillis())
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime().toString(), 1, LocalDateTime.now().toString(), true);
+//                        sendStatusToBackend(Instant.ofEpochMilli(reminder.getScheduleEntity().getScheduledDateTimeMillis())
+//                                .atZone(ZoneId.systemDefault())
+//                                .toLocalDateTime().toString(), 1, LocalDateTime.now().toString(), true);
                         break;
                 }
             }

@@ -16,7 +16,6 @@ import com.mad.prescriptionmanagementapp.data.model.User;
 import com.mad.prescriptionmanagementapp.data.model.UserSetting;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.api.ApiService;
-import com.mad.prescriptionmanagementapp.ui.activity.ProfileSettingActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -2,6 +2,7 @@ package com.mad.prescriptionmanagementapp.util;
 
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
+import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.ScheduleRequest;
 
@@ -45,19 +46,40 @@ public class ScheduleGenerationHelper {
     public static List<ScheduleEntity> generateSchedulesForADrug(DrugInPres drugInPres, LocalDate toDate) {
         List<ScheduleEntity> schedules = new ArrayList<>();
 
-            if (!Validation.isValidList(drugInPres.getTimeDosages())) {
-               return schedules;
-            }
+        if (!Validation.isValidList(drugInPres.getTimeDosages())) {
+            return schedules;
+        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
+        LocalDate startDate = LocalDate.parse(drugInPres.getStartDate(), formatter); // Giả sử drugInPres.getDate() là "YYYY-MM-DD"
 
-            for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
-                if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
-                    addTimeSchedule(schedules, drugInPres, currentDate);
+        for (LocalDate currentDate = startDate; !currentDate.isAfter(toDate); currentDate = currentDate.plusDays(1)) {
+            if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                addTimeSchedule(schedules, drugInPres, currentDate);
+            }
+        }
+        return schedules;
+    }
+
+    public static List<ScheduleEntity> generateSchedulesForATime(DrugInPres drugInPres, Long drugInPresEntityId, TimeDosage timeDosage, Long dosageEntityId) {
+        List<ScheduleEntity> scheduleEntities = new ArrayList<>();
+        LocalDate startDate = Tools.stringToLocalDate(drugInPres.getStartDate());
+        LocalDate endDate = startDate.plusDays(10);
+        for (LocalDate currentDate = startDate; !currentDate.isAfter(endDate); currentDate = currentDate.plusDays(1)) {
+            if (isShouldTakeToday(drugInPres, startDate, currentDate)) {
+                LocalDateTime reminderDateTime = currentDate.atTime(timeDosage.getHour(), timeDosage.getMinutes());
+                if (reminderDateTime.isAfter(LocalDateTime.now())) {
+                    scheduleEntities.add(new ScheduleEntity(
+                            drugInPresEntityId,
+                            dosageEntityId,
+                            reminderDateTime,
+                            ReminderStatus.PENDING,
+                            alarmRequestCodeCounter.getAndIncrement()
+                    ));
                 }
             }
-        return schedules;
+        }
+        return scheduleEntities;
     }
 
     public static List<ScheduleRequest> generateSchedulesForADrugRequest(DrugInPres drugInPres, LocalDate toDate) {
@@ -115,7 +137,7 @@ public class ScheduleGenerationHelper {
                 scheduleEntities.add(new ScheduleEntity(
                         simpleDrugId,
                         null,
-                        scheduledMillisUTC,
+                        LocalDateTime.now(),
                         ReminderStatus.PENDING,
                         alarmRequestCodeCounter.getAndIncrement()
                 ));

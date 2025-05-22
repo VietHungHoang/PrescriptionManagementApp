@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.adapter;
+package com.mad.prescriptionmanagementapp.adapter.hung;
 
 import static com.mad.prescriptionmanagementapp.util.Tools.formatNumber;
 
@@ -12,9 +12,7 @@ import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
 import com.mad.prescriptionmanagementapp.databinding.ViewholderTimeanddosageBinding;
 import com.mad.prescriptionmanagementapp.ui.listener.OnTimeDosageClickListener;
-import com.mad.prescriptionmanagementapp.ui.viewmodel.AddPrescriptionViewModel;
 import com.mad.prescriptionmanagementapp.ui.viewmodel.AddScheduleViewModel;
-import com.mad.prescriptionmanagementapp.util.Tools;
 
 import java.util.ArrayList;
 import java.util.List;

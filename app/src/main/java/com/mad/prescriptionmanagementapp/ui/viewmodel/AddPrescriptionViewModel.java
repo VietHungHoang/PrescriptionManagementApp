@@ -12,6 +12,7 @@ import com.mad.prescriptionmanagementapp.data.database.AppDatabase;
 import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.TimeDosage;
 import com.mad.prescriptionmanagementapp.data.model.Unit;
+import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
 import com.mad.prescriptionmanagementapp.data.model.entitydto.ScheduleEntityDTO;
 import com.mad.prescriptionmanagementapp.data.model.Prescription;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.PrescriptionRequest;
@@ -20,10 +21,13 @@ import com.mad.prescriptionmanagementapp.scheduler.AlarmScheduler;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 import com.mad.prescriptionmanagementapp.util.Tools;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import lombok.Getter;
 
@@ -44,8 +48,8 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     public void removeCurrentDrug(DrugInPres drugInPres) {
         List<DrugInPres> selectedDrug = this.listSelectedDrug.getValue();
-        for(int i = 0; i < selectedDrug.size(); i++) {
-            if(selectedDrug.get(i).equals(drugInPres)) {
+        for (int i = 0; i < selectedDrug.size(); i++) {
+            if (selectedDrug.get(i).equals(drugInPres)) {
                 selectedDrug.remove(i);
                 break;
             }
@@ -54,7 +58,7 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
     public void setPresFromIntent(Prescription pres) {
-        if(pres != null) {
+        if (pres != null) {
             this.prescription.setValue(pres);
             this.listSelectedDrug.setValue(pres.getDrugs());
         }
@@ -142,8 +146,8 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
 
     public void updateSelectedDrug(DrugInPres oldDrug, DrugInPres newDrug) {
         List<DrugInPres> selectedDrugs = this.listSelectedDrug.getValue();
-        for(int i = 0; i < selectedDrugs.size(); i++) {
-            if(selectedDrugs.get(i).equals(oldDrug)) {
+        for (int i = 0; i < selectedDrugs.size(); i++) {
+            if (selectedDrugs.get(i).equals(oldDrug)) {
                 selectedDrugs.set(i, newDrug);
                 return;
             }
@@ -152,9 +156,9 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
     }
 
     public void addSelectedDrug(DrugInPres drug) {
-            List<DrugInPres> selectedDrugs = this.listSelectedDrug.getValue();
-            selectedDrugs.add(drug);
-            this.listSelectedDrug.setValue(selectedDrugs);
+        List<DrugInPres> selectedDrugs = this.listSelectedDrug.getValue();
+        selectedDrugs.add(drug);
+        this.listSelectedDrug.setValue(selectedDrugs);
     }
 
     public LiveData<List<DrugInPres>> getSelectedDrugs() {
@@ -217,10 +221,12 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         return true;
     }
 
-    public void handleBtnSavePres(Context context) {
+    public void handleBtnSavePres(Context context, String consultationDate, String followUpDate) {
         Prescription pres = this.prescription.getValue();
         if (pres != null) {
             pres.setDrugs(this.listSelectedDrug.getValue());
+            pres.setConsultationDate(consultationDate);
+            pres.setFollowUpDate(followUpDate);
             this.setupReminder(context);
         }
     }
@@ -229,23 +235,36 @@ public class AddPrescriptionViewModel extends AndroidViewModel {
         Prescription pres = this.prescription.getValue();
         executor.execute(() -> {
             this.prescriptionRepository.insert(pres);
-            AlarmScheduler.scheduleAlarmsForPendingReminders(context);
+            AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
+            new Thread(() -> {
 
-                AppDatabase db = AppDatabase.getDatabase(context.getApplicationContext());
-                // Chạy trên background thread
-                new Thread(() -> {
-                    List<ScheduleEntityDTO> pendingSchedules = db.scheduleDao()
+                List<ScheduleEntity> pendingSchedules = db.scheduleDao().getCurrentHandler(ReminderStatus.PENDING, LocalDateTime.now());
+                Map<LocalDateTime, List<ScheduleEntity>> grouped = pendingSchedules.stream()
+                        .collect(Collectors.groupingBy(ScheduleEntity::getDateTime));
 
-                            .getPendingReminders(ReminderStatus.PENDING, System.currentTimeMillis());
+                for (Map.Entry<LocalDateTime, List<ScheduleEntity>> entry : grouped.entrySet()) {
+                    LocalDateTime dateTime = entry.getKey();
+                    List<ScheduleEntity> list = entry.getValue();
 
-
-
-                    PrescriptionRequest prescriptionRequest = Tools.prescriptionToRequest(pres, pendingSchedules);
-                    this.prescriptionRepository.saveToServer(prescriptionRequest);
-                    for (ScheduleEntityDTO schedule : pendingSchedules) {
-                        AlarmScheduler.scheduleAlarm(context, schedule);
+                    if(!list.isEmpty()) {
+                        int requestId = list.get(0).getAlarmManagerRequestId();
+                        for(ScheduleEntity scheduleEntity : list) {
+                            AlarmScheduler.cancelAlarm(context, scheduleEntity.getAlarmManagerRequestId());
+                            scheduleEntity.setAlarmManagerRequestId(requestId);
+                        }
+                        db.scheduleDao().updateSchedules(list);
+                        AlarmScheduler.scheduleAlarmByTime(context, list.get(0));
                     }
-                }).start();
+
+                }
+
+
+//                PrescriptionRequest prescriptionRequest = Tools.prescriptionToRequest(pres, pendingSchedules);
+//                this.prescriptionRepository.saveToServer(prescriptionRequest);
+//                for (ScheduleEntityDTO schedule : pendingSchedules) {
+//                    AlarmScheduler.scheduleAlarm(context, schedule);
+//                }
+            }).start();
         });
     }
 

@@ -3,10 +3,9 @@ package com.mad.prescriptionmanagementapp.data.model.entitydto;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-import com.mad.prescriptionmanagementapp.data.model.DrugInPres;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.model.entity.TimeDosageEntity;
+import com.mad.prescriptionmanagementapp.data.model.entity.DosageEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +21,6 @@ public class ScheduleEntityDTO {
     @Relation(parentColumn = "drug_in_pres_id", entityColumn = "local_id", entity = DrugInPresEntity.class)
     public DrugInPresEntityDTO drugInPresDTO;
 
-    @Relation(parentColumn = "time_dosage_id", entityColumn = "local_id")
-    public TimeDosageEntity timeDosage;
+    @Relation(parentColumn = "dosage_id", entityColumn = "local_id")
+    public DosageEntity dosage;
 }

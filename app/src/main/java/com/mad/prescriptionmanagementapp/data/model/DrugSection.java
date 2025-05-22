@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.data;
+package com.mad.prescriptionmanagementapp.data.model;
 
 public class DrugSection {
     private String title;

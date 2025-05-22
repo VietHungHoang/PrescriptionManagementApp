@@ -1,4 +1,4 @@
-package com.mad.prescriptionmanagementapp.api;
+package com.mad.prescriptionmanagementapp.data.remote.api.kiet;
 
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.MedicineResponse;
 import com.mad.prescriptionmanagementapp.data.remote.dto.request.kiet.StatusUpdateRequest;

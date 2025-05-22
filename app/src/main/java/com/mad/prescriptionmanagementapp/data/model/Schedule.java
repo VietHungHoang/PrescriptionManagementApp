@@ -1,9 +1,6 @@
 package com.mad.prescriptionmanagementapp.data.model;
-import androidx.room.Relation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
-import com.mad.prescriptionmanagementapp.data.model.entity.TimeDosageEntity;
 import com.mad.prescriptionmanagementapp.util.ReminderStatus;
 
 import lombok.AllArgsConstructor;

@@ -1,5 +1,7 @@
 package com.mad.prescriptionmanagementapp.data.model;
 
+import com.mad.prescriptionmanagementapp.data.model.entity.DosageEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,5 +41,11 @@ public class TimeDosage {
         this.dosage = other.getDosage();
         this.hour = other.getHour();
         this.minutes = other.getMinutes();
+    }
+
+    public DosageEntity toEntity() {
+        return DosageEntity.builder()
+                .dosage(dosage)
+                .build();
     }
 }

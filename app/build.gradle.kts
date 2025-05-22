@@ -78,4 +78,5 @@ dependencies {
     annotationProcessor ("androidx.room:room-compiler:2.7.1")
     implementation("org.modelmapper:modelmapper:3.2.2")
     implementation ("com.google.code.gson:gson:2.13.1")
+    debugImplementation("com.github.amitshekhariitbhu.Android-Debug-Database:debug-db:1.0.7")
 }

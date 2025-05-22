@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.prescriptionmanagementapp.R;
 import com.mad.prescriptionmanagementapp.adapter.kiet.HistoryDayAdapter;
-import com.mad.prescriptionmanagementapp.api.MedicineApi;
+import com.mad.prescriptionmanagementapp.data.remote.api.kiet.MedicineApi;
 import com.mad.prescriptionmanagementapp.data.model.kiet.MedicineItem;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.kiet.MedicineResponse;
 import com.mad.prescriptionmanagementapp.data.model.kiet.RetrofitClient;

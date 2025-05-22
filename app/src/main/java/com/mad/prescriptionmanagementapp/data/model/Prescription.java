@@ -1,5 +1,8 @@
 package com.mad.prescriptionmanagementapp.data.model;
 
+import com.mad.prescriptionmanagementapp.data.model.entity.PrescriptionEntity;
+import com.mad.prescriptionmanagementapp.util.Tools;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +30,16 @@ public class Prescription {
         this.doctorName = doctorName;
         this.consultationDate = consultationDate;
         this.followUpDate = followUpDate;
+    }
+
+    public PrescriptionEntity toEntity() {
+        return PrescriptionEntity.builder()
+                .name(name)
+                .hospital(hospital)
+                .doctorName(doctorName)
+                .consultationDate(Tools.stringToLocalDate(consultationDate))
+                .followUpDate(Tools.stringToLocalDate(followUpDate))
+                .build();
     }
 
 }

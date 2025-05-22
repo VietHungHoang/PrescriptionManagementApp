@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.SimpleDrug;
 import com.mad.prescriptionmanagementapp.util.Frequency;
 
@@ -31,6 +32,14 @@ public class DrugInPres implements Parcelable {
     public DrugInPres(SimpleDrug simpleDrug) {
         this.simpleDrug = simpleDrug;
         this.timeDosages = new ArrayList<>();
+    }
+
+    public DrugInPresEntity toEntity() {
+        return DrugInPresEntity.builder()
+                .unitId(unit.getId())
+                .drugId(simpleDrug.getId())
+                .note(note)
+                .build();
     }
 
     protected DrugInPres(Parcel in) {

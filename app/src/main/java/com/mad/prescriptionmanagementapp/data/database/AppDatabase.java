@@ -5,20 +5,21 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
-import com.mad.prescriptionmanagementapp.data.cache.DrugCache;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.DrugInPresEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.PrescriptionEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.ScheduleEntity;
-import com.mad.prescriptionmanagementapp.data.model.entity.TimeDosageEntity;
+import com.mad.prescriptionmanagementapp.data.model.entity.DosageEntity;
 import com.mad.prescriptionmanagementapp.data.model.entity.UnitEntity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {DrugCache.class, UnitEntity.class, DrugEntity.class, PrescriptionEntity.class,
-        DrugInPresEntity.class, TimeDosageEntity.class, ScheduleEntity.class/*, Các entity khác */}, version = 1, exportSchema = false)
+@Database(entities = {UnitEntity.class, DrugEntity.class, PrescriptionEntity.class,
+        DrugInPresEntity.class, DosageEntity.class, ScheduleEntity.class/*, Các entity khác */}, version = 1, exportSchema = false)
+@TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UnitDao unitDao();

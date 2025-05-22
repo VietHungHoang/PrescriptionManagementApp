@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import com.mad.prescriptionmanagementapp.R;
-import com.mad.prescriptionmanagementapp.data.DrugSection;
+import com.mad.prescriptionmanagementapp.data.model.DrugSection;
 
 public class DrugSectionAdapter extends RecyclerView.Adapter<DrugSectionAdapter.ViewHolder> {
 
