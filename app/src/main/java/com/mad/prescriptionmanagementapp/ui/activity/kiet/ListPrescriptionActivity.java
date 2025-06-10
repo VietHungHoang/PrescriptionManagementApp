@@ -48,7 +48,7 @@ public class ListPrescriptionActivity extends AppCompatActivity {
 //        bottomNav.setSelectedItemId(R.id.nav_invoice);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.100:8080/") // Địa chỉ localhost trên emulator
+                .baseUrl("http://10.21.49.70:8080/") // Địa chỉ localhost trên emulator
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

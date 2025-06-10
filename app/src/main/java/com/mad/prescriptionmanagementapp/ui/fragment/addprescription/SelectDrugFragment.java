@@ -99,7 +99,7 @@ public class SelectDrugFragment extends Fragment {
         });
 
         this.binding.btnAddDrug.setOnClickListener(v -> {
-
+            SelectDrugFragment.this.moveToNextFragment(new SimpleDrug());
         });
     }
 

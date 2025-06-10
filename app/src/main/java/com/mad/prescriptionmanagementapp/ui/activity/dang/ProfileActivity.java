@@ -16,6 +16,8 @@ import com.mad.prescriptionmanagementapp.data.model.User;
 import com.mad.prescriptionmanagementapp.data.model.UserSetting;
 import com.mad.prescriptionmanagementapp.data.remote.dto.response.ResponseObject;
 import com.mad.prescriptionmanagementapp.data.remote.api.ApiService;
+import com.mad.prescriptionmanagementapp.ui.activity.hung.LoginActivity;
+import com.mad.prescriptionmanagementapp.util.SharedPrefUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -98,10 +100,8 @@ public class ProfileActivity extends AppCompatActivity {
             user.setDateOfBirth("26/05/2003");
             user.setPhoneNumber("0398066323");
             user.setGender("male");
-            Toast.makeText(this, "No user data from Intent, using default", Toast.LENGTH_SHORT).show();
         } else if (user.getId() == null) {
             user.setId(10L);
-            Toast.makeText(this, "User ID is null, using default ID: 1", Toast.LENGTH_SHORT).show();
         }
 
         // Tải dữ liệu từ backend
@@ -129,7 +129,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void loadUserData(Long userId) {
         if (userId == null) {
-            Toast.makeText(this, "User ID is null, cannot load data", Toast.LENGTH_SHORT).show();
             userSetting = new UserSetting(10L, user.getName(), user.getDateOfBirth(),
                     user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
             updateUI();
@@ -148,7 +147,6 @@ public class ProfileActivity extends AppCompatActivity {
                             userSetting.setDateOfBirth(date.format(DISPLAY_FORMATTER));
                             user.setDateOfBirth(date.format(DISPLAY_FORMATTER));
                         } catch (DateTimeParseException e) {
-                            Toast.makeText(ProfileActivity.this, "Error parsing date: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                     user.setName(userSetting.getName());
@@ -157,18 +155,15 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     userSetting = new UserSetting(userId, user.getName(), user.getDateOfBirth(),
                             user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
-                    Toast.makeText(ProfileActivity.this, "No data from server, response code: " + response.code(), Toast.LENGTH_LONG).show();
                 }
                 updateUI();
             }
 
             @Override
             public void onFailure(Call<ResponseObject<UserSetting>> call, Throwable t) {
-                Log.e("ProfileActivity", "Failed to load data: " + t.getMessage(), t);
                 userSetting = new UserSetting(userId, user.getName(), user.getDateOfBirth(),
                         user.getPhoneNumber(), user.getGender(), 0.0, 0.0);
                 updateUI();
-                Toast.makeText(ProfileActivity.this, "Failed to load data: " + t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -227,6 +222,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
     private void showLogoutConfirmationDialog() {
+        SharedPrefUtils sharedPrefUtils = new SharedPrefUtils(this);
         // Inflate layout XML
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_logout_confirmation, null);
@@ -247,6 +243,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ProfileActivity.this, "Đã xác nhận đăng xuất", Toast.LENGTH_SHORT).show();
+                sharedPrefUtils.saveToken(null, null);
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                finish();
                 dialog.dismiss();
             }
         });

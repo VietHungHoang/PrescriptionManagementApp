@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,6 +137,12 @@ public class AddScheduleFragment extends Fragment {
     }
 
     private void setupUI() {
+        if(currentDrug.getDrug().getName() == null || currentDrug.getDrug().getName().isEmpty()) {
+            currentDrug.getDrug().setName("");
+            this.binding.edtPrescriptionName.setClickable(true);
+            this.binding.edtPrescriptionName.setFocusable(true);
+            this.binding.edtPrescriptionName.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
         this.viewModel.setCurrentDrug(this.currentDrug);
         if (this.isEdit) {
             this.binding.edtStartDate.setText(this.currentDrug.getStartDate());

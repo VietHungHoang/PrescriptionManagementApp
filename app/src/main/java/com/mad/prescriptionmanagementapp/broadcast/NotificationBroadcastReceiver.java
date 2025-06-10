@@ -99,7 +99,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             // Nội dung thông báo
             if (remindersForThisTime.size() == 1) {
                 ScheduleEntityDTO singleReminder = remindersForThisTime.get(0);
-                builder.setContentText(String.format(Locale.getDefault(), "Đơn thuốc: %s\n%s %s %s",
+                builder.setContentText(String.format(Locale.getDefault(), "Đơn thuốc: %s => %s %s %s",
                         singleReminder.getDrugInPresDTO().getPrescriptionEntity().getName(), singleReminder.getDrugInPresDTO().getDrugEntity().getName(), Tools.formatNumber(singleReminder.getDosage().getDosage()), singleReminder.getDrugInPresDTO().getUnitEntity().getName()));
             } else {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
